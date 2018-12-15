@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.6  (Unix)">
+	<META NAME="AUTHOR" CONTENT="James Li">
+	<META NAME="CREATED" CONTENT="20181202;383600">
+	<META NAME="CHANGEDBY" CONTENT="James Li">
+	<META NAME="CHANGED" CONTENT="20181202;544100">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P ALIGN=CENTER><IMG align=middle src=vblogo2.jpg><P>
+<P ALIGN=CENTER><FONT SIZE=6>VB2000 Version 2.8</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=6 STYLE="font-size: 20pt">Jiabo Li, Brian
+Duke and Roy McWeeny</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=4>December, 2018</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=4>A pre-release of version 2.8 of the
+stand-alone VB2000 is available in github.</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=4>The version of VB2000 in GAMESS(US) is still 2.7.</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=4>Version 2.8 of VB2000 in GAMESS(US) will be available soon.</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=4>Version 2.8 of the Gaussian VB2000 will take a little longer.</FONT></P>
+<P ALIGN=CENTER><FONT SIZE=4>See information on <A HREF="http://www.msg.chem.iastate.edu/gamess/">GAMESS(US)</A>,
+with the VB2000 built in, on <A HREF="https://en.wikipedia.org/wiki/GAMESS_(US)">Wikipedia.</A>
+<P></P>
+<P ALIGN=CENTER><IMG align=middle src=jiabo1.jpg height=300 width=450></P>
+<P ALIGN=CENTER><FONT SIZE=4>The 2 active developers, Jiabo Li and Brian
+Duke at the Sydney WATOC in 2008,</P>
+<P ALIGN=CENTER><FONT SIZE=4>the only time they have ever meet in person.</P>
+
+<P ALIGN=CENTER><FONT SIZE=4>Take a look at <A HREF="vb2tips.htm">Brian's page</A> 
+of tips for using VB2000.</P>
+
+<P ALIGN=CENTER><FONT SIZE=6>What is new in version 2.8?</FONT></P>
+
+The VB2000 2.8 release is primarily due to developments in the GAMESS version that are outlined below, 
+marked with <B>GAMESS</B> but some changes are more general.<P>
+
+• A *.vec file can be created containing a GAMESS like $VEC file for initial orbitals. MOs, LMOs and 
+final VB orbitals. This is now supported by MacMolPlt which labels the  orbitals correctly</P>
+      
+• Molden files can now be read directly by the stand-alone version, to use the basis set, geometry 
+and  MOs directly from another program.</P>
+      
+• VB2000 can now use the structures for a set of ionicities (number of double occupied orbitals) 
+or, equivalently, seniority number (number of singly occupied orbitals).</P>
+      
+• <B>GAMESS - </B> The Generalized Product Function Energy Partitioning code from the Nascimanto Group in Brazil 
+was added.</P>
+
+• <B>GAMESS - </B> The VB2000 2.8 release is primarily due to developments that removes restrictions on the kind 
+of GAMESS calculation that are used to construct initial guess orbitals in VB2000. Now all values of SCFTYP 
+can be used, allowing UHF, GVB and MCSCF orbitals, in addition to RHF and ROHF. All kinds of DFT orbitals 
+can be used. MP2, coupled-cluster and configuration interaction can be calculated but the HF orbitals 
+are used. GVB is restricted to closed shell and uses the actual “bond” GVB orbitals after using localized 
+orbitals to calculate the GVB CI pairs. The GVB orbitals can be a particularly good initial guess to 
+use VB2000 for more advanced VB methods than GVB-PP. RUNTYP = OPTIMIZE and RUNTYP = HESSIAN can now 
+be used to optimize the geometry or calculate frequencies with the GAMESS method before doing a VB2000 
+calculation, as well as optimizing the geometry or calculate frequencies with the VB method. RUNTYP = IRC
+and RUNTYP = SURFACE can be used with a range of GAMESS methods, calculating VB function at each point.  
+$GMSPATH/vb2000/docs/Readme-2.8-tests, explains these methods in more
+detail and describes a set of test files for them.</P>
+      
+• <B>GAMESS - </B> VB calculations can be done after a optimisation or Hessian with another method or along 
+an IRC or set of saddle points calculate with another method. </P>
+ 
+• See the CHANGELOG and  Change_VB2.7-2.8.pdf in the DOC directory for more details and for 
+other developments.</P>
+
+<P ALIGN=CENTER><BR><BR>
+</P>
+</P>
+</BODY>
+</HTML>

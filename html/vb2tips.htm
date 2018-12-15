@@ -1,0 +1,134 @@
+<HTML>
+<HEAD>
+<TITLE>Brian Duke's VB2000 Page.</TITLE>
+</HEAD>
+<body alink="#cc00cc" background="sky7a.gif" link="#0033ff"
+ vlink="#0033ff">
+<CENTER>
+<img alt="[vb2000]" src=vblogo.jpg>
+</CENTER>
+
+<H1 ALIGN=CENTER><font color="#3333ff">Tips, news and FAQs.</font></H1><P>
+<P>
+<B>
+VB2000, Version 2.7, was released in 2013, and included in GAMESS(US) in 2014. 
+Version 2.7 is still in the GAMESS(US) release, but the stand-alone version 
+2.8 is about to be released, with hopefully the GAMESS version to follow 
+closely after. 
+
+<P>The purpose of this page is to collect together everything we, the 
+authors, and the VB2000 community have learnt about using the program.
+However, the current version is just a start.</P>
+
+<P>We welcome items from users. Please e-mail them to <A
+HREF="mailto:brian,james.duke@gmail.com">Brian Duke</A><P> </B> 
+<HR>
+<h3><font color="#3333ff">Tips and tricks</font></h3> 
+<P> The following advice may help you to run VB2000
+more effectively for your systems.  
+<OL> 
+
+<LI> If you want to run a multi-group VB calculation, specify the VB
+groups explicitly using the "dot" notation, such as
+VB(8).CASVB(6,6).VB(8). You can specify the same kind of calculation by
+using GPF(ng) and other controls, but the "dot"  notation is much
+easier to use and intuitive.
+
+<LI> You can do a VB calculation of a molecule at one geometry and do
+another VB calculation on the same molecule at a different geometry by
+reading the VB orbitals of a previous calculation. This is not only a
+good way to speed up convergence of a new calculation, but also a
+necessary step for generating initial VB orbitals for a bond breaking
+calculation in some cases.
+
+<LI> If a VB group has many resonance structures and you have difficulty
+to determine which ones make major contributions, you can try a CASVB
+calculation first and then check the biggest contributors.
+
+<LI> Try to avoid running CASVB or SCVB for groups with large number of
+electrons (N>8 for CASVB and N>12 for SCVB - but SC(12,m) with m say 11
+or 13 is more challenging). If you want to run SCVB(n) (n slightly larger 
+than 12), you can try to run a VB(n) for orbital optimization with one or a
+few structures, and then do a SCVB(n) as a restart calculation without
+further optimization of VB orbitals (using key word CIONLY).
+
+<LI> The spin-density calculation can be very time consuming for group
+with more than 12 electrons.
+
+<LI> If VBSCF for VB orbital optimization becomes unstable, you can turn
+on DIIS.  See Chapter 6 for more details about key word DIIS. The DIIS
+option helps to maintain the symmetry of wave function during VBSCF
+iterations.
+
+<LI> If the macro iteration is unstable (total energy becomes
+oscillating, you can set a damping factor for rigid rotation. See
+Chapter 6 for control $DAMPROT.
+
+</OL><P>
+<HR>
+<h3><font color="#3333ff">VB2000 on 64bit processors.</font></h3>
+<UL>
+<LI>All tests are using only one processor. The VB2000 codes do not support
+parallel processing.<P>
+<LI>The Gamess/VB2000 version and the stand-alone version work fine with the 
+gfortran and intel compilers.<P> 
+<LI>We have used earlier versions VB2000 on Itanium 64 bit machine, on a SGI Irix,
+and on intel 64 bit processors with the Gamess TARGET=linux64 
+(using the g95 and pgf77 compilers). Thanks are due to Jörg
+Saßmannshausen, Institut für Chemische Technologie von Materialien. TU-Graz, 
+Austria (now in London) for allowing access to his machines for one of these tests.<P>
+<LI>We have tested both Gaussian03 and Gaussian09 on intel 64 bit processors
+at the <A HREF="http://nf.apac.edu.au/">Australian National Facility</A>.
+Particular thanks are due to Rika Kobayashii, as Gaussian09 involves
+changes in the interface with VB2000.  No such changes were involved in
+moving from Gaussian98 to Gaussian03.  These Gaussian versions, where the
+VB2000 code is a separate Gaussian mode, is no longer supported.<P>
+</UL>
+
+<h3><font color="#3333ff">New VB2000/Gaussian version.</font></h3> 
+
+<P>From Gaussian09D1, where a large file of integrals and other values can
+be output, there is a stand-alone VB2000 Gaussian version that reads that
+file. There is no longer the problem of compiling VB2000 into Gaussian
+when most users do not have the source code. This version however is more
+limited than the earlier built-in Gaussian VB2000 versions. The large
+file in more recent versions of Gaussian now contains more material, such
+as dipole moment integrals. However the Gaussian VB2000 version does not 
+yet allow these output files from more recent versions of Gaussian. It
+is getting to the top of my TODO list.
+
+<P><HR>
+<h3><font color="#3333ff">Geometry optimization.</font></h3>
+Geometry optimization with VB2000 is possible in two ways:-
+<OL>
+<LI>Using Gamess/VB2000 with the TRUDGE facility.
+<LI>Using Gamess/VB2000 with numerical gradients.
+</OL>
+Problems arise because VB2000 does not use symmetry. Method 2 can only use 
+symmetry for reading in the data. It then has to switch off symmetry. 
+Method 1 can use symmetry as you can define contraints on the variables. 
+However the geometry data has to be input using the Hilderbrand internal 
+coordinates and these are widely recognised to be a real pain. If you have to 
+use Gamess/VB2000 for geometry optimization on symmetric molecules, master 
+Hilderbrand internals. This was not made as clear as it could have been in 
+earlier documentation. Indeed, we have only recently realised how restrictive 
+symmetry is in this respect.
+
+<P><HR>
+<h3><font color="#3333ff">Effective core potentials with VB2000.</font></h3>
+<P>In case this is not clear from the Gamess/VB2000 test examples, the
+use of efffective core potentials is quite straight forward. Any
+potential that can be run with Gamess directly can be used with the
+Gamess/VB2000 combination.<P>
+
+<P><HR>
+<h3><font color="#3333ff">Parallization of VB2000.</font></h3>
+First parallization tests are likely to be with the Gamess/VB2000
+version but it is still a daunting task. Anyone want to have a crack at
+this?
+<h3><font color="#3333ff"></font></h3>
+<P><HR><BR>
+Last updated: 5 December, 2018.
+<A HREF="mailto:brian.james.duke@gmail.com">Brian Salter-Duke (Brian Duke)</A><P>
+</BODY>
+</HEAD>
