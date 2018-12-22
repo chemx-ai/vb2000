@@ -1,0 +1,8 @@
+rm -f *.V*
+rm -f *.TEMP*
+rm -f *.ED*
+rm -f *.source
+rm -f *.output
+rm -f *.orb
+rm -f *.vec
+rm -f *.cube

@@ -1,0 +1,343 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ *       An ab initio Valence-Bond Program Based on the       *
+ *           Generalized Product Function Method and          *
+ *                  the Algebrant Algorithm                   *
+ *                                                            *
+ *                Version 2.1  September  2009                *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *    * SciNet Technologies, 9943 Fieldthorn St., San Diego   *
+ *      CA 92127, USA                                         *
+ *                                                            *
+ *   ** Department of Medicinal Chemistry, Monash University, *
+ *      381 Royal Pde, Parkville, Victoria, 3052, Australia   *
+ *                                                            *
+ *  *** Department of Chemistry, University of Pisa,          *
+ *      56100 Pisa, Italy                                     *
+ *                                                            *
+ *  Reference for the software:                               *
+ *      Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version *
+ *      2.0 (R3), SciNet Technologies, San Diego, CA, 2009    *
+ *      URL: http://www.scinetec.com or http://www.vb2000.net *
+ *                                                            *
+ *  Reference for the theory:                                 *
+ *      Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence   *
+ *      Bond Theory to New Limits", Int. J. Quantum Chem.,    *
+ *      89(2002)208-216.                                      *
+ *                                                            *
+ *  Copyright (C) 2000-2009 by SciNet Technologies            *
+ **************************************************************
+
+ JOB NAME IS h2bovb                                                          
+
+ VB2000 DIRECTORY IS: /home/jli/VB2000Pro                                                             
+ MAXIMUM DYNAMIC MEMORY IS:        6500000
+
+
+ Input of molecule
+ =================
+ #! VB(2)/CC-PVDZ PRINTALL                                               
+
+ Title: H2 cc-pVDZ, bovb using extremely large DPWEIGHT                                 
+
+ Charge =  0 Multiplicity =  1
+
+ BASIS SET FILE IS: /home/jli/VB2000Pro/BASET/cc-pVDZ                                               
+
+ Cartesian coordinates of atoms in Angstrom
+ ------------------------------------------
+                 X         Y         Z   
+
+  H     1.0  0.000000  0.000000  0.370000
+  H     1.0  0.000000  0.000000 -0.370000
+ ------------------------------------------
+
+ Total number of two-electron integrals =      512
+ Time for integral evaluation                0.016
+
+ SKIPPED INTEGRALS=         920
+ Number of iter = 15, DMAX =        0.000006462880
+ Final Hartree-Fock Energy =       -1.128700081314
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3         4         5         6
+ E(a.u.)              -0.592     0.197     0.479     0.937     1.293     1.293
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.40366  -0.15024   0.70011   0.76067  -0.00000  -0.00000
+   2  1  H     s    -0.17376  -1.95865  -0.72637  -1.61735   0.00000   0.00000
+   3  1  H     x    -0.00000  -0.00000   0.00000  -0.00000   0.57904   0.00256
+   4  1  H     y    -0.00000  -0.00000   0.00000  -0.00000  -0.00256   0.57904
+   5  1  H     z     0.02250   0.01425  -0.01127   0.41022  -0.00000  -0.00000
+   6  2  H     s    -0.40366   0.15024   0.70011  -0.76067   0.00000  -0.00000
+   7  2  H     s    -0.17376   1.95865  -0.72637   1.61735  -0.00000  -0.00000
+   8  2  H     x     0.00000   0.00000  -0.00000   0.00000   0.57904   0.00256
+   9  2  H     y    -0.00000   0.00000   0.00000  -0.00000  -0.00256   0.57904
+  10  2  H     z    -0.02250   0.01425   0.01127   0.41022   0.00000   0.00000
+
+ VBO LIB IS: /home/jli/VB2000Pro/VBOLIB/VBOLIBCCPVDZ                                         
+
+ Localized molecular orbitals and the bond labels
+ ===============================================================================
+ LMO#                      1
+ E(a.u.)              -0.592
+ Bond Label           2-1(1)
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.40366
+   2  1  H     s    -0.17376
+   3  1  H     x    -0.00000
+   4  1  H     y    -0.00000
+   5  1  H     z     0.02250
+   6  2  H     s    -0.40366
+   7  2  H     s    -0.17376
+   8  2  H     x     0.00000
+   9  2  H     y    -0.00000
+  10  2  H     z    -0.02250
+
+
+ Mulliken population of localized molecular orbitals
+ ===============================================================================
+ LMO#                      1
+ E(a.u.)              -0.592
+ Bond Label           2-1(1)
+ -------------------------------------------------------------------------------
+
+   1         H       1.00000
+   2         H       1.00000
+
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRP)
+ =======================================================================
+ LMO#     1
+ Group#   1
+ Split    1
+
+ WARNING: Initial orbital  3 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital  4 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital  5 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital  6 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital  7 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital  8 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital  9 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital 10 undefined from DISLMO
+ Initial orbital
+
+
+ WARNING: LMO LABELS ARE TRUNCATED!
+
+ Initial guess of orbitals
+ ===============================================================================
+ ORBITAL#                  1         2         3         4         5         6
+ Bond Label         AO TYPE   AO TYPE   AO TYPE   AO TYPE   AO TYPE   AO TYPE 
+ -------------------------------------------------------------------------------
+
+   1  1  H     s     1.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   2  1  H     s     0.00000   0.00000   1.00000   0.00000   0.00000   0.00000
+   3  1  H     x     0.00000   0.00000   0.00000   0.00000   1.00000   0.00000
+   4  1  H     y     0.00000   0.00000   0.00000   0.00000   0.00000   1.00000
+   5  1  H     z    -0.00000  -0.00000  -0.00000  -0.00000   0.00000   0.00000
+   6  2  H     s     0.00000   1.00000   0.00000  -0.00000   0.00000   0.00000
+   7  2  H     s     0.00000   0.00000   0.00000   1.00000   0.00000   0.00000
+   8  2  H     x     0.00000   0.00000   0.00000   0.00000  -0.00000   0.00000
+   9  2  H     y     0.00000   0.00000   0.00000   0.00000   0.00000  -0.00000
+  10  2  H     z    -0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+
+ ORBITAL#                  7         8         9        10
+ Bond Label         AO TYPE   AO TYPE   AO TYPE   AO TYPE 
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.00000   0.00000   0.00000   0.00000
+   2  1  H     s    -0.00000   0.00000   0.00000  -0.00000
+   3  1  H     x     0.00000  -0.00000   0.00000   0.00000
+   4  1  H     y     0.00000   0.00000  -0.00000   0.00000
+   5  1  H     z     1.00000   0.00000   0.00000  -0.00000
+   6  2  H     s    -0.00000   0.00000   0.00000   0.00000
+   7  2  H     s    -0.00000   0.00000   0.00000  -0.00000
+   8  2  H     x     0.00000   1.00000   0.00000   0.00000
+   9  2  H     y     0.00000   0.00000   1.00000   0.00000
+  10  2  H     z    -0.00000   0.00000   0.00000   1.00000
+
+
+
+ GENERAL CONTROLS ($GENCTL)
+ ==============================
+ Number of electron groups =  1
+ Maximum macro-iterations  = 12
+ Restart calculation(0/1/2)=  0
+ Group#               1
+ Num. of electrons    2
+ Num. of spins        0
+ Num. of orbitals    10
+ Method#              2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  1
+ STR. NO.       RUMER PATTERN  
+    1           1  2
+    2           3  3
+    3           4  4
+
+ CALCULATE INITIAL STRUCTURE COEFFICIENTS
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  2 CMAX = 0.12230018785722
+ GROUP =  1  ITER =  3 CMAX = 0.06594637967967
+ GROUP =  1  ITER =  4 CMAX = 0.04489628473023
+ GROUP =  1  ITER =  5 CMAX = 0.03317624707151
+ GROUP =  1  ITER =  6 CMAX = 0.02177805345649
+ GROUP =  1  ITER =  7 CMAX = 0.01787400441650
+ GROUP =  1  ITER =  8 CMAX = 0.01471916997461
+ GROUP =  1  ITER =  9 CMAX = 0.02395612114289
+ GROUP =  1  ITER = 10 CMAX = 0.03315797996940
+ GROUP =  1  ITER = 11 CMAX = 0.04761000660652
+ GROUP =  1  ITER = 12 CMAX = 0.05573337015037
+ GROUP =  1  ITER = 13 CMAX = 0.04887102933158
+ GROUP =  1  ITER = 14 CMAX = 0.03869190223463
+ GROUP =  1  ITER = 15 CMAX = 0.03050266253640
+ GROUP =  1  ITER = 16 CMAX = 0.03174974556814
+ GROUP =  1  ITER = 17 CMAX = 0.02739822007610
+ GROUP =  1  ITER = 18 CMAX = 0.02474314134713
+ GROUP =  1  ITER = 19 CMAX = 0.04318167915465
+ GROUP =  1  ITER = 20 CMAX = 0.00934786332498
+ GROUP =  1  ITER = 21 CMAX = 0.02972393254216
+ GROUP =  1  ITER = 22 CMAX = 0.01318656829590
+ GROUP =  1  ITER = 23 CMAX = 0.02856531603874
+ GROUP =  1  ITER = 24 CMAX = 0.01017074977158
+ GROUP =  1  ITER = 25 CMAX = 0.02357964183608
+ GROUP =  1  ITER = 26 CMAX = 0.00983019801727
+ GROUP =  1  ITER = 27 CMAX = 0.01965568134613
+ GROUP =  1  ITER = 28 CMAX = 0.00910749595325
+ GROUP =  1  ITER = 29 CMAX = 0.01647275983158
+ GROUP =  1  ITER = 30 CMAX = 0.01096011456941
+ GROUP =  1  ITER = 31 CMAX = 0.01924100910862
+ GROUP =  1  ITER = 32 CMAX = 0.01088267082235
+ GROUP =  1  ITER = 33 CMAX = 0.02130837171162
+ GROUP =  1  ITER = 34 CMAX = 0.01049709836436
+ GROUP =  1  ITER = 35 CMAX = 0.02224732805993
+ GROUP =  1  ITER = 36 CMAX = 0.00999119416223
+ GROUP =  1  ITER = 37 CMAX = 0.02140549721474
+ GROUP =  1  ITER = 38 CMAX = 0.00955515021451
+ GROUP =  1  ITER = 39 CMAX = 0.01826524479386
+ GROUP =  1  ITER = 40 CMAX = 0.01096953621139
+ GROUP =  1  ITER = 41 CMAX = 0.01489398726441
+ GROUP =  1  ITER = 42 CMAX = 0.00981789152482
+ GROUP =  1  ITER = 43 CMAX = 0.00473286066404
+ GROUP =  1  ITER = 44 CMAX = 0.00183067091767
+ GROUP =  1  ITER = 45 CMAX = 0.00057307387458
+ GROUP =  1  ITER = 46 CMAX = 0.00014359694303
+ GROUP =  1  ITER = 47 CMAX = 0.00002906157042
+ GROUP =  1  ITER = 48 CMAX = 0.00000486618577
+
+ ENERGY AND DIFF OF MACROITER    1 =     -1.14886284     -1.14886284
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000935404
+
+ ENERGY AND DIFF OF MACROITER    2 =     -1.14886284     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000877924
+
+ DELOCALIZATION FOR VB ORBITALS OF GROUP  1
+ =============================================
+ VBO INDEX =  1 DELOCALIZATION =   0.00000
+ VBO INDEX =  2 DELOCALIZATION =   0.00000
+ VBO INDEX =  3 DELOCALIZATION =   0.00000
+ VBO INDEX =  4 DELOCALIZATION =   0.00000
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   1
+
+       1     2     3     4     5     6     7     8     9    10
+ ===============================================================
+   1  1.00
+   2  0.74  1.00
+   3  0.12  0.08  1.00
+   4  0.08  0.12  0.84  1.00
+   5  0.00 -0.00  0.00 -0.00  1.00
+   6  0.00 -0.00  0.00 -0.00  0.00  1.00
+   7 -0.05 -0.46  0.48  0.39  0.00  0.00  1.00
+   8  0.00 -0.00  0.00 -0.00  0.49  0.00  0.00  1.00
+   9  0.00 -0.00  0.00 -0.00  0.00  0.49  0.00  0.00  1.00
+  10  0.46  0.05 -0.39 -0.48  0.00  0.00 -0.21  0.00  0.00  1.00
+
+ Normalized structure coefficients
+ -0.9989  0.0319  0.0319
+
+ ====Mulliken Weight====
+  0.9972  0.0014  0.0014
+
+ ====Lowdin   Weight====
+  0.9973  0.0014  0.0014
+
+ ====Hiberty  Weight====
+  0.9980  0.0010  0.0010
+
+
+ ENERGY AND DIFF OF MACROITER    3 =     -1.14886284     -0.00000000
+
+
+ MULLIKEN CHARGES ON ATOMS
+ -------------------------
+  ATOM             CHARGE 
+
+    1             0.00000
+    2            -0.00000
+
+ -------------------------
+
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1         2         3         4         5         6
+      Group#             1         1         1         1         1         1
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  H     s   0.73250   0.00000  -0.89949   0.00000   0.00000   0.00000
+   2  1  H     s   0.34272  -0.00000   1.19889  -0.00000   0.00000   0.00000
+   3  1  H     x   0.00000   0.00000   0.00000  -0.00000   1.00000   0.00000
+   4  1  H     y   0.00000   0.00000   0.00000  -0.00000   0.00000   1.00000
+   5  1  H     z  -0.04597   0.00000   0.48028  -0.00000   0.00000   0.00000
+   6  2  H     s   0.00000   0.73250   0.00000  -0.89949   0.00000   0.00000
+   7  2  H     s  -0.00000   0.34272  -0.00000   1.19889   0.00000   0.00000
+   8  2  H     x  -0.00000  -0.00000   0.00000  -0.00000  -0.00000   0.00000
+   9  2  H     y  -0.00000  -0.00000   0.00000  -0.00000   0.00000  -0.00000
+  10  2  H     z  -0.00000   0.04597   0.00000  -0.48028   0.00000   0.00000
+
+ ===========================================================================
+    Orbital#             7         8         9        10
+      Group#             1         1         1         1
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  H     s  -0.00000   0.00000   0.00000   0.00000
+   2  1  H     s  -0.00000   0.00000   0.00000  -0.00000
+   3  1  H     x   0.00000  -0.00000   0.00000   0.00000
+   4  1  H     y   0.00000   0.00000  -0.00000   0.00000
+   5  1  H     z   1.00000   0.00000   0.00000  -0.00000
+   6  2  H     s  -0.00000   0.00000   0.00000   0.00000
+   7  2  H     s  -0.00000   0.00000   0.00000  -0.00000
+   8  2  H     x   0.00000   1.00000   0.00000   0.00000
+   9  2  H     y   0.00000   0.00000   1.00000   0.00000
+  10  2  H     z  -0.00000   0.00000   0.00000   1.00000
+
+ WORDS OF DYNAMIC MEMORY USED IN VB2000 CODE ONLY:        5441
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION      0.031
+ CPU TIME FOR MACROITERATION      1.578
+ TOTAL CPU TIME                   1.609
+

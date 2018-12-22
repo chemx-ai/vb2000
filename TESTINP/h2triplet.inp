@@ -1,0 +1,14 @@
+#! VB(2)/D95 SPDEN printall
+
+TEST TRIPLET STATE
+
+0 3
+1   .361842   .000000   .0
+1  -.361842   .000000   .0 
+
+ $GRPDIM
+ 2
+
+ $01VBORB
+ 1-2
+ 

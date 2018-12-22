@@ -1,0 +1,388 @@
+#!/bin/csh
+# Copyright (C) 2018 Jiabo Li, Brian Duke, and Roy McWeeny
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+########################################################################
+#
+# This is the installation script
+#
+# Author: Brian Duke, Jan 2004. Latest changes, July 2013.
+#
+# Compiles stand-alone version of VB2000.
+# For Gaussian or Gamess version of VB2000, consult gaussian.README
+# or gamess.README respectively.
+#
+#
+###################################################################
+#
+# This section is the only one you may need to alter. Other choices
+# are made by 'question and answer' session when you run the script.
+#
+# Change the lines below toi set CMEM='CSTA' for static memory.
+#set CMEM='CSTA'
+set CMEM='CDYN'
+#
+###################################################################
+#
+set TARGET=vb2000$1.src
+# Allows targetting compiling such as vb2000-1.8.src as "install -1.8
+set WVB='    '
+#set WVB='CWVB'
+set MBIT='64'
+set VERS='C000'
+set TEST="./runall"
+set TAG='==========+++++=========='
+#set COMPTAG default
+set COMPTAG='==========+++++=========='
+set RUN="./vb2000$1.exe"
+set EXE="vb2000$1.exe"
+# Defaults
+set CC=gcc 
+set F77=gfortran
+#
+# Uncomment lines below for 32 bit compile, but this is now untested.
+#set bit=$<
+#if (${bit} =~ [yY]*) then
+#   set MBIT='32'
+#endif
+cp SRC/maxwork.inc .
+cp SRC/maxcen.inc .
+echo ""
+echo " Welcome to the general script for installing VB2000."
+echo ""
+echo " 64 bit compile is assumed as there are few 32 bit systems"
+echo " If 32 bit required modify this install file"
+echo ""
+echo " This will install the stand-alone version. It does not install"
+echo " the GAMESS(US) or Gaussian98 versions. For GAMESS(US), you need" 
+echo " to read gamess.README and install VB2000 as a module in the"
+echo " gamess directory. If you want to install the Gaussian version"
+echo " as a Gaussian module, read gaussian.README."
+echo ""
+echo " If you want GAMESS(US) or Gaussian version, exit in the next menu."
+echo ""
+echo " You may want to exit at this menu to edit this install script to"
+echo " change COMPTAG for your compiler option to be the correct full"
+echo " name of your compiler including the version number. This will"
+echo " then appear in your VB2000 output."
+echo ""
+echo " The most common options are:"
+echo ""
+echo " 0. Exit."
+echo " 1. VB2000 with gfortran compiler in Linux or Cygwin."
+echo " 2. VB2000 with Intel ifort compiler."
+echo " 3. VB2000 with Portland pfg77 compiler in Linux."
+echo " 9. List more less used and less tested compilers."
+echo ""
+echo " Type the number of the option you want:"
+set opt=$<
+echo ""
+if (${opt} == 9) then
+echo " The full options are:"
+echo ""
+echo " 0. Exit."
+echo " 1. VB2000 with gfortran compiler in Linux or Cygwin."
+echo " 2. VB2000 with Intel ifort compiler in Linux."
+echo " 3. VB2000 with Portland pfg77 compiler in Linux."
+echo " 4. WinVB2000 compiled in Cygwin with -mno-cygwin."
+echo " 5. VB2000 with g77 compiler in Linux32 or Cygwin."
+echo " 6. VB2000 with g95 compiler in Linux."
+echo " 7. VB2000 with gfortran compiler on Apple Mac."
+echo " 8. Prepare VB2000 source files to compile in Windows."
+echo ""
+echo " Type the number of the option you want:"
+set opt=$<
+endif
+set FLAGS1=""
+echo ""
+switch ( $opt )
+case 1:
+# gfortran. Assumes that gfortran is on your path.
+   echo " Compiling stand-alone version with gfortran and linux or cygwin."
+#  COMPTAG has to be 25 characters long
+#  set COMPTAG='    Compiler GFORTRAN    '
+   set COMPTAG='Compiler  GFORTRAN 4.8.5 '
+   if($MBIT == '64') then    
+     set CFLAGS='-DLINUX64 -m64'
+#    Below are flags used for a considerable time - seem OK
+#    set FLAGS="-O2 -fdefault-integer-8 -std=legacy -fno-whole-file"
+#    Below are GAMESS flags 
+     set FLAGS="-O2 -fdefault-integer-8 -g -std=legacy -w"
+     set FLAGS1="-fno-aggressive-loop-optimizations"
+#    Other that can be used to help debugging and checking of new code"
+#    set FLAGS1="-fno-aggressive-loop-optimizations -funconstrained-commons"
+#    set FLAGS1="-Wall -fcheck=all -fbounds-check -fbacktrace"
+#    set FLAGS1="-finit-real=nan -fno-range-check -Wunreachable-code -Wunused -Wuninitialized" 
+#    set FLAGS1="-ffpe-trap=invalid -fdump-core -Wconversion -Wconversion-extra -Wextra "
+   else
+     set CFLAGS='-DLINUX -m32'
+#    set FLAGS="-static -O2 -malign-double"
+     set FLAGS="-O2 -std=legacy"
+   endif
+   set LOG="comp-gfc.log"
+breaksw
+case 2:
+# Intel Fortran compiler, ifort.
+   echo " Compiling stand-alone version with Intel ifort."
+   set F77=ifort
+#  set CC=icc 
+   set CC=gcc 
+#  Change CC to icc from default gcc only for ifort if available
+#  COMPTAG has to be 25 characters long
+#  set COMPTAG='     Compiler IFORT      '
+#  set COMPTAG='  Compiler IFORT 16.0.3  '
+   set COMPTAG='  Compiler IFORT 18.0.3  '
+   if($MBIT == '64') then    
+     set CFLAGS='-DLINUX64 -m64'
+#    set FLAGS='-i8 -O2 -ftz -auto -assume byterecl -vec-report0 -w95 -cm'
+#    is needed for older versions of ifort less than 12.
+#    -auto and -vec-report0 seems to cause problems but are used in GAMESS.
+#    For ifort >=12 -warn nousage -inline-level=0 is added and -w95 -cm removed
+#    For ifort >=14 -qopt-report=0
+#    -O1 is much faster than -O0, but 3 tests fail. 
+set FLAGS='-g -c -i8 -O1 -ftz -auto -assume byterecl -qopt-report=0 -warn nousage -inline-level=0'
+#set FLAGS='-g -c -i8 -O0 -ftz -assume byterecl -qopt-report=0 -warn nousage -inline-level=0'
+   else
+     set CFLAGS='-DLINUX'
+     set FLAGS="-O2 -tpp7 -unroll -cm -w -WB -align -i4" 
+#    This probably applies to older versions of ifort only.
+   endif
+#  ifort version < 10 is no longer supported here.
+   set LOG="comp-ifort.log"
+breaksw
+case 3:
+# This is a commercial compiler (non-free) for Linux.
+   echo " Compiling stand-alone version with Portland pgf90."
+#  COMPTAG has to be 25 characters long
+   set COMPTAG='     Compiler  PGF90     '
+#   set F77=pgf77 - does not SELECT CASE
+   set F77=pgf90
+   set CC=pgcc 
+#  pgcc seems to be needed for 64 bit machines but gcc3 was used much
+#  earlier on 32 machines.
+   if($MBIT == '64') then    
+     set CFLAGS='-DLINUX64 -m64'
+     set FLAGS="-O2 -i8 -m64 -fastsse -Mipa=fast" 
+#    set FLAGS="-O0 -i8 -m64" 
+#  The last two parameters were specifically recommended on the system
+#  used, but may cause problems on other systems.
+   else
+     set CFLAGS='-DLINUX -m32'
+     set FLAGS="-O2 -tp p6 -Munroll" 
+#  This use is very old and has not been tested with recent versions
+#  of this compiler.
+   endif
+   set LOG="comp-pgf77.log"
+breaksw
+case 4:
+#  This command gives executable that runs as free standing WinVB2000.
+#  It only runs under cygwin if $VB2000PATH has no symbolic links. Since
+#  /home is a link, it therefore only runs if $VB2000PATH is set to "." 
+#  or not set.
+   echo "Compiling VB2000 in Cygwin to run as a stand-alone Windows program"
+   echo "is no longer possible as the compiler command - "-mno--cygwin" no"
+   echo "longer exists, at least in gfortran. We will therefore exit."
+   echo "You should use option 9 to prepare the code and put vb2000.src,"
+   echo "vb2000-so.src and vb20000ints.src into a single file called"
+   echo "winvb2000.f. However, if you think you can get it to work, perhaps"
+   echo "you have an old Cygwin gfortran, you can remove the "exit" on the"
+   echo "next line."
+   exit
+   set EXE="winvb2000.exe"
+   echo " Compiling WinVB2000 with g77 and cygwin."
+   set FLAGS="-O2 -malign-double -fautomatic -Wno-globals -fno-globals -mno-cygwin"
+   set LOG="comp-cyg.log"
+breaksw
+case 5:
+# g77 which has largely been superceded by gfortran. Has not been tested
+# for a long time. Probably no longer usefull.
+   echo " Compiling stand-alone version with g77 and linux."
+#  COMPTAG has to be 25 characters long
+   set COMPTAG='      Compiler  G77      '
+#  set F77=g77
+   set F77=fort77
+   set CFLAGS='-DLINUX'
+   set FLAGS="-O -malign-double -fautomatic -Wno-globals -fno-globals"
+   set LOG="comp-g77.log"
+   if($MBIT == '64') then    
+      echo " VB2000 is not supported for g77 on Linux64."
+      exit
+   endif
+breaksw
+case 6:
+# g95. Assumes that g95 on your path is link to the actual compiler.
+   echo " Compiling stand-alone version with g95 and linux."
+   set F77=g95
+#  COMPTAG has to be 25 characters long
+   set COMPTAG='      Compiler  G95      '
+   if($MBIT == '64') then    
+     set CFLAGS='-DLINUX64 -m64'
+     set FLAGS="-O2"
+   else
+     set CFLAGS='-DLINUX -m32'
+     set FLAGS="-O3 -malign-double -fsloppy-char"
+   endif
+   set LOG="comp-g95.log"
+breaksw
+case 7:
+   echo " Compiling stand-alone version with gfortran on Apple Mac."
+#  COMPTAG has to be 25 characters long
+   set COMPTAG='    Compiler GFORTRAN    '
+#  set COMPTAG='Compiler  GFORTRAN 4.6.3 '
+   if($MBIT == '64') then    
+#    Recently tested but on an old OS X version.
+     set CFLAGS='-DLINUX64 -m64 -I/usr/include/malloc'
+     set FLAGS="-O2 -m64 -fdefault-integer-8 -std=legacy"
+   else
+     set CFLAGS='-DLINUX -m32'
+     set FLAGS="-O2 -std=legacy"
+   endif
+   set LOG="comp-gfc.log"
+breaksw
+case 8:
+echo " Setting up stand-alone version with gfortran for Windows."
+echo " This can be done in Cygwin, prior to moving the  created"
+echo  "files to Straight Windows for MinGW compiler."
+set EXE="winvb2000.exe"
+set COMPTAG='Compiler  GFORTRAN 5.2.0 '
+# Set up all Fortran code in one file.
+echo " sed "s/^CL$MBIT/    /g" SRC/$TARGET | \"
+echo " sed "s/$TAG/$COMPTAG/" | sed "s/^$CMEM/    /g" | \"
+echo " sed "s/^$VERS/    /g" | sed "s/^CTMAP/     /g" > vb2000.tmp1"
+sed "s/^CL$MBIT/    /g" SRC/$TARGET | \
+sed "s/$TAG/$COMPTAG/" | sed "s/^$CMEM/    /g" | \
+sed "s/^$VERS/    /g" | sed "s/^CTMAP/     /g" > vb2000.tmp1
+if ($WVB == 'CWVB') then
+  echo " sed "s/^$WVB/    /g" vb2000.tmp1 > winvb2000.f"
+  sed "s/^$WVB/    /g" vb2000.tmp1 > winvb2000.f
+else
+  echo "cp vb2000.tmp1 winvb2000.f"
+  cp vb2000.tmp1 winvb2000.f
+endif
+echo "cat SRC/vb2000ints.src >> winvb2000.f"
+cat SRC/vb2000ints.src >> winvb2000.f 
+echo "cat SRC/vb2000-so.src >> winvb2000.f"
+cat SRC/vb2000-so.src >> winvb2000.f 
+rm vb2000.tmp1 
+#
+# Compile and link
+echo "Now run comp-winvb2000 to compile and link winvb2000.f with vb2c.c"
+exit
+breaksw
+case 0:
+   echo " Exiting - option 0"
+   exit
+breaksw
+default:
+   echo " Option is $opt. It must be 1, 2, 3, 4, 5, 6, 7 or 8 - exiting."
+#  Remember to edit above line, if other options added.
+   exit
+endsw
+rm -f $LOG
+echo ""
+set ints=Y
+# Developers can modify the next 12 lines to avoid recompiling vb2000ints.src.
+set ints=N
+if ( -e vb2000ints.o ) then
+   echo " Do you also want to re-compile vb2000ints.src? Hit [y/Y] if so or <enter>:"
+   set ints2=$<
+else
+   set ints2 = "YES"
+endif
+if (${ints2} =~ [yY]*) then
+   set ints=Y
+else
+   set ints=N
+endif
+set SO=Y
+# Developers can modify the next 12 lines to avoid recompiling vb2000-so.src.
+set SO=N
+if ( -e vb2000-so.o ) then
+   echo " Do you also want to re-compile vb2000-so.src? Hit [y/Y] if so or <enter>:"
+   set SO2=$<
+else
+   set SO2 = "YES"
+endif
+if (${SO2} =~ [yY]*) then
+   set SO=Y
+else
+   set SO=N
+endif
+# vbotran.src not currently supported.
+#set tran=N
+#set gmsol=N
+echo ""
+echo " Using sed to get vb2000.f for option $opt."
+
+echo " sed "s/^CL$MBIT/    /g" SRC/$TARGET | \"
+echo " sed "s/$TAG/$COMPTAG/" | sed "s/^$CMEM/    /g" | \"
+echo " sed "s/^$VERS/    /g" | sed "s/^CTMAP/     /g" > vb2000.tmp1"
+sed "s/^CL$MBIT/    /g" SRC/$TARGET | \
+sed "s/$TAG/$COMPTAG/" | sed "s/^$CMEM/    /g" | \
+sed "s/^$VERS/    /g" | sed "s/^CTMAP/     /g" > vb2000.tmp1
+
+if ($WVB == 'CWVB') then
+  echo " sed "s/^$WVB/    /g" vb2000.tmp1 >vb2000.f"
+  sed "s/^$WVB/    /g" vb2000.tmp1 > vb2000.f
+else
+  cp vb2000.tmp1 vb2000.f
+endif
+
+echo ""
+echo " $F77 $FLAGS $FLAGS1 -c vb2000.f >& $LOG "
+$F77 $FLAGS $FLAGS1  -c vb2000.f >& $LOG 
+if ($ints == "Y") then
+   echo " Copying SRC/vb2000ints.src to vb2000ints.f" 
+   cp SRC/vb2000ints.src vb2000ints.f 
+   echo " $F77 $FLAGS $FLAGS1 -c vb2000ints.f >>& $LOG "
+   $F77 $FLAGS $FLAGS1 -c vb2000ints.f >>& $LOG 
+endif
+if ($SO == "Y") then
+   echo " Copying SRC/vb2000-so.src to vb2000-so.f" 
+   cp SRC/vb2000-so.src vb2000-so.f 
+   echo " $F77 $FLAGS $FLAGS1 -c vb2000-so.f >>& $LOG "
+   $F77 $FLAGS $FLAGS1 -c vb2000-so.f >>& $LOG
+endif
+
+if($CMEM == "CDYN") then
+  echo " $CC -c $CFLAGS SRC/vb2c.c >>& $LOG"
+  $CC -c $CFLAGS SRC/vb2c.c >>& $LOG
+  echo ""
+  echo " Linking:"
+  echo " $F77 -o $EXE vb2000.o vb2000ints.o vb2000-so.o vb2c.o >>& $LOG "
+  $F77 -o $EXE vb2000.o vb2000ints.o vb2000-so.o vb2c.o >>& $LOG 
+# $F77 $FLAGS $FLAGS1 -o $EXE vb2000.o vb2000ints.o vb2000-so.o vb2c.o >>& $LOG 
+else
+  echo ""
+  echo " Linking:"
+  echo " $F77 -o $EXE vb2000.o vb2000ints.o vb2000-so.o >>& $LOG "
+  $F77 -o $EXE vb2000.o vb2000ints.o vb2000-so.o >>& $LOG 
+# $F77 $FLAGS $FLAGS1 -o $EXE vb2000.o vb2000ints.o vb2000-so.o >>& $LOG 
+endif
+rm vb2000.tmp1
+rm *.f
+rm *.inc
+echo "" 
+echo " Installation is completed, but check $LOG! "
+echo "" 
+echo " To run all tests use:"
+echo "   $TEST"
+echo ""
+echo " To run your calculation:"
+echo "   $RUN  file > file.out"
+echo "    where file.inp is the data and file.out is the output."
+echo "" 
+echo " Good luck! "
+echo "" 
+

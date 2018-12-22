@@ -1,0 +1,221 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ *                WinVB2000 - Windows Version                 *
+ *                                                            *
+ *       An ab initio Valence-Bond Program Based on the       *
+ *           Generalized Product Function Method and          *
+ *                  the Algebrant Algorithm                   *
+ *                                                            *
+ *                Version 2.0, November 2007                  *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *    * SciNet Technologies, 9943 Fieldthorn St., San Diego   *
+ *      CA 92127, USA                                         *
+ *                                                            *
+ *   ** Department of Medicinal Chemistry, Monash University, *
+ *      381 Royal Pde, Parkville, Victoria, 3052, Australia   *
+ *                                                            *
+ *  *** Department of Chemistry, University of Pisa,          *
+ *      56100 Pisa, Italy                                     *
+ *                                                            *
+ *  Reference for the software:                               *
+ *      Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version *
+ *      2.0, SciNet Technologies, San Diego, CA, 2007         *
+ *      URL: http//www.scinetec.com/                          *
+ *                                                            *
+ *  Reference for the theory:                                 *
+ *      Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence   *
+ *      Bond Theory to New Limits", Int. J. Quantum Chem.,    *
+ *      89(2002)208-216.                                      *
+ *                                                            *
+ *  Copyright (C) 2000-2007 by SciNet Technologies            *
+ **************************************************************
+
+ JOB NAME IS example17                                                       
+
+ VB2000 DIRECTORY IS: .                                                                               
+
+ MAXWK MEMORY IS:        6500000
+
+
+ Input of molecule
+ =================
+ #! VB(4)/STO-3G                                                         
+
+ Title: Water                                                                           
+
+ Charge =  0 Multiplicity =  1
+
+ BASIS SET FILE IS: ./BASET/STO-3G                                                                  
+
+ Cartesian coordinates of atoms in Angstrom
+ ------------------------------------------
+                 X         Y         Z   
+
+  O     8.0  0.000000  0.000000  0.000000
+  H     1.0  0.000000 -0.757215  0.586536
+  H     1.0  0.000000  0.757215  0.586536
+ ------------------------------------------
+
+ Total number of two-electron integrals =      228
+ Time for integral evaluation                0.016
+
+ SKIPPED INTEGRALS= 124
+ Number of iter = 14, DMAX =        0.000009397574
+ Final Hartree-Fock Energy =      -74.963028619902
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3         4         5         6
+ E(a.u.)             -20.242    -1.268    -0.618    -0.453    -0.391     0.605
+ -------------------------------------------------------------------------------
+
+   1  1  O     s    -0.99413  -0.23281   0.00000  -0.10317   0.00000  -0.13229
+   2  1  O     s    -0.02655   0.83371   0.00000   0.53679   0.00000   0.88360
+   3  1  O     x     0.00000   0.00000   0.00000   0.00000  -1.00000   0.00000
+   4  1  O     y     0.00000   0.00000  -0.60648   0.00000   0.00000   0.00000
+   5  1  O     z    -0.00434   0.12943   0.00000  -0.77648   0.00000   0.74251
+   6  2  H     s     0.00596   0.15867   0.44507  -0.27812   0.00000  -0.79667
+   7  3  H     s     0.00596   0.15867  -0.44507  -0.27812   0.00000  -0.79667
+
+ MO#                       7
+ E(a.u.)               0.742
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.00000
+   2  1  O     s     0.00000
+   3  1  O     x     0.00000
+   4  1  O     y     0.99013
+   5  1  O     z     0.00000
+   6  2  H     s     0.83817
+   7  3  H     s    -0.83817
+
+ VBO LIB IS: ./VBOLIB/VBOLIBSTO-nG                                                           
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRP)
+ =======================================================================
+ LMO#     1  2  3  4  5
+ Group#   1  1  1  2  2
+ Split    0  0  0  1  1
+
+
+
+
+
+ GENERAL CONTROLS ($GENCTL)
+ ==============================
+ Number of electron groups =  2
+ Maximum macro-iterations  = 12
+ Restart calculation(0/1/2)=  0
+ Group#               1  2
+ Num. of electrons    6  4
+ Num. of spins        0  0
+ Num. of orbitals     3  4
+ Method#              1  2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  2
+ STR. NO.       RUMER PATTERN  
+    1           1  2   3  4
+
+
+ ENERGY AND DIFF OF MACROITER    1 =    -75.00254374    -75.00254374
+
+ ENERGY AND DIFF OF MACROITER    2 =    -75.00310641     -0.00056268
+
+ ENERGY AND DIFF OF MACROITER    3 =    -75.00332966     -0.00022324
+
+ ENERGY AND DIFF OF MACROITER    4 =    -75.00337891     -0.00004925
+
+ ENERGY AND DIFF OF MACROITER    5 =    -75.00339243     -0.00001353
+
+ ENERGY AND DIFF OF MACROITER    6 =    -75.00339761     -0.00000517
+
+ ENERGY AND DIFF OF MACROITER    7 =    -75.00340001     -0.00000241
+
+ ENERGY AND DIFF OF MACROITER    8 =    -75.00340123     -0.00000122
+
+ ENERGY AND DIFF OF MACROITER    9 =    -75.00340188     -0.00000065
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   2
+
+       1     2     3     4
+ ===========================
+   1  1.00
+   2  0.80  1.00
+   3  0.17  0.10  1.00
+   4  0.10  0.04  0.80  1.00
+
+ ENERGY AND DIFF OF MACROITER   10 =    -75.00340224     -0.00000036
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1         2         3         4         5         6
+      Group#             1         1         1         2         2         2
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  O     s   1.02583  -0.01452  -0.00001  -0.05259   0.00751  -0.05259
+   2  1  O     s  -0.23444  -0.97018   0.00001   0.17387  -0.21783   0.17387
+   3  1  O     x   0.00001   0.00001   1.00000   0.00000   0.00000   0.00000
+   4  1  O     y   0.00000   0.00000   0.00000  -0.58254  -0.18205   0.58254
+   5  1  O     z   0.07936   0.27852   0.00000   0.69647   0.32661   0.69647
+   6  2  H     s  -0.00181   0.01675   0.00000   0.15078   0.87854  -0.02794
+   7  3  H     s  -0.00181   0.01675   0.00000  -0.02794  -0.07321   0.15078
+
+ ===========================================================================
+    Orbital#             7
+      Group#             2
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  O     s   0.00751
+   2  1  O     s  -0.21783
+   3  1  O     x   0.00000
+   4  1  O     y   0.18205
+   5  1  O     z   0.32661
+   6  2  H     s  -0.07321
+   7  3  H     s   0.87854
+
+ CREATED FILE FOR MOLPLT ANALYSIS
+
+ CREATED VEC & ORB FILE FOR PLTORB ANALYSIS
+
+ CREATING MOLEKEL MKL FILE example17.mkl                           
+ CREATED FILE FOR MOLEKEL ANALYSIS
+
+ CREATED XYZ FILE OF MOLECULAR COORDINATES
+
+
+ CUBE FILE HEADERS
+ ################################################
+
+  Water                                  
+ SCF Molecular Orbitals
+  -3   -6.000000   -7.430930   -6.000000
+  50    0.244898    0.000000    0.000000
+  50    0.000000    0.303303    0.000000
+  50    0.000000    0.000000    0.267518
+   0    0.000000    0.000000    0.000000    0.000000
+   0    0.000000    0.000000   -1.430930    1.108391
+   0    0.000000    0.000000    1.430930    1.108391
+   1   4
+
+ ################################################
+
+ CUBE FILE FOR ORBITAL   4 CREATED AS example17-004.cube                                              
+
+ CUBE FILE FOR ORBITAL   5 CREATED AS example17-005.cube                                              
+
+ CUBE FILE FOR ORBITAL   6 CREATED AS example17-006.cube                                              
+
+ CUBE FILE FOR ORBITAL   7 CREATED AS example17-007.cube                                              
+
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION      0.000
+ CPU TIME FOR MACROITERATION      6.156
+ TOTAL CPU TIME                   6.156
+

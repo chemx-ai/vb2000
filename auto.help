@@ -1,0 +1,6 @@
+-auto     make all local variables AUTOMATIC
+-auto-scalar
+          make scalar local variables AUTOMATIC (DEFAULT)
+-save     save all variables (static allocation) (same as -noauto,
+          opposite of -auto)
+

@@ -1,0 +1,247 @@
+ FILES AVAILABLE 
+ TESTINP/example05.ED3                   
+0
+BASIS SET                                                                       
+
+
+ THE CONTRACTED PRIMITIVE FUNCTIONS HAVE BEEN UNNORMALIZED
+ THE CONTRACTED BASIS FUNCTIONS ARE NOW NORMALIZED TO UNITY
+
+          ********************
+
+          MOLECULAR BASIS SET
+
+          ********************
+
+
+ ******************************************************************************
+
+  ATOM     NUCLEAR               COORDINATES                 NUMBER OF
+           CHARGE       X             Y              Z       SHELLS
+
+ ******************************************************************************
+
+ ATOM        6.0   0.0000000      0.0000000      1.1527499    6
+                                                                 S   S   S   
+                                                                 S   P   P   
+
+ ATOM        6.0   0.0000000      0.0000000     -1.1527499    6
+                                                                 S   S   S   
+                                                                 S   P   P   
+
+ ATOM        1.0   0.0000000      0.0000000      3.1936483    2
+                                                                 S   S   
+
+ ATOM        1.0   0.0000000      0.0000000     -3.1936483    2
+                                                                 S   S   
+
+ ******************************************************************************
+
+ CONTRACTED PRIMITIVE FUNCTIONS
+
+ Atom Shell Type Primitive  Exponents            Contraction coefficients
+
+ ATOM    
+
+
+        1    S        1     4232.610000       0.758837  (  0.002029 )
+        1    S        2      634.882000       1.400365  (  0.015535 )
+        1    S        3      146.097000       2.258530  (  0.075411 )
+        1    S        4       42.497400       3.050138  (  0.257121 )
+        1    S        5       14.189200       3.108344  (  0.596555 )
+        1    S        6        1.966600       0.287038  (  0.242517 )
+
+
+        2    S        7        5.147700       2.435679  (  1.000000 )
+
+
+        3    S        8        0.496200       0.421359  (  1.000000 )
+
+
+        4    S        9        0.153300       0.174609  (  1.000000 )
+
+
+        5    P       10       18.155700       0.990092  (  0.018534 )
+        5    P       11        3.986400       0.926894  (  0.115442 )
+        5    P       12        1.142900       0.650533  (  0.386206 )
+        5    P       13        0.359400       0.253894  (  0.640089 )
+
+
+        6    P       14        0.114600       0.095043  (  1.000000 )
+
+ ATOM    
+
+
+        7    S       15     4232.610000       0.758837  (  0.002029 )
+        7    S       16      634.882000       1.400365  (  0.015535 )
+        7    S       17      146.097000       2.258530  (  0.075411 )
+        7    S       18       42.497400       3.050138  (  0.257121 )
+        7    S       19       14.189200       3.108344  (  0.596555 )
+        7    S       20        1.966600       0.287038  (  0.242517 )
+
+
+        8    S       21        5.147700       2.435679  (  1.000000 )
+
+
+        9    S       22        0.496200       0.421359  (  1.000000 )
+
+
+       10    S       23        0.153300       0.174609  (  1.000000 )
+
+
+       11    P       24       18.155700       0.990092  (  0.018534 )
+       11    P       25        3.986400       0.926894  (  0.115442 )
+       11    P       26        1.142900       0.650533  (  0.386206 )
+       11    P       27        0.359400       0.253894  (  0.640089 )
+
+
+       12    P       28        0.114600       0.095043  (  1.000000 )
+
+ ATOM    
+
+
+       13    S       29       19.240600       0.214941  (  0.032828 )
+       13    S       30        2.899200       0.366119  (  0.231208 )
+       13    S       31        0.653400       0.423296  (  0.817238 )
+
+
+       14    S       32        0.177600       0.194981  (  1.000000 )
+
+ ATOM    
+
+
+       15    S       33       19.240600       0.214941  (  0.032828 )
+       15    S       34        2.899200       0.366119  (  0.231208 )
+       15    S       35        0.653400       0.423296  (  0.817238 )
+
+
+       16    S       36        0.177600       0.194981  (  1.000000 )
+ BOND LENGTHS IN BOHR (ANGSTROM)
+
+
+
+ 1--2  2.30550   1--3  2.04090   2--4  2.04090
+     (1.22002)       (1.08000)       (1.08000)
+ BOND ANGLES
+
+  1--2--4  179.999999   2--1--3  179.999999
+ DIHEDRAL ANGLES
+      NONE
+
+
+
+
+
+
+
+
+
+
+
+
+ MAIN FILE ON     TESTINP/example05.ED3                    STARTING AT BLOCK   1
+
+
+0START
+
+ TIME LIMIT =  72705.600
+ OUTPUT OPTION =     3
+ PREFACTOR TOLERANCE FOR INTEGRALS = 1.0D-18
+ INTEGRAL CUTOFF = 1.0D-10
+ OPTION FOR NORMALIZATION OF BASIS FUNCTIONS =     0
+ OPTION FOR UNNORMALIZATION OF PRIMITIVES =     0
+ RESTART OPTION =    -1
+
+ STARTING SHELLS FOR 2E-INTEGRALS =     1    1    1    1
+ RECORD NUMBER =          1
+ LOCATION OF FIRST INTEGRAL IN THIS RECORD =     1
+
+          INTERNUCLEAR DISTANCES ( A.U.)
+          ------------------------------
+ 
+                    ATOM           ATOM           ATOM           ATOM    
+ 
+  1  ATOM           0.000000     2.305500     2.040898     4.346398
+  2  ATOM           2.305500     0.000000     4.346398     2.040898
+  3  ATOM           2.040898     4.346398     0.000000     6.387297
+  4  ATOM           4.346398     2.040898     6.387297     0.000000
+
+          INTERNUCLEAR DISTANCES (ANGS.)
+          ------------------------------
+ 
+                    ATOM           ATOM           ATOM           ATOM    
+ 
+  1  ATOM           0.000000     1.220018     1.079997     2.300015
+  2  ATOM           1.220018     0.000000     2.300015     1.079997
+  3  ATOM           1.079997     2.300015     0.000000     3.380012
+  4  ATOM           2.300015     1.079997     3.380012     0.000000
+
+ TOTAL NUMBER OF SHELLS                      =   16
+ TOTAL NUMBER OF BASIS FUNCTIONS             =   24
+ NUMBER OF ELECTRONS                         =   14
+ CHARGE OF MOLECULE                          =    0
+ STATE MULTIPLICITY                          =    1
+ NUMBER OF DOUBLY OCCUPIED ORBITALS          =    7
+ NO OF SINGLY OCCUPIED ORBITALS (ALPHA)      =    0
+ NO OF SINGLY OCCUPIED ORBITALS (BETA)       =    0
+ TOTAL NUMBER OF ATOMS                       =    4
+ SCFTYP = CLOSED  
+ RUNTYP = INTEGRAL
+  GUESS = HCORE   
+
+
+          ********************
+
+          1 ELECTRON INTEGRALS
+
+          ********************
+
+
+ -------------------------------------------------------------------------------
+
+          LAST STEP USED     0.00 SECS 
+
+          TOTAL USED     0.00 SECS 
+
+          REMAINING 73440.00 SECS
+
+ -------------------------------------------------------------------------------
+
+        POSITIONED
+ DDNAME   AT BLOCK
+ TESTINP/example05.ED2                               4
+ TESTINP/example05.ED3                               3
+ Time for integral evaluation                    0.036
+
+
+
+     ATOM       1             2             3             4
+
+
+       E'X     0.0000000     0.0000000     0.0000000     0.0000000
+       E'Y     0.0000000     0.0000000     0.0000000     0.0000000
+       E'Z    -5.6499884     5.6499884    -1.7826040     1.7826040
+
+          ----------------------
+          HELLMANN-FEYNMAN FORCE
+          ----------------------
+
+
+     ATOM       1             2             3             4
+
+
+       E'X     0.0000000     0.0000000     0.0000000     0.0000000
+       E'Y     0.0000000     0.0000000     0.0000000     0.0000000
+       E'Z    -5.6499884     5.6499884    -1.7826040     1.7826040
+
+ ...... END OF HELLMANN-FEYNMAN FORCE ......
+
+
+
+
+
+
+
+ --------------------------------------------------------------------------------
+                              ALL FINISHED
+ --------------------------------------------------------------------------------

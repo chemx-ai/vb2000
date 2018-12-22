@@ -1,0 +1,53 @@
+#! VB(4)/cc-pVDZ printall
+
+TEST H2O
+
+0 1
+8   .000000   .000000   .000000
+1   .801842   .000000   .555582
+1  -.801842   .000000   .555582 
+
+
+$02VBORB
+1-2
+1-3
+
+$DPWEIGHT
+0.1
+
+$02LENHANCE
+4
+1,1,1
+2,1,2
+3,1,1
+4,1,3
+
+$02VBSTR
+5
+1 2 3 4
+1 1 3 4
+3 3 1 2
+2 2 3 4
+4 4 1 2
+
+$MACROITER
+30
+
+$CUBE
+4
+4 5 6 7
+water local
+64
+
+$PLTORB
+ 2  2  1  3  1
+ 4  4  5  6  7
+ 3ATOMS
+ 1 3 2
+ 0.0
+ -2.0 2.0 -2.0 2.0
+ Water VBO 4
+ Water VBO 5
+ Water VBO 6
+ Water VBO 7
+

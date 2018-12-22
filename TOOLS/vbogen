@@ -1,0 +1,26 @@
+#! /bin/csh -f
+
+sed '1,$s/D95/cc-pVDZ/g' <VBOLIBMOL/ch4A.inp >ch4A.inp
+../vb2000.exe ch4A >ch4A.out
+cat ch4A.V89 >VBOLIBCCPVDZ
+
+sed '1,$s/D95/cc-pVDZ/g' <VBOLIBMOL/ch4B.inp >ch4B.inp
+../vb2000.exe ch4B >ch4B.out
+cat ch4B.V89 >>VBOLIBCCPVDZ
+
+sed '1,$s/D95/cc-pVDZ/g' <VBOLIBMOL/h2coA.inp >h2coA.inp
+../vb2000.exe h2coA >h2coA.out
+cat h2coA.V89 >>VBOLIBCCPVDZ
+
+sed '1,$s/D95/cc-pVDZ/g' <VBOLIBMOL/h2coB.inp >h2coB.inp
+../vb2000.exe h2coB >h2coB.out
+cat h2coB.V89 >>VBOLIBCCPVDZ
+
+sed '1,$s/D95/cc-pVDZ/g' <VBOLIBMOL/h2csA.inp >h2csA.inp
+../vb2000.exe h2csA >h2csA.out
+cat h2csA.V89 >>VBOLIBCCPVDZ
+
+sed '1,$s/D95/cc-pVDZ/g' <VBOLIBMOL/h2csB.inp >h2csB.inp
+../vb2000.exe h2csB >h2csB.out
+cat h2csB.V89 >>VBOLIBCCPVDZ
+

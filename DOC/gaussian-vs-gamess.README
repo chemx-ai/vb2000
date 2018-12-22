@@ -1,0 +1,41 @@
+The Gaussian and Gamess(US) versions of VB2000 are quite similar with
+similar improvements to the standalone version. There are however some
+differences:-
+
+1. Both extend the allowable basis set from d functions to f, g, h and i
+basis functions, but the Gaussian version allows the use of pure
+spherical harmonics, which significantly reduces the total basis set
+size. Gamess can use the ISPHER directive to get the spherical harmonic
+result for the MO energy, but it still leaves the integrals in
+cartesians Gaussians. The keyword "SPHER" does do the same sort of thing
+in the VB run to get a spherical harmonic result, but at the cost of
+some efficiency, as well as still using the larger cartesian basis set.
+The Gaussian version is recommended for large jobs that use spherical
+harmonic basis sets, and the GAMESS version will not use SPHER if there
+are h or i orbitals in the basis set.
+
+2. Both allow symmetry in setting up the geometry data, although both
+have to use no symmetry for the integrals.
+
+3. The gaussian version can not run reactor runs at the present time,
+while the gamess version, like the stand-alone version, can.
+
+4. The GAMESS version can do geometry optimisations and frequencies
+although only numerically, while the Gaussian can not do so, but it may
+from the next release.
+
+5. GAMESS can do effective core potential or pseudo-potential
+calculations, while again this may be something for the Gaussian version
+in the next release.
+
+7. Gamess can evaluate a number of molecular properties, such a
+molecular moments higher than the dipole, electron densities at a series
+of points, etc. Gaussian only calculate the dipole moment at this time.
+
+In general the Gamess version is easier to modify or improve. For
+example, the Gamess version can easily (in a few lines of code),
+recalculate the integrals from inside the VB routines thus easily
+allowing the REACTOR runs. The new Gaussian version D should allow users
+to call VB2000 as an external program. We will be investigating this for
+the later releases.
+

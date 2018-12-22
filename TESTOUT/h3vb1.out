@@ -1,0 +1,417 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ *       An ab initio Valence-Bond Program Based on the       *
+ *           Generalized Product Function Method and          *
+ *                  the Algebrant Algorithm                   *
+ *                                                            *
+ *                Version 2.1  September  2009                *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *    * SciNet Technologies, 9943 Fieldthorn St., San Diego   *
+ *      CA 92127, USA                                         *
+ *                                                            *
+ *   ** Department of Medicinal Chemistry, Monash University, *
+ *      381 Royal Pde, Parkville, Victoria, 3052, Australia   *
+ *                                                            *
+ *  *** Department of Chemistry, University of Pisa,          *
+ *      56100 Pisa, Italy                                     *
+ *                                                            *
+ *  Reference for the software:                               *
+ *      Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version *
+ *      2.0 (R3), SciNet Technologies, San Diego, CA, 2009    *
+ *      URL: http://www.scinetec.com or http://www.vb2000.net *
+ *                                                            *
+ *  Reference for the theory:                                 *
+ *      Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence   *
+ *      Bond Theory to New Limits", Int. J. Quantum Chem.,    *
+ *      89(2002)208-216.                                      *
+ *                                                            *
+ *  Copyright (C) 2000-2009 by SciNet Technologies            *
+ **************************************************************
+
+ JOB NAME IS h3vb1                                                           
+
+ VB2000 DIRECTORY IS: /home/jli/VB2000Pro                                                             
+ MAXIMUM DYNAMIC MEMORY IS:        6500000
+
+
+ Input of molecule
+ =================
+ #! VB(1)/STO-3G DIIS PRINTALL                                           
+
+ Title: TEST                                                                            
+
+ Charge =  0 Multiplicity =  2
+
+ BASIS SET FILE IS: /home/jli/VB2000Pro/BASET/STO-3G                                                
+
+ Cartesian coordinates of atoms in Angstrom
+ ------------------------------------------
+                 X         Y         Z   
+
+  H     1.0  0.000000  0.000000  1.000000
+  H     1.0  0.000000  0.000000  0.000000
+  H     1.0  0.000000  0.000000 -1.000000
+ ------------------------------------------
+
+ Total number of two-electron integrals =       21
+ Time for integral evaluation                0.000
+
+ SKIPPED INTEGRALS=           0
+ Number of iter =  9, DMAX =        0.000003345433
+ Final Hartree-Fock Energy =       -1.390330192141
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3
+ E(a.u.)              -0.566    -0.070     0.702
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.36753  -0.75344  -0.81447
+   2  2  H     s    -0.54655  -0.00000   1.22006
+   3  3  H     s    -0.36753   0.75344  -0.81447
+
+ VBO LIB IS: /home/jli/VB2000Pro/VBOLIB/VBOLIBSTO-nG                                         
+
+ Localized molecular orbitals and the bond labels
+ ===============================================================================
+ LMO#                      1         2
+ E(a.u.)              -0.318    -0.318
+ Bond Label           3-2(1)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.27288  -0.79265
+   2  2  H     s     0.38647  -0.38647
+   3  3  H     s     0.79265   0.27288
+
+
+ Mulliken population of localized molecular orbitals
+ ===============================================================================
+ LMO#                      1         2
+ E(a.u.)              -0.318    -0.318
+ Bond Label           3-2(1)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1         H      -0.00736   1.50919
+   2         H       0.49818   0.49818
+   3         H       1.50919  -0.00736
+
+ WARNING: MELEK != MELE(K)
+
+ MACROITERATION CONVERGENCE TOLERANCE
+ ALTERED TO 10.00**(-*).
+
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRP)
+ =======================================================================
+ LMO#     1  2
+ Group#   1  2
+ Split    0  0
+
+
+
+
+ Initial guess of orbitals
+ ===============================================================================
+ ORBITAL#                  1         2
+ Bond Label         MC-ORBIT   3->2(1)
+ -------------------------------------------------------------------------------
+
+   1  1  H     s     0.57803  -0.22013
+   2  2  H     s     0.57803  -0.22013
+   3  3  H     s     0.00000   1.07006
+
+
+
+ GENERAL CONTROLS ($GENCTL)
+ ==============================
+ Number of electron groups =  2
+ Maximum macro-iterations  = 50
+ Restart calculation(0/1/2)=  0
+ Group#               1  2
+ Num. of electrons    2  1
+ Num. of spins        0  1
+ Num. of orbitals     1  1
+ Method#              1  2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  2
+ STR. NO.       RUMER PATTERN  
+    1           1
+
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    1 =     -1.46347041     -1.46347041
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    2 =     -1.49716406     -0.03369365
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    3 =     -1.51464503     -0.01748097
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    4 =     -1.51999182     -0.00534680
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    5 =     -1.52199302     -0.00200120
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    6 =     -1.52292097     -0.00092794
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    7 =     -1.52339853     -0.00047756
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    8 =     -1.52365757     -0.00025904
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    9 =     -1.52380233     -0.00014475
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   10 =     -1.52388454     -0.00008221
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   11 =     -1.52393167     -0.00004713
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   12 =     -1.52395884     -0.00002717
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   13 =     -1.52397455     -0.00001571
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   14 =     -1.52398365     -0.00000910
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   15 =     -1.52398892     -0.00000528
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   16 =     -1.52399199     -0.00000306
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   17 =     -1.52399376     -0.00000178
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   18 =     -1.52399479     -0.00000103
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   19 =     -1.52399539     -0.00000060
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   20 =     -1.52399574     -0.00000035
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   21 =     -1.52399594     -0.00000020
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   22 =     -1.52399606     -0.00000012
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   23 =     -1.52399613     -0.00000007
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   24 =     -1.52399617     -0.00000004
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   25 =     -1.52399619     -0.00000002
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   26 =     -1.52399620     -0.00000001
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   27 =     -1.52399621     -0.00000001
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   28 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   29 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   30 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   31 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   32 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   33 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   34 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   35 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   36 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   37 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   38 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   39 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   40 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   41 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   42 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   43 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER   44 =     -1.52399622     -0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX = 0.00000000000000
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   2
+
+       1
+ =========
+   1  1.00
+
+ SPIN DENSITY ON ATOMS
+ ---------------------
+ ATOM      DENSITY
+
+    1      0.50000
+    2     -0.00000
+    3      0.50000
+
+ ---------------------
+
+
+ ENERGY AND DIFF OF MACROITER   45 =     -1.52399622     -0.00000000
+
+
+ MULLIKEN CHARGES ON ATOMS
+ -------------------------
+  ATOM             CHARGE 
+
+    1            -0.00182
+    2             0.00365
+    3            -0.00182
+
+ -------------------------
+
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1         2
+      Group#             1         2
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  H     s   0.36753  -0.75344
+   2  2  H     s   0.54655  -0.00000
+   3  3  H     s   0.36753   0.75344
+
+ WORDS OF DYNAMIC MEMORY USED IN VB2000 CODE ONLY:         174
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION      0.048
+ CPU TIME FOR MACROITERATION      3.765
+ TOTAL CPU TIME                   3.813
+

@@ -1,0 +1,28 @@
+This gamess directory contains material that you might want to add
+to the gamess/vb2000 that you will get if you install GAMESS. VB2000
+is included by default in GAMESS. Alternatively, it will give you some
+idea of VB2000 in GAMESS before you install GAMESS.
+
+"checkvb" is a script very like the "install" script for the stand-alone
+VB2000 or the "compvb" script in the VB2000/g09-vb2000-release directory.
+it compiles the VB2000 source files, vb2gau-so.src and vb2000.src (the
+latter after activating the CGMS lines). To run this script from here,
+you need to alter the line:-
+
+setenv VB_DIR ../../VB2000/SRC
+
+near the top of the script to:
+
+setenv VB_DIR ../SRC
+
+as the source codes are in VB2000/SRC.
+
+"gamess.README" tells you why you might want to get GAMESS/VB2000 and
+other stuff.
+
+"EPFEP_DOCUMENTATION.pdf" tells you about the Generalized Product Function
+Energy Partitioning (GPF-EP) from the Nascimento Group in Rio de Janeiro,
+Brazil, that is now in VB2000/GAMESS.
+
+"GMS_VB_test.README" tells you about the tests for VB2000/GAMESS.
+

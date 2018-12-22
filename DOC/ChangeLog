@@ -1,0 +1,146 @@
+ChangeLog for VB2000 since inclusion in GAMESS(US).
+---------------------------------------------------
+
+This directory is the release of VB2000 that is now distributed with
+GAMESS(US). Here is recorded all major changes to this release since 
+the first time this was sent to the GAMESS group.
+------------------------------------------------------------------------
+11 Feb 2012	Sent to GAMESS group
+26 Mar 2012	Changed runallvb to reflect new rungms and gms-files.csh.
+		Updated README files.
+		New code that gives even less ftnchek warning.
+30 July 2013 	VB2000 now handles h and i basis functions.
+		New $DENSCUBE directive that creates CUBE files for the
+		total density, the density of the HF or a VB group, or 
+		the spin density if there are unpaired electrons.
+		General tidying up of maximum bounds for arrays.
+Aug-Sept 2013	Scope of VBOLIB increased by creating LIBs on the fly
+		for addition of polarisation and diffuse functions to
+		basis sets 3-21, 6-31G and 6-311G. This significantly
+		decreases the number of VBOLIBs that are needed, while
+		also increasing the number of basis sets covered 
+		particularly in the GAMESS version.
+		Modified BRILLMASK to create conditions on the fly for
+		the simple case of localisation to atoms.
+		Some routines not used in GAMESS version moved out of
+		vb2000.src.
+		Added VBOLIB for MIDI basis set which is different from
+		the MIDIX (MIDI!) basis set in the stand-alone version.
+		The CENTROID code now calculates the distances of the
+		centroids from up to 5 atoms, the first 5 by default or
+		by specifying the atoms in the $CENTROID option.
+Oct 2013	Visualisation option $VECONLY added to output only the
+		$VEC block of VB orbitals for MacMolPlt.
+Nov 2013	Fixed bug in VBHESS that occurs only for non-linux
+		targets, so allowing use of all GAMESS targets..
+		A new visualization directive $DENSCUBE creates CUBE 
+		file for the total density, the density of specific 
+		groups and, for open shell systems, the spin density. 
+		Since both GAMESS and Gaussian with conventional 
+		integral storage have both been extended to use h and 
+		I basis functions, VB2000 has been extended in this way. 
+		However SPHER can not be used with such basis sets and 
+		and a bug in Gaussian (fixed for the next release) 
+		prevents the use g, h and i with Cartesian basis sets.
+2014/2015 	The vb2blas.src file has been renamed to vb2000-so.src 
+		and it now contains routines, previously in vb2000.src,  
+		that are only used in the stand-alone version. 
+		Greater control over maximum values for many parameters 
+		has been introduced.
+		Visualisation options $VECMOS, $VECLMOS and $VECINIT
+		added for. respectively, visualisation of MOs, LMOs
+		and intial guess in MacMolPlt.
+		Allows post-HF methods such as MP2, CCSD, CCSD(T), CISD,
+		as well as CASSCF and GVB, prior to a VB2000 run.
+		A geometry optimisation can now be done with all GAMESS
+		methods followed by a single-point VB run at the optimised
+		geometry Similarly, a Hessian can be calculated prior to a
+		single-point VB run. Both this and the geometry
+		optimisation are in addition to doing VB2000 geometry
+		optimisations and Hessian.
+		The overlap matrix S over the initial guess VB orbitals
+		and the final VB orbitals are printed along with the
+		eigenvalues of S. The Inverse Overlap Weights by Gallup
+		and Norbeck are now reported along with three other weights 
+		in earlier versions.
+		The GAMESS directive AIMPAC=.TRUE. can now give data for
+		the VB function. It also has an option to print the
+		natural orbitals of the VB function. A matrix is now 
+		printed for distances between the centroids.
+		Directives are now checked and possible spelling errors
+		reported. More checking of directives is done in
+		EXETYP=CHECK runs.
+Feb 2016        A rapid exit occurs if NaN is reported for the VB energy
+		in any nacroiteration.
+		For cases where there are several VB2000 entries, such as
+		optimisations and Hessian runs, each entry after the first
+		now gets its initial guess from the previous run.
+		All directives that give a file of orbitals in the GAMESS
+		$VEC format now put the the $VEC groups in the same *.vec
+		file. The previously undocumented directives $VECINIT,
+		$VECMOS, $VECLMOS and $VECONLY that give $VEC groups for
+		the MOs in VB2000, the localised orbitals, the initial
+		guess and the final VB orbitals respectively, now put the
+		$VEC groups into the same *.vec file rather than separate
+		files. Similarly runs that do more than one VB calculation,
+		and this can give several $VEC groups, now also put the
+		$VEC groups into the same *.vec file. The line above the
+		$VEC line is specific to the type of orbitals included and
+		should never be altered as it is recognised by MacMolPlt
+		to identify the orbitals when the $VEC group is imported.
+		Many thanks to Brett Bode, the author of MacMolPlt, for
+		this splendid collaboration. VB saddle points can now be
+		obtained starting from a HF saddle point, using OPT=SADPOINT
+		and of course VB2000 calculations can be run at HF saddle
+		points geometries. Internal reaction coordinate (IRC) runs
+		can now be run, doing a VB2000 calculation at each point.
+		These are not VB IRC paths, but paths for the method used
+		in GAMESS. Only RHF IRC paths have been studied so far.
+		New examples, exam-vb37 and exam-vb38 cover the above two
+		new additions.
+March 2016      Surface scans can now be done, where a VB calculation is
+		added at each point. A new examples, exam-vb39 covers
+		this.
+April 2016      The $NEWLIB directive has been introduced to use a VBOLIB
+		different (a sub set) from the one for the basis set that
+		is used.
+May 2016        Molden files can now be read directly by the stand-alone
+		version, to use the basis set, geometry and  MOs directly
+		from another program. GAMESS can not do this, but a small
+		program called molden2gmsvb.f reads a Molden file and
+		creates a GAMESS VB2000 input file that has the geometry
+		basis set from the Molden file, along with a $VEC group
+		for the HF orbitals. The calcuation of the HF orbitals in
+		GAMESS can be skipped along with the initial guess.
+August 2016     VB2000 can now use the structures for a set of ionicities
+		or seniority numbers (number of double occupied orbitals
+		and number of singly occupied orbitals respectively). These
+		are identical interconvertable concepts. This gives a
+		number of structures between SC (minimum ionicity or maximum
+		seniority number) and CASVB (all possible ionicities or
+		seniority numbers).
+		All file unit numbers for GAMESS version are now 100 more 
+		than they were, so are in the range 180 - 200, avoiding
+		any conflict with GAMESS.
+September 2016  A major memory allocation bug was found and fixed in 
+		vb2000.src in code for the VB2000/GaussianD1 version.
+December 2016	The Generalized Product Function Energy Partitioning
+		code from the Nascimanto Group in Brazil was added 
+		to the GAMESS/VB2000 version.
+December 2017	The program was fixed for release under the GPL license.
+		The license was added to all source files. Rumer
+		structures checked for repeats.
+January 2018    vb2000-so.src FUNCTION DNRM2 replaced by LAPACK version
+		to remove warnings about ASSIGNED GOTOs and some unused
+		declarations removed. Listing option for VBOLIB extended
+		to all versions.
+April 2018	Added 2 digits to BOHR conversion factor for total 
+		comptability with GAMESS.
+June 2018	Removed license related lines commented out with CLIC.
+		Added output of eigenvalues of overlap matrix over VB
+		structures with $PRINTHS directive.
+		Changed the Generalized Product Function Energy	Partitioning - 
+		GPF-EP method for David de Souxa's version 0.6.1.
+July 2018	vbqa.pl to check test results for stand-alone version only
+		now allows a parameter for the directory that holds the
+		*.out files. Default is TEMPOUT if no parameter.

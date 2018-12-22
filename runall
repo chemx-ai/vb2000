@@ -1,0 +1,59 @@
+#!/bin/csh 
+# Copyright (C) 2018 Jiabo Li, Brian Duke, and Roy McWeeny
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+######################################################################
+#
+# Checks stand-alone tests if running in VB2000 directory
+#
+if (!(-e TEMPOUT )) then
+mkdir TEMPOUT
+endif
+foreach file ( b2h6DZvb12 c2h2ba10 c2h2ba6 c2h2DYN c2h2oldbanana \
+  c2h2TB1 c2h2TB2 c2h2TB3 c2h2TB4 c2h2vb10 c2h2vb10bsc c2h2vb3s \
+  c2h4vb12 c2h6vb14 c6h6vb c6h6vb14 ch3ohvb10 ch3ohvb10scci ch4gvb4 \
+  ch4vb8 ch4vb8sc clch3cl clch3clSN2s ethanol ethanoldot h1 h13 \
+  h2bovb h2cc2DP H2Fd95 h2oDZcasvb4 h2oDZcasvb8in6 h2oDZvbDLMO \
+  h2olocal h2triplet h3bovb h3vb1 h4casvb h4scvb HCld95 hfsplit3 \
+  ohlocal test1 test10 test11 test12 test13  test2 test3 test4 \
+  test5 test6 test7 test8 test9 test90 tmmDZ6s0 tmmDZ6s1 \
+  tmmDZsinglet tmmDZtriplet )
+cp ./TESTINP/$file.inp .
+set filename = TEMPOUT/$file.out
+if (!(-e "$filename")) then
+rm -f fort.80
+./vb2000.exe $file >& $filename
+rm -f $file.inp
+rm -f $file.ED3
+rm -f $file.V80
+rm -f $file.V81
+rm -f $file.V82
+rm -f $file.V83
+rm -f $file.V85
+rm -f $file.V86
+rm -f $file.V87
+rm -f $file.V88
+rm -f $file.V89
+rm -f $file.output
+rm -f $file.source
+rm -f $file.TEMP*
+endif
+end
+rm -f fort*
+rm -f FIL.LOC
+rm -f GUESS
+rm -f ED* 
+rm -f *.V84
+rm -f SOURCEDAT
+rm -f OUTPUT

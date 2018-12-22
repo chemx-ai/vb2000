@@ -1,0 +1,4231 @@
+C 
+C     This program is free software: you can redistribute it and/or modify
+C     it under the terms of the GNU General Public License as published by
+C     the Free Software Foundation, either version 3 of the License, or
+C     (at your option) any later version.
+C 
+C     This program is distributed in the hope that it will be useful,
+C     but WITHOUT ANY WARRANTY; without even the implied warranty of
+C     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+C     GNU General Public License for more details.
+C 
+C     You should have received a copy of the GNU General Public License
+C     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+C 
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     Routines that are only used in the GAMESS VB2000 version.
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE VBGMS(IDIP)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     Function: Initial routine for Gamess(US)/VB2000 version
+C
+C     History:  First created in April 2004.
+C
+C     Author:   Brian Duke
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      IMPLICIT NONE
+C
+      INTEGER MXRT,MXATM,NAT,ICH,MUL,NUM,NX,NE,NA,NB,IAN
+      DOUBLE PRECISION ZAN,C
+C     DOUBLE PRECISION S(10000),H(10000)
+      PARAMETER (MXRT=100, MXATM=2000)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+C
+      INTEGER IR,IW,IP,IS,IPK,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+C
+      CHARACTER*3 FUNIT(10)
+      INTEGER IOUTVB,LENFIL
+      CHARACTER*64 FSTR,RWFFILE,INTFILE,LOCFILE,FILE
+      COMMON /FILNAM/ IOUTVB,FSTR,RWFFILE,INTFILE,LOCFILE,LENFIL,FUNIT
+C
+      CHARACTER*80 VBPATH
+      INTEGER IAO1E,IAO2E,IOHFORB,IOVBORB,IVBO2E,IOMAP,IOHES,
+     &        IOVBOLIB,IOENGI,IOTEMP,IOTEMPA,IOTEMPB
+      COMMON /IOUNIT/IAO1E,IAO2E,IOHFORB,IOVBORB,IVBO2E,IOMAP,IOHES,
+     &               IOVBOLIB,IOENGI,IOTEMP,IOTEMPA,IOTEMPB,VBPATH
+C
+      INTEGER NEVALS,NGLEVL,NHLEVL
+      DOUBLE PRECISION RUNTYP,EXETYP
+      COMMON /RUNOPT/ RUNTYP,EXETYP,NEVALS,NGLEVL,NHLEVL
+C
+      INTEGER NPRINT,ITOL,ICUT,NORMF,NORMP,NOPK
+      COMMON /OUTPUT/ NPRINT,ITOL,ICUT,NORMF,NORMP,NOPK
+C
+      INTEGER IGROUP,NAXIS,ILABMO
+      LOGICAL ABEL
+      DOUBLE PRECISION GROUP,COMPLEX
+      COMMON /SYMMOL/ GROUP,COMPLEX,IGROUP,NAXIS,ILABMO,ABEL
+C
+      LOGICAL DIRSCF,FDIFF
+      COMMON /OPTSCF/ DIRSCF,FDIFF
+C
+      DOUBLE PRECISION SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP
+      INTEGER MPLEVL,MPCTYP
+      COMMON /WFNOPT/ SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP,
+     &                MPLEVL,MPCTYP
+C
+      DOUBLE PRECISION FRIEND
+      LOGICAL AIMPAC,PLTORB,MOLPLT,RPAC,DGRIDPROG
+      COMMON /INTRFC/ FRIEND,AIMPAC,RPAC,PLTORB,MOLPLT,DGRIDPROG
+C
+C     COMMON /VBINTF/ IS THE INTERFACE COMMON WITH GAMESS
+C     AND IS USED IN gamess.src, inputa.src AND statpt.src
+      INTEGER LPROP,NOSYMV,MAXOCC,LNOS,JSTEP,MGMS
+      DOUBLE PRECISION VBENGY
+      COMMON /VBINTF/ VBENGY,LPROP,NOSYMV,MAXOCC,LNOS,JSTEP,MGMS
+C
+C     /GMSODD/ IS THE INTERFACE FOR ALL GMS STUFF IN VB ROUTINES
+      LOGICAL NUMGR2,LSTEP
+      INTEGER MSTEP
+      COMMON /GMSODD/ MSTEP,NUMGR2,LSTEP
+C
+      INTEGER IMOL,JMOL,NF,KAT,MAXCEN,MAXSHL,MAXPRM
+      LOGICAL LOGMOL
+      DOUBLE PRECISION XEXP,COEFF
+      CHARACTER*1 SYM
+      PARAMETER (MAXSHL=500,MAXCEN=200,MAXPRM=15)
+      COMMON /SEEING/ XEXP(MAXSHL,MAXPRM),COEFF(MAXSHL,MAXPRM)
+     &,NF(MAXSHL),KAT(MAXCEN),IMOL,JMOL,LOGMOL,SYM(MAXSHL)
+C
+      DOUBLE PRECISION ENUCR,EELCT,ETOT2,SZ2,SZZ2,ECORE,ESCF,EERD,
+     &     E1,E2,VEN,VEE,EPOT,EKIN,ESTATE,STATN,EDFT,EDISP
+      COMMON /ENRGYS/ ENUCR,EELCT,ETOT2,SZ2,SZZ2,ECORE,ESCF,EERD,E1,E2,
+     *                VEN,VEE,EPOT,EKIN,ESTATE(MXRT),STATN,EDFT(2),EDISP
+C
+      INTEGER MAXBFN,NEXTRA,MAXEXT,MAXGRP,IMOLDEN
+      INTEGER NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,LPTALL,LHYBRD
+     &,MELE,MSPIN,MNORBIT,MLORBIT,MWIN,MSTR,METHOD,IBASIS,NOCC,NOBIAS
+     &,NEPS,NVIR,NOTROT,LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS
+     &,KEY
+      PARAMETER (MAXBFN=1350)
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+C
+      LOGICAL RUNVB
+      CHARACTER*25 TEMPCOMP
+      CHARACTER*60 COMPILER
+      INTEGER IDIP,I,J,LEN,IOK,ISPDEN
+      DOUBLE PRECISION TRUDGE,ROPTIMZ,HESSIAN,RMCSCF,AIRC
+     &  ,SURFACE,CTLVAL,VB2
+      DATA TRUDGE  /8HTRUDGE  /
+      DATA ROPTIMZ /8HOPTIMIZE/
+      DATA HESSIAN /8HHESSIAN /
+      DATA RMCSCF /8HMCSCF   /
+      DATA AIRC  /8HIRC     /
+      DATA SURFACE /8HSURFACE /
+      DATA VB2/8HVB2000  /
+      DATA COMPILER
+     1/"                                                            "/
+C
+C#######################################################################
+C     Block for IDIP=0 i.e. read input only.
+      IF(IDIP.EQ.0) THEN
+C     Check that not running XMVB file with VB2000 linked executable
+      IF(VBTYP.NE.VB2) THEN
+         WRITE(IW,6) 
+         CALL ENDGMS
+      ENDIF
+      LSTEP=.FALSE.
+      JSTEP=0
+      I=0
+      CALL LOCTOR(IR,"$VB2000",7,IOK,0)
+      IF (IOK.EQ.0) CALL LOCTOR(IR,"$vb2000",7,IOK,0)
+      IF (IOK.EQ.0) I=1
+      CALL LOCTOR(IR,"#!",2,IOK,0)
+      IF (IOK.EQ.0) I=1
+      IF (I.EQ.1) THEN
+C        Abort if $VB2000 is absent or empty (no command line).
+         WRITE(IW,5)
+         CALL ENDGMS
+      ENDIF
+C     Get job name
+      CALL GETENV("GMSJOBNAME",FSTR)
+      IF (FSTR .EQ. " ") THEN
+         WRITE(IW,'(/," In VB2000:-",/)')
+         WRITE(IW,'(/," Environmental variable GMSJOBNAME not set.",/)')
+         WRITE(IW,'(/," Put -  setenv GMSJOBNAME $JOB - in rungms.",/)')
+         CALL ABRT
+         RETURN
+      ENDIF
+      DO I=1,64
+      IF(FSTR(I:I).EQ." ") THEN
+         LENFIL=I-1
+         GOTO 1
+      ENDIF
+      ENDDO
+ 1    CONTINUE
+C     Write IOENGI file
+      CALL IOVBINIT()
+      CALL GETIOUNIT("IOENGI  ",IOENGI)
+      FILE=FSTR(1:LENFIL)//'.'//FUNIT(10)
+      OPEN(UNIT=IOENGI,FILE=FILE,STATUS='UNKNOWN',
+     1  ACCESS='SEQUENTIAL',FORM="FORMATTED")
+      CALL GMSINPUT(RUNVB,IOENGI)
+      IF (.NOT. RUNVB) CLOSE(IOENGI)
+C
+C     Abort if wrong flags set in Gamess run.
+      IF(DIRSCF) THEN
+         WRITE(IW,9126)
+         CALL ABRT
+      ENDIF
+      IF(NOPK.NE.1) THEN
+         WRITE(IW,9127)
+         CALL ABRT
+      ENDIF
+      REWIND(IR)
+      LPROP=0
+      CALL LOCTOR(IR,"$NOVBPROP",9,LPROP,0)
+      CALL LOCTOR(IR,"$SKIPGMSHF",10,MGMS,0)
+      CLOSE(IOENGI)
+      IF (RUNTYP.EQ.AIRC) LPROP=2
+      IF (RUNTYP.EQ.SURFACE) LPROP=3
+      IF (RUNTYP.EQ.TRUDGE) LSTEP=.TRUE.
+      IF (RUNTYP.EQ.ROPTIMZ) LSTEP=.TRUE.
+C
+      IF(IGROUP.NE.1) THEN
+         IF (RUNTYP.EQ.TRUDGE) THEN
+            WRITE(IW,9128) GROUP,NAXIS
+            WRITE(IW,9130)
+            CALL ABRT
+         ENDIF
+         IF (NOSYMV.NE.1) THEN
+            WRITE(IW,9128) GROUP,NAXIS
+            WRITE(IW,9129) NOSYMV
+            CALL ABRT
+         ENDIF
+      ENDIF
+      IF (RUNTYP.EQ.TRUDGE) THEN
+        REWIND(IR)
+        CALL LOCTOR(IR,"$TRUDGE",7,IOK,0)
+        IF(IOK.EQ.0) THEN
+          WRITE(IW,9131)
+          CALL ABRT
+        ENDIF
+      ENDIF
+      IF (RUNTYP.EQ.ROPTIMZ.AND.LPROP.EQ.0) THEN
+        IF(NGLEVL.EQ.0) THEN
+          WRITE(IW,9132)
+          CALL ABRT
+        ENDIF
+      ENDIF
+      NUMGR2 = (NGLEVL.EQ.1)
+      IMOL = 96
+      JMOL = 97
+      LOGMOL = .TRUE.
+      RETURN
+      ENDIF
+C     END OF INPUT BLOCK - IDIP = 0
+C#######################################################################
+C
+C     RUNNING VB2000 IN VARIOUS WAYS - IDIP > 0
+C     IDIP = 1 - normal VB2000 in GAMESS
+C     IDIP = 2 - call in gamess.src to do VB after normal optimisation 
+C                or hessian run - LPROP is 1
+C     IDIP = 3 - for IRC - LPROP is 2
+C     IDIP = 4 - for SURFACE - LPROP is 3
+C
+C     This block was used to output the overlap matrix for another job
+C     CALL RGMS1E(S,H,NUM)
+C     J = NUM*(NUM+1)/2
+C     WRITE(IP,999) (S(I),I=1,J)
+C999  FORMAT(1X,5E15.8)
+C
+      IF(IDIP.EQ.1.AND.LPROP.EQ.1) THEN
+        IF (RUNTYP.EQ.ROPTIMZ) RETURN
+        IF (RUNTYP.EQ.HESSIAN) RETURN
+      ENDIF
+      IF(IDIP.EQ.2.AND.LPROP.NE.1) RETURN
+      JSTEP = JSTEP + 1
+C     IF(IDIP.EQ.3) WRITE(IW,9124)
+C     IF(IDIP.EQ.4) WRITE(IW,9125)
+      CALL IOVBINIT()
+      CALL GETIOUNIT("IOENGI  ",IOENGI)
+      FILE=FSTR(1:LENFIL)//'.'//FUNIT(10)
+      OPEN(UNIT=IOENGI,FILE=FILE,STATUS='UNKNOWN',
+     1  ACCESS='SEQUENTIAL',FORM="FORMATTED")
+      WRITE(IW,1402)
+C
+C     I was irritated by the fact that the compiler line was 
+C     not centered properly, so fixed it. (BSD Feb 2016)
+C     TEMPCOMP below is altered by a sed line in the compile.
+      TEMPCOMP = "==========+++++=========="
+      DO I=1,64
+      IF(TEMPCOMP(I:I+1).EQ.'  ') THEN
+         LEN=I-1
+         GOTO 2
+      ENDIF
+      ENDDO
+ 2    J = 60 - LEN
+      J = J/2
+      I = J + LEN
+      J = J + 1
+C     WRITE(IW,'(/,"J,I,LEN = ",3I5)') J,I,LEN
+C     WRITE(IW,'(/," TEMPCOMP IS ",A25)') TEMPCOMP
+      COMPILER(J:I) = TEMPCOMP(1:LEN)
+      IF(MSTEP.EQ.0) CALL BANNER(IW,COMPILER)
+      WRITE(IW,'(/," JOB NAME IS ",A64)') FSTR
+C
+      IF (AIMPAC) THEN
+        CALL LOCTOR(IOENGI,'$PRINTNOS',8,LNOS,0)
+        IF(LNOS.EQ.1) THEN
+          WRITE(IW,'(/," VB NATURAL ORBITALS WILL BE OUTPUT")')
+          WRITE(IW,'(" ALONG WITH AIMPAC DATA IN PUNCH FILE")')
+        ENDIF
+      ENDIF
+C
+C     Call main VB2000 routine.
+      CALL VB2000()
+      WRITE(IW,99) VBENGY
+      IF(LPROP.LT.1) THEN
+        ETOT2 = VBENGY
+        CLOSE(IOENGI)
+        ISPDEN = 0
+        CALL GETCTLVAL("SPINDEN   ",CTLVAL,ISPDEN)
+        CALL GETIOUNIT('IOENGI  ',IOENGI)
+        FILE=FSTR(1:LENFIL)//'.'//FUNIT(10)
+        OPEN(UNIT=IOENGI,FILE=FILE,STATUS='UNKNOWN',
+     1    ACCESS='SEQUENTIAL',FORM="FORMATTED")
+        CALL LOCTOR(IOENGI,'$SPDEN',6,IOK,0)
+        IF(IOK.EQ.1) ISPDEN = 1
+        IF(MUL.GT.1.AND.ISPDEN.EQ.0) WRITE(IW,98)
+        IF(MTHEORY .EQ. 1) THEN
+          WRITE(IW,96)
+        ELSE
+          WRITE(IW,97)
+          IF(SCFTYP.EQ.RMCSCF) WRITE(IW,94)
+        ENDIF
+      ENDIF
+      WRITE(IW,95)
+      CALL TIMIT(1)
+      RETURN
+C
+  5   FORMAT(/," VBTYP=VB2000 is given, but no $VB2000 block is ",
+     &"present,",/," or no command line is present in that block.",/)
+  6   FORMAT(/," VBTYP is not VB2000 so aborting run.",/)
+C9124 FORMAT(1X,'VB ENERGY AT FIRST IRC POINT',/)
+C9125 FORMAT(1X,'VB ENERGY AT FIRST SURFACE POINT',/)
+ 9126 FORMAT(1X,'VB2000 - YOU MUST NOT USE DIRSCF=.TRUE."
+     & " IN $SCF GROUP',/)
+ 9127 FORMAT(1X,'VB2000 - YOU MUST NOT USE NOPK=0 IN $INTGRL GROUP',/)
+ 9128 FORMAT(/1X,'THE POINT GROUP OF THE MOLECULE IS ',A8,/,
+     *        1X,'THE ORDER OF THE PRINCIPAL AXIS IS ',I5,/)
+ 9129 FORMAT(1X,'THE VALUE OF NOSYM IS ',I5,/, 'FOR VB2000 RUNS,YOU',
+     *' MUST USE NOSYM=1 IF NOT USING C1 SYMMETRY IN $CONTRL GROUP',/)
+ 9130 FORMAT(1X,
+     * 'VB2000 - RUNTYP=TRUDGE - YOU MUST USE C1 SYMMETRY"
+     & " in $DATA GROUP',/)
+ 9131 FORMAT(" VB2000 - NO TRUDGE GROUP PRESENT IN DATA,"
+     & " YET RUNTYP=TRUDGE",/)
+ 9132 FORMAT(" RUNTYP=OPTIMIZE FOR VB FUNCTION CAN ONLY BE USED WITH,"
+     & " NUMGRD=.TRUE.",/)
+ 99   FORMAT(/
+     1' **************************************************************'/
+     1' *                                                            *'/
+     1' *                  ENDING GAMESS(US) VB2000                  *'/
+     1' *            FINAL VB2000 ENERGY =',F15.8,'            *')
+ 98   FORMAT(
+     1' *    VB Properties below will be incorrect for open-shell    *'/
+     1' *  systems unless keyword SPDEN is included on command line. *')
+ 97   FORMAT(
+     1' *  Properties for individual molecular orbitals are correct  *'/
+     1' *   only for VB modified orbitals in a Hartree-Fock group.   *')
+ 96   FORMAT(
+     1' *  The data below is repeated Hartree-Fock data as this is   *'/
+     1' *                  a pure Hartree-Fock run.                  *')
+ 94   FORMAT(
+     1' *  Ignore warning about MCSCF populations. They are for VB.  *')
+ 95   FORMAT(
+     1' *                                                            *'/
+     1' **************************************************************')
+ 1402 FORMAT(/
+     1' **************************************************************'/
+     1' *                                                            *'/
+     1' *         ENTERING VB2000 INTERFACED INTO GAMESS(US)         *'/
+     1' *                                                            *'/
+     1' **************************************************************')
+C
+      END
+      SUBROUTINE GMSMOS(W,W2,NBASIS,NOCB)
+C
+C     Function: Reads MOs from Gamess and replaces them with the HF
+C               orbitals for HF groups in the VB calculations. It then
+C               writes them back to the Gamess Disk.
+C
+C     Note:     Works only for Gamess.
+C
+C     History:  First created in April 2006.
+C
+C     Author:   Brian Duke
+C
+      IMPLICIT NONE
+      LOGICAL NUMGR2,LSTEP
+      DOUBLE PRECISION W(*),W2(*),RUNTYP,EXETYP,TRUDGE
+      INTEGER NBASIS,NOCB,MAXBFN,NEXTRA,MAXEXT,MAXGRP
+      INTEGER NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE,MSPIN,MNORBIT,MLORBIT,MWIN,MSTR,METHOD,
+     &IBASIS,NOCC,NOBIAS,NEPS,NVIR,NOTROT,
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY
+      INTEGER NEVALS,NGLEVL,NHLEVL,IR,IW,IP,IS,IPK,IDAF,NAV,IODA,MSTEP
+      INTEGER N2,I,J,I1,J1
+      COMMON /RUNOPT/ RUNTYP,EXETYP,NEVALS,NGLEVL,NHLEVL
+      PARAMETER (MAXBFN=1350)
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /GMSODD/ MSTEP,NUMGR2,LSTEP
+      DATA TRUDGE  /8HTRUDGE  /
+      IF(RUNTYP.EQ.TRUDGE) RETURN
+      IF(NUMGR2) RETURN
+      N2 = NBASIS*NBASIS
+      CALL DAREAD(IDAF,IODA,W2,N2,15,0)
+      DO J=1,NOCB
+        I = IBASIS(J)
+        IF(METHOD(I).EQ.1) THEN
+          I1 = (J-1)*NBASIS
+          DO J1=1,NBASIS
+            I1 = I1 + 1
+            W2(I1) = W(I1)
+          ENDDO
+        ENDIF
+      ENDDO
+      CALL DAWRIT(IDAF,IODA,W2,N2,15,0)
+      RETURN
+      END
+      SUBROUTINE VBDENS(NBASIS,NSUB,MORBIT,RWRK,LWRK2)
+C
+C     Function: Calculates VB total density and writes it to Gamess
+C               disk file. If open shell (MUL > 1), it uses the total 
+C               density and spin density to calculate the alpha and
+C               beta densities and then writes these to the Gamess
+C               disk file
+C
+C     Note:     Works only for Gamess.
+C
+C     History:  First created in April 2006.
+C               Modified in May 2011.
+C               Direct access file 20 changed to 52
+C
+C     Author:   Brian Duke
+C
+      IMPLICIT NONE
+      INTEGER MXATM,NBASIS,NSUB,MORBIT,LWRK2,IAN,IR,IW,IP,IS,IPK,IDAF,
+     &NAV,IODA,NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,LD2STA,
+     &LGDMP,N1DADD,N2DADD,NB1ADD,NB2ADD,ISPDEN,NAT,ICH,MUL,NUM,NX,NE,
+     &NA,NB,IOENGI,IOK,I,K,NOBADD1
+      DOUBLE PRECISION RWRK,ZAN,C,A1,A2,A3,A4,CTLVAL
+      PARAMETER (MXATM=2000)
+      DIMENSION MORBIT(*),RWRK(*)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+      CHARACTER*64 DENFILE
+      INTEGER IDENS,NBA2,LDMA,LDMB,IFLAG
+      LOGICAL LDENS,LTOT,LGRP,LSD,LGMS,LPRT
+      COMMON /DCUBE/ IDENS,LDENS,LTOT,LGRP,LSD,LGMS,LPRT,DENFILE
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /ROTADD/NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,
+     & LD2STA,LGDMP,N1DADD(100),N2DADD(100),NB1ADD(100),NB2ADD(100)
+      NBA2=NBASIS*(NBASIS+1)/2
+      LDMA=LWRK2
+      LDMB=LDMA+NBA2
+      DO I=1,NBA2
+         RWRK(LDMA-1+I) = 0.0D0
+         RWRK(LDMB-1+I) = 0.0D0
+      ENDDO
+      IFLAG=1
+      NOBADD1=NAOBAS
+C
+C     Obtain total density (D) = alpha D + beta D
+      DO K=1,NSUB
+         CALL MATRAN2(MORBIT(K),NBASIS,RWRK(NOBADD1),RWRK(LGDMP),
+     &             RWRK(ND1STA-1+N1DADD(K)),RWRK(LDMA),IFLAG)
+         NOBADD1=NOBADD1+MORBIT(K)*NBASIS
+      ENDDO
+      ISPDEN = 0
+      CALL GETCTLVAL("SPINDEN   ",CTLVAL,ISPDEN)
+      CALL GETIOUNIT('IOENGI  ',IOENGI)
+      CALL LOCTOR(IOENGI,'$SPDEN',6,IOK,0)
+      IF(IOK.EQ.1) ISPDEN = 1
+      IF (MUL.GT.1.AND.ISPDEN.EQ.1) THEN
+C       Read spin density (S), previously put to 52 which is normally
+C       used for MOPAC overlaps and therefore should never be used in
+C       VB2000.
+        CALL DAREAD(IDAF,IODA,RWRK(LDMB),NBA2,52,0)
+        IF(LPRT) WRITE(IW,9190)
+        IF(LPRT) CALL PRTRIL(RWRK(LDMB),NBASIS)
+        DO I=1,NBA2
+          A1 = RWRK(LDMA-1+I)
+          A2 = RWRK(LDMB-1+I)
+          A3 = 0.5D0*(A1 + A2)
+          A4 = 0.5D0*(A1 - A2)
+          RWRK(LDMA-1+I) = A3
+          RWRK(LDMB-1+I) = A4
+C         Calculates alpha density = (D + S)/2
+C                     beta density = (D - S)/2. D = total density.
+        ENDDO
+C       Now write beta density to its proper place for 
+C       latter use in Gamess code.
+        CALL DAWRIT(IDAF,IODA,RWRK(LDMB),NBA2,20,0)
+        IF(LPRT) WRITE(IW,9192)
+        IF(LPRT) CALL PRTRIL(RWRK(LDMB),NBASIS)
+      ENDIF
+C
+C     Now write alpha density to its proper place for 
+C     latter use in Gamess code.
+      CALL DAWRIT(IDAF,IODA,RWRK(LDMA),NBA2,16,0)
+      IF(LPRT) WRITE(IW,9191)
+      IF(LPRT) CALL PRTRIL(RWRK(LDMA),NBASIS)
+      RETURN
+ 9190 FORMAT(/10X,22(1H-)/10X,22HSPIN DENSITY IN VBDENS/10X,22(1H-))
+ 9191 FORMAT(/10X,23(1H-)/10X,23HALPHA DENSITY IN VBDENS/10X,23(1H-))
+ 9192 FORMAT(/10X,22(1H-)/10X,22HBETA DENSITY IN VBDENS/10X,22(1H-))
+      END
+      SUBROUTINE VBSCRF(NBASIS,NSUB,MORBIT,RWRK,ENERGY)
+C
+C     Function: Calculates Self Consistent Reaction Field using
+C               VB Density
+C
+C     Note:     Works only for Gamess.
+C
+C     History:  First created in November 2006.
+C
+C     Author:   Jiabo Li
+C
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MWPROP=100000)
+      LOGICAL LGR,GGDONE,LCOULRD
+      COMMON /GBCNTL/EDIELE,ETGAS,DAMP,SOLN,SOLA,SOLB,SOLG,SOLC,SOLH,
+     .               ISOL,ISCRF,ICMD,ICDS,IAQU,IDOSOL,ICSAVE,ICREAD,
+     .               ISREAD,IGAS,LGR,GGDONE,LCOULRD
+      COMMON /GBSOLV/EGAS,ESOL,CDST,GPGAS,GPSOL,
+     .               TCDST,TCDSA(1000),
+     *               DIPCM2,DP2XYZ(3),
+     *               DIPLOW,DPLXYZ(3),GPA(1000),CDSA(1000),
+     *               CHGLOW(1000),CHGCM2(1000),
+     &V(1000),RLPA(1000),DPRLPA,DPRXYZ(3)
+      DIMENSION MORBIT(*),RWRK(*),W(MWPROP)
+      COMMON /ROTADD/NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,
+     & LD2STA,LGDMP,N1DADD(100),N2DADD(100),NB1ADD(100),NB2ADD(100)
+      DIMENSION RF(50000)
+      IF(ISOL.EQ.0) THEN
+         EDIELE=0.0D+00
+         RETURN
+      ENDIF
+      NBA2=NBASIS*(NBASIS+1)/2
+      IF(NBA2*2.GT.MWPROP) CALL ABORT0("VBPROP01  ")
+      IF(NBA2.GT.50000) CALL ABORT0("VBPROP02  ")
+      LDMA=1
+      LWK1=LGDMP
+      DO I=1,NBA2
+         W(LDMA-1+I) =0.0D0
+      ENDDO
+      IFLAG=1
+      NOBADD1=NAOBAS
+      DO K=1,NSUB
+         CALL MATRAN2(MORBIT(K),NBASIS,RWRK(NOBADD1),RWRK(LWK1),
+     &             RWRK(ND1STA-1+N1DADD(K)),W(LDMA),IFLAG)
+         NOBADD1=NOBADD1+MORBIT(K)*NBASIS
+      ENDDO
+CGSOL CALL CM2CHG(NBASIS,W(LDMA),W(LDMA),1)
+CGSOL CALL REACTF(ENERGY)
+      CALL VBRF(RF,NBASIS)
+      EP = 0.0D0
+      DO I=1, NBA2
+      EP = EP + W(LDMA-1+I)*RF(I)
+      END DO
+      DO I=1, NBASIS
+        II = I*(I+1)/2
+        EP = EP - W(LDMA-1+II)*RF(II)
+      END DO
+      ESOL = ENERGY - EP
+      RETURN
+      END
+      SUBROUTINE CONGMS()
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     Function: Gets Gamess general information from COMMON
+C
+C     History:  Substance added to dummy routine Dec. 2003.
+C
+C     Author:   Brian Duke
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MXSH=5000,MXGTOT=20000,MXAO=8192,MXATM=2000,MXRT=100)
+      INTEGER NU(1000)
+      LOGICAL NUMGR2,LSTEP
+      CHARACTER*8  BFCH
+      CHARACTER*20 BASNAME
+      CHARACTER*12 BFCH2,BFLABE
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+      COMMON /ENRGYS/ ENUCR,EELCT,ETOT,SZ,SZZ,ECORE,ESCF,EERD,E1,E2,
+     *                VEN,VEE,EPOT,EKIN,ESTATE(MXRT),STATN,EDFT(2),EDISP
+      COMMON /RUNLAB/ TITLE(10),A(MXATM),B(MXATM),BFLAB(MXAO)
+      PARAMETER (MAXCEN=200,MAXBFN=1350)
+      COMMON /GENINF/NATOM,NELE,NSPIN,NBASIS,NATNUM(MAXCEN),
+     & NATBAS(MAXCEN),ENREP,XYZ(3,MAXCEN),BFLABE(MAXBFN),BASNAME
+      COMMON /NSHEL / EX(MXGTOT),CS(MXGTOT),CP(MXGTOT),CD(MXGTOT),
+     *                CF(MXGTOT),CG(MXGTOT),CH(MXGTOT),CI(MXGTOT),
+     *                KSTART(MXSH),KATOM(MXSH),KTYPE(MXSH),KNG(MXSH),
+     *                KLOC(MXSH),MIN(MXSH),MAX(MXSH),NSHELL
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+      COMMON /RUNOPT/ RUNTYP,EXETYP,NEVALS,NGLEVL,NHLEVL
+      COMMON /GMSODD/ MSTEP,NUMGR2,LSTEP
+      COMMON /ATMCH/ ATMCHG(MAXCEN)
+      COMMON /WFNOPT/ SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP,
+     *                MPLEVL,MPCTYP
+      INTEGER LPROP,NOSYMV,MAXOCC,LNOS,JSTEP,MGMS
+      DOUBLE PRECISION VBENGY
+      COMMON /VBINTF/ VBENGY,LPROP,NOSYMV,MAXOCC,LNOS,JSTEP,MGMS
+      DATA HESSIAN /8HHESSIAN /
+      DATA TRUDGE  /8HTRUDGE  /
+      DATA ROPTIMZ /8HOPTIMIZE/
+      DATA RMCSCF /8HMCSCF   /
+      DATA RRHF   /8HRHF     /
+      DATA RUHF   /8HUHF     /
+      DATA RROHF  /8HROHF    /
+      DATA RGVB   /8HGVB     /
+      DATA RNONE  /8HNONE    /
+      DATA NSTEP/0/
+      SAVE NSTEP
+      NSTEP=NSTEP+1
+      MSTEP=NSTEP
+      IF (NSTEP.GE.2) LPTALL = 0
+C
+      NATOM=NAT
+      IF(NATOM.GE.MAXCEN) CALL SIZEABT(NATOM,MAXCEN,"      NATOM ",
+     & "MAXCEN",IW,.TRUE.)
+      NELE=NE
+      NBASIS=NUM
+      NSPIN=NA-NB
+C
+      IF (RUNTYP.EQ.TRUDGE.OR.(RUNTYP.EQ.ROPTIMZ.AND.LPROP.NE.1)) THEN
+         IMACRO = 24
+         NEPS = 7
+         WRITE(IW,'(/," MACROITERATION CONVERGENCE TOLERANCE TIGHTEN",
+     &    "ED",/," TO 10.00**(-7) FOR GEOMETRY OPTIMIZATION.",/)')
+      ENDIF
+      IF (RUNTYP.EQ.HESSIAN.AND.LPROP.NE.1) THEN
+         IMACRO = 36
+         NEPS = 8
+         WRITE(IW,'(" MACROITERATION CONVERGENCE TOLERANCE TIGHTENED",
+     &     /," TO 10.00**(-8) FOR FREQUENCY RUN.",/)')
+      ENDIF
+C
+      WRITE(IW,900) ICH, MUL
+  900 FORMAT(" Charge =",I3," Multiplicity =",I3)
+      WRITE(IW,9050)
+      DO I=1,NATOM
+        NATBAS(I)=0
+        DO J=1,3
+          XYZ(J,I)=C(J,I)*0.52917724924D0
+        END DO
+        NATNUM(I)=IAN(I)
+        ATMCHG(I)=ZAN(I)
+        XXXX=DFLOAT(NATNUM(I))
+        WRITE(IW,9060) A(I),B(I),XXXX,(XYZ(J,I),J=1,3)
+      END DO
+ 9050 FORMAT(/1X,'ATOM',6X,'ATOMIC',22X,'COORDINATES (ANGS)'/
+     *         11X,'CHARGE',9X,'X',19X,'Y',19X,'Z')
+ 9060 FORMAT(1X,A8,A2,F5.1,F17.10,2F20.10)
+      ENREP=ENUCR
+C
+C     Print correct heading for energy from GAMESS run.
+      IF(IPNT.LE.1.AND.MGMS.EQ.0) THEN
+        IF(DFTYPE.NE.RNONE) THEN 
+          WRITE(IW,1121) DFTYPE,ETOT
+        ELSE IF(MPLEVL.GT.0) THEN 
+          WRITE(IW,1122) ETOT
+        ELSE IF(CCTYP.NE.RNONE) THEN 
+          WRITE(IW,1123) CCTYP,ETOT
+        ELSE IF(CITYP.NE.RNONE) THEN 
+          WRITE(IW,1124) CITYP,ETOT
+        ELSE IF((SCFTYP.EQ.RRHF).OR.(SCFTYP.EQ.RROHF)) THEN 
+          WRITE(IW,1125) ETOT
+          IF (MUL.GT.1) WRITE(IW,1130)
+        ELSE IF(SCFTYP.EQ.RUHF) THEN
+          WRITE(IW,1125) ETOT
+          IF (MUL.GT.1) WRITE(IW,1131)
+        ELSE IF(SCFTYP.EQ.RMCSCF) THEN 
+          WRITE(IW,1126) ETOT
+        ELSE IF(SCFTYP.EQ.RGVB) THEN 
+          WRITE(IW,1127) ETOT
+        ENDIF
+      ENDIF
+ 1121 FORMAT(1x/,A8,' Density Functional Energy from Gamess run = ',
+     & F20.10,/)
+ 1122 FORMAT(1x/,' MP2 Energy from Gamess run = ',F20.10,/)
+ 1123 FORMAT(1x/,A8,' Couple Cluster Energy from Gamess run = ',
+     & F20.10,/)
+ 1124 FORMAT(1x/,A8,
+     & ' Configuration Interaction Energy from Gamess run = ',F20.10)
+ 1125 FORMAT(1x/,' Hartree-Fock Energy from Gamess run = ',F20.10)
+ 1126 FORMAT(1x/,' Multiconfiguration SCF Energy from Gamess run = ',
+     & F20.10)
+ 1127 FORMAT(1x/,' Generalised VB Energy from Gamess run = ',F20.10)
+ 1130 FORMAT(/,
+     1 ' The above open shell energy from Gamess is a better ROHF',/
+     2,' energy than the stand-alone VB2000 open-shell energy.')
+ 1131 FORMAT(/,
+     1 ' The above open shell energy from Gamess is a UHF energy. The',/
+     2,' alpha orbitals will be used for the initial guess.')
+C
+      J=0
+      DO I=1,NSHELL
+         L1=KLOC(I)+MIN(I)-1
+         L2=KLOC(I)+MAX(I)-1
+         DO K=L1,L2
+           J=J+1
+           NU(J)=KATOM(I)
+         ENDDO
+      ENDDO
+      DO I=1,NBASIS
+        NATBAS(NU(I))=NATBAS(NU(I)) + 1
+        WRITE(UNIT=BFCH,FMT='(A8)') BFLAB(I)
+        IF (BFCH(1:2).EQ.' B') BFCH(1:2)='Bq'
+        BFCH2='            '
+        BFCH2(2:3)=BFCH(3:4)
+        IF (BFCH(2:2).EQ.' ') BFCH2(6:6)=BFCH(1:1)
+        IF (BFCH(2:2).NE.' ') THEN
+            BFCH2(5:6)=BFCH(1:2)
+            CALL CONVCASE(BFCH2(6:6),1,2)
+        ENDIF
+        IF(BFCH(5:6).EQ.'  '.AND.BFCH(8:8).EQ.' ') THEN
+           BFCH2(12:12)=BFCH(7:7)
+        ELSE IF(BFCH(5:5).EQ.' '.AND.BFCH(8:8).EQ.' ') THEN
+           BFCH2(11:12)=BFCH(6:7)
+        ELSE IF(BFCH(5:5).EQ.' ') THEN
+           BFCH2(10:12)=BFCH(6:8)
+        END IF
+        IF (BFCH(5:5).NE.' ') BFCH2(9:12)=BFCH(5:8)
+C       NEW FOR h and i
+        IF (BFCH(3:3).EQ.'X') BFCH2(7:12)=BFCH(3:8)
+        IF (BFCH(4:4).EQ.'X') BFCH2(8:12)=BFCH(4:8)
+        IF (BFCH(4:4).EQ.'Y') BFCH2(8:12)=BFCH(4:8)
+        IF (BFCH(4:4).EQ.'Z') BFCH2(8:12)=BFCH(4:8)
+        CALL CONVCASE(BFCH2(7:12),6,2)
+C       Cludge - GAMESS overwrites the atom number for h and i functions
+C                so reset all atom numbers.
+        WRITE(UNIT=BFCH2(1:3),FMT='(I3)') NU(I)
+        BFLABE(I)=BFCH2
+      ENDDO
+      WRITE(IW,120) NBASIS
+ 120  FORMAT(/,' Basis set size = ',I4)
+      RETURN
+      END
+      SUBROUTINE IJKLG1(GG,II,JJ,KK,LL,NINT)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      LOGICAL PACK2E
+      DIMENSION GG(*),IX(30000)
+      DIMENSION II(*),JJ(*),KK(*),LL(*)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /INTFIL/ NINTMX,NHEX,NTUPL,PACK2E,INTG76,IGRDTYP
+      COMMON /PCKLAB/ LABSIZ
+      NXX=0
+      READ(IS,END=200) NXX
+      BACKSPACE(IS)
+      CALL PREAD(IS,GG,IX,NXX,NINTMX)
+      NINT = IABS(NXX)
+      IF(NXX .EQ. 0) GO TO 290
+      IF(NINT .GT. NINTMX) CALL ABRT
+      DO M = 1,NINT
+         NPACK = M
+         IF (LABSIZ .EQ. 2) THEN
+*I32        LABEL = IX( 2*NPACK - 1 )
+*I32        IPACK = ISHFT( LABEL, -16 )
+*I32        JPACK = IAND(  LABEL, 65535 )
+*I32        LABEL = IX( 2*NPACK     )
+*I32        KPACK = ISHFT( LABEL, -16 )
+*I32        LPACK = IAND(  LABEL, 65535 )
+*I64        LABEL = IX(NPACK)
+*I64        IPACK = ISHFT( LABEL, -48 )
+*I64        JPACK = IAND( ISHFT( LABEL, -32 ), 65535 )
+*I64        KPACK = IAND( ISHFT( LABEL, -16 ), 65535 )
+*I64        LPACK = IAND( LABEL, 65535 )
+         ELSE IF (LABSIZ .EQ. 1) THEN
+*I32        LABEL = IX(NPACK)
+*I32        IPACK = ISHFT( LABEL, -24 )
+*I32        JPACK = IAND( ISHFT( LABEL, -16 ), 255 )
+*I32        KPACK = IAND( ISHFT( LABEL,  -8 ), 255 )
+*I32        LPACK = IAND( LABEL, 255 )
+*I64        IF ( MOD(NPACK,2) .EQ. 0 ) THEN
+*I64           LABEL = IX( NPACK/2 )
+*I64           IPACK = IAND( ISHFT( LABEL, -24 ), 255 )
+*I64           JPACK = IAND( ISHFT( LABEL, -16 ), 255 )
+*I64           KPACK = IAND( ISHFT( LABEL,  -8 ), 255 )
+*I64           LPACK = IAND( LABEL, 255 )
+*I64        ELSE
+*I64           LABEL = IX( (NPACK/2)+1 )
+*I64           IPACK = ISHFT( LABEL, -56 )
+*I64           JPACK = IAND( ISHFT( LABEL, -48 ), 255 )
+*I64           KPACK = IAND( ISHFT( LABEL, -40 ), 255 )
+*I64           LPACK = IAND( ISHFT( LABEL, -32 ), 255 )
+*I64        END IF
+         END IF
+         I = IPACK
+         J = JPACK
+         K = KPACK
+         L = LPACK
+         VAL = GG(M)
+         IF(I.EQ.J) VAL=VAL+VAL
+         IF(K.EQ.L) VAL=VAL+VAL
+         IF((I.EQ.K).AND.(J.EQ.L)) VAL=VAL+VAL
+         GG(M)=VAL
+         II(M)=I
+         JJ(M)=J
+         KK(M)=K
+         LL(M)=L
+      ENDDO
+ 290  RETURN
+ 200  NINT=0
+      RETURN
+      END
+      SUBROUTINE GMSINPUT(RUNVB,IOENGI)
+C BSD 23/12/13 Allow $VB2000 and $END to be in lower case.
+C BSD 17/01/14 Do check against list of commands, using first
+C              10 characters.
+C BSD 18/01/14 Use of IMPLICIT NONE introduced.
+C BSD 13/03/16 Changes all lower case directives to be upper case.
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     Writes IOENGI in GAMESS version and if EXETYP=CHECK lists 
+C     commands that are known and warns about ones that are not.
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      IMPLICIT NONE
+      INTEGER M1,M2,I,J,N,IOENGI
+      LOGICAL RUNVB,LDOLL,FIRST
+      DOUBLE PRECISION CHECK
+      CHARACTER*80 RECORD
+      CHARACTER*1 DOLLAR,CH
+      CHARACTER*5 VBSP
+      CHARACTER*10 COM1(95)
+      CHARACTER*8 COM2(12)
+      CHARACTER*8 VBST,SYM
+C
+      INTEGER IR,IW,IP,IS,IPK,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+C
+      INTEGER NEVALS,NGLEVL,NHLEVL
+      DOUBLE PRECISION RUNTYP,EXETYP
+      COMMON /RUNOPT/ RUNTYP,EXETYP,NEVALS,NGLEVL,NHLEVL
+C
+      DATA VBST/' $VB2000'/,VBSP/' $END'/
+      DATA DOLLAR/'$'/
+      DATA CHECK  /8HCHECK   /
+C
+      CALL GETCOM(COM1,COM2,M1,M2)
+      RUNVB=.FALSE.
+      LDOLL = .FALSE.
+      FIRST = .TRUE.
+      REWIND(IR)
+      I=0
+ 1    READ(IR,'(A80)',END=100) RECORD
+      READ(RECORD(1:8),'(A8)') SYM
+      CALL CONVCASE(SYM,8,1)
+      IF (SYM.NE.VBST) GOTO 1
+      IF(EXETYP.EQ.CHECK) WRITE(IW,9001) "VB2000  "
+ 2    READ(IR,'(A80)',END=101) RECORD
+      READ(RECORD(1:5),'(A5)') SYM
+      CALL CONVCASE(SYM,5,1)
+      IF (SYM.EQ.VBSP) THEN
+         IF (I.NE.0) RUNVB=.TRUE.
+         IF(EXETYP.EQ.CHECK) THEN
+           RUNVB=.FALSE.
+           WRITE(IW,9004)
+         ENDIF
+         RETURN
+      ENDIF
+      DO J=1,10
+        READ(RECORD(J:J),'(A1)',END=8,ERR=8) CH
+        IF(CH.EQ.DOLLAR) THEN
+          CALL CONVCASE(RECORD,80,1)
+          GOTO 8
+        ENDIF
+      ENDDO
+ 8    WRITE(IOENGI,'(A80)') RECORD
+C     WRITE(IW,'(A80)') RECORD
+      IF (EXETYP.EQ.CHECK) THEN
+        N=0
+ 4      N=N+1
+        IF(N.EQ.80) GOTO 5
+        READ(RECORD(N:N),'(A5)',END=5,ERR=5) CH
+        IF(CH.NE.DOLLAR) GOTO 4
+        IF(CH.EQ.DOLLAR) GOTO 6
+ 5      IF(.NOT.LDOLL) THEN
+          WRITE(IW,'(A80)') RECORD
+          I=I+1
+          GOTO 2
+        ENDIF
+ 6      LDOLL = .TRUE.
+        IF(FIRST) THEN
+          WRITE(IW,9003)
+          FIRST=.FALSE.
+        ENDIF
+        IF(LDOLL.AND.CH.EQ.DOLLAR) THEN
+           DO J=1,M1
+             IF (RECORD(N+1:N+10).EQ.COM1(J)) GOTO 11
+           ENDDO
+           DO J=1,M2
+             IF (RECORD(N+3:N+10).EQ.COM2(J)) GOTO 11
+           ENDDO
+           WRITE(IW,9002) RECORD(1:20)
+           GOTO 13
+ 11        WRITE(IW,9005) RECORD(1:20)
+ 13        CONTINUE
+        ENDIF
+      ENDIF
+      I=I+1
+      GOTO 2
+ 100  IF(EXETYP.EQ.CHECK) THEN
+        RUNVB=.FALSE.
+        WRITE(IW,9004)
+      ENDIF
+      RETURN
+ 101  WRITE(IW,'(/," NO $END IN $VB2000 GROUP!",/)')
+      IF(EXETYP.NE.CHECK) CALL ABRT
+      RETURN
+ 9001 FORMAT(/,' CHECK SHOWS $',A8,' GROUP INPUT IS PRESENT',/)
+ 9002 FORMAT(' VB2000 SECTION ',A20,' IS NOT PRESENT IN OUR DATABASE')
+ 9003 FORMAT(' THE CHARGE, MULTIPLICITY AND COORDINATES, IF DISPLAYED',
+     1' ABOVE,',/,' ARE NOT USED, AS THE VALUES FROM THE GAMESS CODE',
+     2' ARE CARRIED',/,' OVER FOR USE IN VB2000.'/)
+ 9004 FORMAT(/)
+ 9005 FORMAT(' VB2000 SECTION ',A20,' APPEARS TO BE ACCEPTABLE')
+      END
+      SUBROUTINE RGMS1E(S,H,N)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      DIMENSION S(*),H(*)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      NBA2=N*(N+1)/2
+      DO I=1,NBA2
+        H(I)=0.0D0
+        S(I)=0.0D0
+      END DO
+      CALL DAREAD(IDAF,IODA,H(1),NBA2,11,0)
+      CALL DAREAD(IDAF,IODA,S(1),NBA2,12,0)
+      RETURN
+      END
+      SUBROUTINE RGMSMO(V,E,N)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      DIMENSION V(*),E(*)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      LL1=N
+      LL3=LL1*LL1
+      CALL DAREAD(IDAF,IODA,V(1),LL3,15,0)
+      CALL DAREAD(IDAF,IODA,E(1),LL1,17,0)
+C
+C     Debug output of orbitals. This is not perfect as LABMO is not set.
+C     WRITE(IW,1)
+C     CALL  PREVS(V,E,LABMO,N,N,N,1)
+      RETURN
+C1    FORMAT(//,12x,'ORBITAL ENERGIES AND EIGENVECTORS FROM MO RUN'//)
+      END
+      SUBROUTINE RGMS2E(G)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MXATM=2000)
+      LOGICAL PACK2E
+      DIMENSION G(*),IX(30000),GG(15000)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /INTFIL/ NINTMX,NHEX,NTUPL,PACK2E,INTG76,IGRDTYP
+      COMMON /PCKLAB/ LABSIZ
+      NUM1=NUM*(NUM+1)/2
+      NUM2=NUM1*(NUM1+1)/2
+C     WRITE(IW,'(" NUMBER OF INTEGRALS TO CALCULATE IS =",I14)') NUM2
+      DO I=1,NUM2
+        G(I)=0.0D0
+      ENDDO
+      NXX=0
+ 210  CONTINUE
+      CALL PREAD(IS,GG,IX,NXX,NINTMX)
+      IF(NXX .EQ. 0) GO TO 290
+      NINT = IABS(NXX)
+      IF(NINT .GT. NINTMX) CALL ABRT
+C      NINT = IABS(NXX)
+      DO M = 1,NINT
+         NPACK = M
+         IF (LABSIZ .EQ. 2) THEN
+*I32        LABEL = IX( 2*NPACK - 1 )
+*I32        IPACK = ISHFT( LABEL, -16 )
+*I32        JPACK = IAND(  LABEL, 65535 )
+*I32        LABEL = IX( 2*NPACK     )
+*I32        KPACK = ISHFT( LABEL, -16 )
+*I32        LPACK = IAND(  LABEL, 65535 )
+*I64        LABEL = IX(NPACK)
+*I64        IPACK = ISHFT( LABEL, -48 )
+*I64        JPACK = IAND( ISHFT( LABEL, -32 ), 65535 )
+*I64        KPACK = IAND( ISHFT( LABEL, -16 ), 65535 )
+*I64        LPACK = IAND( LABEL, 65535 )
+         ELSE IF (LABSIZ .EQ. 1) THEN
+*I32        LABEL = IX(NPACK)
+*I32        IPACK = ISHFT( LABEL, -24 )
+*I32        JPACK = IAND( ISHFT( LABEL, -16 ), 255 )
+*I32        KPACK = IAND( ISHFT( LABEL,  -8 ), 255 )
+*I32        LPACK = IAND( LABEL, 255 )
+*I64        IF ( MOD(NPACK,2) .EQ. 0 ) THEN
+*I64           LABEL = IX( NPACK/2 )
+*I64           IPACK = IAND( ISHFT( LABEL, -24 ), 255 )
+*I64           JPACK = IAND( ISHFT( LABEL, -16 ), 255 )
+*I64           KPACK = IAND( ISHFT( LABEL,  -8 ), 255 )
+*I64           LPACK = IAND( LABEL, 255 )
+*I64        ELSE
+*I64           LABEL = IX( (NPACK/2)+1 )
+*I64           IPACK = ISHFT( LABEL, -56 )
+*I64           JPACK = IAND( ISHFT( LABEL, -48 ), 255 )
+*I64           KPACK = IAND( ISHFT( LABEL, -40 ), 255 )
+*I64           LPACK = IAND( ISHFT( LABEL, -32 ), 255 )
+*I64        END IF
+         END IF
+         I = IPACK
+         J = JPACK
+         K = KPACK
+         L = LPACK
+         VAL = GG(M)
+         IF(I.GE.J)IPQ=I*(I-1)/2+J
+         IF(I.LT.J)IPQ=J*(J-1)/2+I
+         IF(K.GE.L)IRS=K*(K-1)/2+L
+         IF(K.LT.L)IRS=L*(L-1)/2+K
+         IF(IPQ.GE.IRS)IPQRS=IPQ*(IPQ-1)/2+IRS
+         IF(IPQ.LT.IRS)IPQRS=IRS*(IRS-1)/2+IPQ
+         IF(I.EQ.J) VAL=VAL+VAL
+         IF(K.EQ.L) VAL=VAL+VAL
+         IF((I.EQ.K).AND.(J.EQ.L)) VAL=VAL+VAL
+         G(IPQRS)=VAL
+      ENDDO
+      IF(NXX.GT.0) GO TO 210
+ 290  REWIND(IS)
+      RETURN
+      END
+      SUBROUTINE GETLOC(X,LOCX)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      DIMENSION X(1)
+      LOCX = 1
+*AIX  LOCX = LADDRS(X)
+*CRY  LOCX = LOC(X)
+*CX1  LOCX = LOC(X)
+*DEC  LOCX = LOC(X)
+*FUJ  LOCX = LADDRS(X)
+*HIT  LOCX = LADDRS(X)
+*HP   LOCX = LOC(X)
+*INT  LOCX = LOC(X)
+*I32  LOCX = LADDRS(X)
+*I64  LOCX = LOC(X)
+*NEC  LOCX = LOC(X)
+*NEC  CALL LADDRS(X,LOCX)
+*SGI  LOCX = LOC(X)
+*SUN  LOCX = LOC(X)
+*T3E  LOCX = LOC(X)
+*VMS  LOCX = %LOC(X)
+*WIN  LOCX = LADDRS(X)
+*XT3  LOCX = LOC(X)
+      RETURN
+      END
+      SUBROUTINE GAMINT()
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MXATM=2000,MXRT=100)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /ENRGYS/ ENUCR,EELCT,ETOT,SZ,SZZ,ECORE,ESCF,EERD,E1,E2,
+     *                VEN,VEE,EPOT,EKIN,ESTATE(MXRT),STATN,EDFT(2),EDISP
+      DATA TOANG /0.52917724924D0/
+C
+C     This routine is to recalculate the GAMESS 1- and 2-electron
+C     integrals for VB2000 REACTOR runs.
+C
+      EN=ENUC(NAT,ZAN,C)
+      ENUCR=EN
+      WRITE(IW,4)
+      WRITE(IW,1) ENUCR
+      WRITE(IW,2)
+      DO I=1,NAT
+        WRITE(IW,3) ZAN(I),(TOANG*C(J,I),J=1,3)
+      END DO
+      CALL ONEEI
+      CALL JANDK
+      REWIND(8)
+      RETURN
+ 1    FORMAT(" THE NUCLEAR REPULSION ENERGY IS ",F20.10,/)
+ 2    FORMAT(/2X,'CHARGE',20X,'COORDINATES (ANGSTROMs)'/
+     *         16X,'X',19X,'Y',19X,'Z')
+ 3    FORMAT(1X,F5.1,F17.10,2F20.10)
+ 4    FORMAT(/," RECALCULATING NUCLEAR REPULSION ENERGY, 1-EL AND 2-EL",
+     & " INTEGRALS",/)
+      END
+      SUBROUTINE TRUCON
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MXATM=2000)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+      COMMON /INTNAL/ BOND(MXATM),ALPHA(MXATM),BETA(MXATM),SIGN(MXATM),
+     *                ICONX(MXATM),IATCON(3,MXATM),INATOM(MXATM),
+     *                NATIN1,IUNT
+      DATA ONE/1.0D0/
+      PI = ACOS(-ONE)
+      X = 1.8D2/PI
+      REWIND(IR)
+      CALL LOCTOR(IR,"$VB2000",6,IOK,0)
+      IF(IOK.EQ.0) RETURN
+      CALL LOCTOR(IR,"$TRUDGECONSTRAINTS",18,IOK,0)
+      IF(IOK.EQ.0) RETURN
+      READ(IR,*) NOCST
+      WRITE(IW,4) NOCST
+      DO I=1,NOCST
+         READ(IR,*) IA,IB
+         IATOM=IA/10
+         IHINT=IA - 10*IATOM
+         JATOM=IB/10
+         JHINT=IB - 10*JATOM
+         WRITE(IW,3) IATOM,IHINT,JATOM,JHINT
+         IF(IHINT.NE.JHINT) THEN
+            WRITE(IW,1) I
+            CALL ABRT
+         ENDIF
+         IF(IHINT.EQ.1) BOND(IATOM) = BOND(JATOM)
+         IF(IHINT.EQ.2) ALPHA(IATOM) = ALPHA(JATOM)*X
+         IF(IHINT.EQ.3) BETA(IATOM) = BETA(JATOM)*X
+      ENDDO
+      WRITE(IW,2)
+      DO I=1,NAT
+       WRITE(IW,'(I3,3F14.7)') I,BOND(I),ALPHA(I)*X,BETA(I)*X
+      ENDDO
+      RETURN
+ 1    FORMAT(" TRUDGE CONTRAINTS MISMATCH FOR CONSTRAINT",I3)
+ 2    FORMAT(" NEW HINT COORDINATES AFTER CONSTRAINTS INPOSED"
+     &," (IN ANGSTROMS AND DEGREES)",/,
+     &"  I       BOND          ALPHA         BETA")
+ 3    FORMAT(" CONSTRAINING ATOM",I3," COORD",I3," TO",
+     &" ATOM",I3," COORD",I3)
+ 4    FORMAT(" APPLYING",I3," CONSTRAINTS")
+      END
+      SUBROUTINE BASISM()
+C#######################################################################
+C
+C     GET BASIS SET INTO APPROPRIATE FORM IN GAMESS VB2000
+C
+C#######################################################################
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      PARAMETER (MXGTOT=20000,MXSH=5000)
+      INTEGER IMOL,JMOL,NF,KAT,MAXCEN,MAXSHL,MAXPRM
+      LOGICAL LOGMOL
+      CHARACTER*1 SYM
+      PARAMETER (MAXSHL=500,MAXCEN=200,MAXPRM=15)
+      COMMON /SEEING/ XEXP(MAXSHL,MAXPRM),COEFF(MAXSHL,MAXPRM)
+     &,NF(MAXSHL),KAT(MAXCEN),IMOL,JMOL,LOGMOL,SYM(MAXSHL)
+C     COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+C     Uncomment COMMON /IOFILE/ above, if WRITE statements below are
+C     uncommented.
+      COMMON /NSHEL / EX(MXGTOT),CS(MXGTOT),CP(MXGTOT),CD(MXGTOT),
+     *                CF(MXGTOT),CG(MXGTOT),CH(MXGTOT),CI(MXGTOT),
+     *                KSTART(MXSH),KATOM(MXSH),KTYPE(MXSH),KNG(MXSH),
+     *                KLOC(MXSH),MIN(MXSH),MAX(MXSH),NSHELL
+C
+C     Built-in functions for normalisaton factors.
+      XNS(J,K,PI32) = SQRT(PI32/(XEXP(J,K)+XEXP(J,K))**(1.5D0))
+      XNP(J,K,PI32) = SQRT(0.5D0 * PI32/
+     &(XEXP(J,K)+XEXP(J,K))**(2.5D0))
+      XND(J,K,PI32) = SQRT(0.75D0 * PI32/
+     &(XEXP(J,K)+XEXP(J,K))**(3.5D0))
+      XNF(J,K,PI32) = SQRT((1.5D1/8.0D0) *
+     &PI32/(XEXP(J,K)+XEXP(J,K))**(4.5D0))
+      XNG(J,K,PI32) = SQRT((1.05D2/1.6D1) *
+     &PI32/(XEXP(J,K)+XEXP(J,K))**(5.5D0))
+      XNH(J,K,PI32) = SQRT((9.45D2/3.2D1) *
+     &PI32/(XEXP(J,K)+XEXP(J,K))**(6.5D0))
+      XNI(J,K,PI32) = SQRT((1.0395D4/6.4D1) *
+     &PI32/(XEXP(J,K)+XEXP(J,K))**(7.5D0))
+C
+      PI = 4.0D0 * DATAN(1.0D0)
+      PI32 = PI**(1.5D0)
+      DO I=1,30
+        KAT(I)=0
+      ENDDO
+      J = 0
+C     J is sub-shell - spliting SP
+      DO I=1,NSHELL
+        J=J+1
+        NSUB=1
+        IF (KTYPE(I).EQ.1) SYM(J)="s"
+        IF (KTYPE(I).EQ.2) THEN
+          IF((MAX(I)-MIN(I)).EQ.3) THEN
+            NSUB = 2
+            SYM(J) = "s"
+          ELSE
+          SYM(J) = "p"
+          ENDIF
+        ENDIF
+        IF (KTYPE(I).EQ.3) SYM(J)="d"
+        IF (KTYPE(I).EQ.4) SYM(J)="f"
+        IF (KTYPE(I).EQ.5) SYM(J)="g"
+        IF (KTYPE(I).EQ.6) SYM(J)="h"
+        IF (KTYPE(I).EQ.7) SYM(J)="i"
+        DO LL=1,NSUB
+          KAT(KATOM(I))=KAT(KATOM(I))+1
+          IF(LL.EQ.2) THEN
+            J=J+1
+            SYM(J)="p"
+          ENDIF
+          NF(J)=KNG(I)
+          L1=NF(J)
+          L2=KSTART(I)
+C         WRITE(IW,'(3X,A1,3X,I3)') SYM(J),NF(J)
+          DO K=1,L1
+            XEXP(J,K)=EX(L2+K-1)
+            IF (SYM(J).EQ."s") COEFF(J,K)=CS(L2+K-1)*XNS(J,K,PI32)
+C           IF (SYM(J).EQ."s")
+C    &         WRITE(IW,'(3F15.8)') XEXP(J,K),COEFF(J,K),CS(L2+K-1)
+            IF (SYM(J).EQ."p") COEFF(J,K)=CP(L2+K-1)*XNP(J,K,PI32)
+C           IF (SYM(J).EQ."p")
+C    &        WRITE(IW,'(3F15.8)') XEXP(J,K),COEFF(J,K),CP(L2+K-1)
+            IF (SYM(J).EQ."d") COEFF(J,K)=CD(L2+K-1)*XND(J,K,PI32)
+C    &      IF (SYM(J).EQ."d")
+C             WRITE(IW,'(3F15.8)') XEXP(J,K),COEFF(J,K),CD(L2+K-1)
+C           ENDIF
+            IF (SYM(J).EQ."f") COEFF(J,K)=CF(L2+K-1)*XNF(J,K,PI32)
+            IF (SYM(J).EQ."g") COEFF(J,K)=CG(L2+K-1)*XNG(J,K,PI32)
+            IF (SYM(J).EQ."h") COEFF(J,K)=CH(L2+K-1)*XNH(J,K,PI32)
+            IF (SYM(J).EQ."i") COEFF(J,K)=CI(L2+K-1)*XNI(J,K,PI32)
+          ENDDO
+        ENDDO
+      ENDDO
+C
+C     The output below is very usefull for understanding the basis
+C     set common area, when developing this routine.
+C
+C     WRITE(IW,'("NSHELL = ",I4)') NSHELL
+C     WRITE(IW,'("EX")')
+C     WRITE(IW,1) (EX(J),J=1,30)
+C     WRITE(IW,'("CS")')
+C     WRITE(IW,1) (CS(J),J=1,30)
+C     WRITE(IW,'("CP")')
+C     WRITE(IW,1) (CP(J),J=1,30)
+C     WRITE(IW,'("CD")')
+C     WRITE(IW,1) (CD(J),J=1,30)
+C     WRITE(IW,'("CF")')
+C     WRITE(IW,1) (CF(J),J=1,30)
+C     WRITE(IW,'("CG")')
+C     WRITE(IW,1) (CG(J),J=1,30)
+C1    FORMAT(5F12.6)
+C     WRITE(IW,'("KSTART")')
+C     WRITE(IW,2) (KSTART(J),J=1,30)
+C     WRITE(IW,'("KATOM")')
+C     WRITE(IW,2) (KATOM(J),J=1,30)
+C     WRITE(IW,'("KTYPE")')
+C     WRITE(IW,2) (KTYPE(J),J=1,30)
+C     WRITE(IW,'("KNG")')
+C     WRITE(IW,2) (KNG(J),J=1,30)
+C     WRITE(IW,'("KLOC")')
+C     WRITE(IW,2) (KLOC(J),J=1,30)
+C     WRITE(IW,'("KMIN")')
+C     WRITE(IW,2) (KMIN(J),J=1,30)
+C     WRITE(IW,'("KMAX")')
+C     WRITE(IW,2) (KMAX(J),J=1,30)
+C2    FORMAT(10I4)
+      RETURN
+      END
+      SUBROUTINE ORBPTM(SUM,C1,C2,XE,XX,YY,ZZ,JT,IT,M,N)
+C#######################################################################
+C
+C     Common routine for finally creating CUBE, GRID, LINE and
+C     DENSCUBE points.
+C
+C     This routine is used only for GAMESS version.
+C
+C#######################################################################
+      IMPLICIT NONE
+      INTEGER MAXCEN,MAXEXP
+      PARAMETER (MAXCEN=200,MAXEXP=4400)
+      INTEGER JT(MAXEXP),IT(MAXEXP),M,N
+      DOUBLE PRECISION SUM,C1(3,MAXCEN),C2(MAXEXP),XE(MAXEXP),XX,YY,ZZ
+      DOUBLE PRECISION R,R2,X,Y,Z,XTEMP,SS
+      INTEGER J
+      DO J=M,N
+        X = XX - C1(1,JT(J))
+        Y = YY - C1(2,JT(J))
+        Z = ZZ - C1(3,JT(J))
+        R2 = X*X + Y*Y + Z*Z
+        R = SQRT(R2)
+        XTEMP = EXP(-XE(J)*R*R)
+        SELECT CASE (IT(J))
+        CASE(1)
+C       S ORBITALS
+        SS = C2(J) 
+        CASE(2)
+C       P ORBITALS
+        SS = C2(J) * X 
+        CASE(3)
+        SS = C2(J) * Y 
+        CASE(4)
+        SS = C2(J) * Z 
+        CASE(5)
+C       D ORBITALS
+        SS = C2(J) * X * X 
+        CASE(6)
+        SS = C2(J) * Y * Y 
+        CASE(7)
+        SS = C2(J) * Z * Z 
+        CASE(8)
+        SS = C2(J) * X * Y 
+        CASE(9)
+        SS = C2(J) * X * Z 
+        CASE(10)
+        SS = C2(J) * Y * Z 
+        CASE(11)
+C       F ORBITALS
+        SS = C2(J) * X * X * X 
+        CASE(12)
+        SS = C2(J) * Y * Y * Y 
+        CASE(13)
+        SS = C2(J) * Z * Z * Z 
+        CASE(14)
+        SS = C2(J) * X * X * Y 
+        CASE(15)
+        SS = C2(J) * X * X * Z 
+        CASE(16)
+        SS = C2(J) * Y * Y * X 
+        CASE(17)
+        SS = C2(J) * Y * Y * Z 
+        CASE(18)
+        SS = C2(J) * Z * Z * X 
+        CASE(19)
+        SS = C2(J) * Z * Z * Y 
+        CASE(20)
+        SS = C2(J) * X * Y * Z 
+        CASE(21)
+C       G ORBITALS
+        SS = C2(J) *X*X*X*X 
+        CASE(22)
+        SS = C2(J) *Y*Y*Y*Y 
+        CASE(23)
+        SS = C2(J) *Z*Z*Z*Z 
+        CASE(24)
+        SS = C2(J) *X*X*X*Y 
+        CASE(25)
+        SS = C2(J) *X*X*X*Z 
+        CASE(26)
+        SS = C2(J) *Y*Y*Y*X 
+        CASE(27)
+        SS = C2(J) *Y*Y*Y*Z 
+        CASE(28)
+        SS = C2(J) *Z*Z*Z*X 
+        CASE(29)
+        SS = C2(J) *Z*Z*Z*Y 
+        CASE(30)
+        SS = C2(J) *X*X*Y*Y 
+        CASE(31)
+        SS = C2(J) *X*X*Z*Z 
+        CASE(32)
+        SS = C2(J) *Y*Y*Z*Z 
+        CASE(33)
+        SS = C2(J) *X*X*Y*Z 
+        CASE(34)
+        SS = C2(J) *Y*Y*X*Z 
+        CASE(35)
+        SS = C2(J) *Z*Z*X*Y 
+        CASE(36)
+C       H ORBITALS
+        SS = C2(J) *X*X*X*X*X 
+        CASE(37)
+        SS = C2(J) *Y*Y*Y*Y*Y 
+        CASE(38)
+        SS = C2(J) *Z*Z*Z*Z*Z 
+        CASE(39)
+        SS = C2(J) *X*X*X*X*Y 
+        CASE(40)
+        SS = C2(J) *X*X*X*X*Z 
+        CASE(41)
+        SS = C2(J) *Y*Y*Y*Y*X 
+        CASE(42)
+        SS = C2(J) *Y*Y*Y*Y*Z 
+        CASE(43)
+        SS = C2(J) *Z*Z*Z*Z*X 
+        CASE(44)
+        SS = C2(J) *Z*Z*Z*Z*Y 
+        CASE(45)
+        SS = C2(J) *X*X*X*Y*Y 
+        CASE(46)
+        SS = C2(J) *X*X*X*Z*Z 
+        CASE(47)
+        SS = C2(J) *Y*Y*Y*X*X 
+        CASE(48)
+        SS = C2(J) *Y*Y*Y*Z*Z 
+        CASE(49)
+        SS = C2(J) *Z*Z*Z*X*X 
+        CASE(50)
+        SS = C2(J) *Z*Z*Z*Y*Y 
+        CASE(51)
+        SS = C2(J) *X*X*X*Y*Z 
+        CASE(52)
+        SS = C2(J) *Y*Y*Y*X*Z 
+        CASE(53)
+        SS = C2(J) *Z*Z*Z*X*Y 
+        CASE(54)
+        SS = C2(J) *X*X*Y*Y*Z 
+        CASE(55)
+        SS = C2(J) *X*X*Z*Z*Y 
+        CASE(56)
+        SS = C2(J) *Y*Y*Z*Z*X 
+        CASE(57)
+C       I ORBITALS
+        SS = C2(J) *X*X*X*X*X*X 
+        CASE(58)
+        SS = C2(J) *Y*Y*Y*Y*Y*Y 
+        CASE(59)
+        SS = C2(J) *Z*Z*Z*Z*Z*Z 
+        CASE(60)
+        SS = C2(J) *X*X*X*X*X*Y 
+        CASE(61)
+        SS = C2(J) *X*X*X*X*X*Z 
+        CASE(62)
+        SS = C2(J) *Y*Y*Y*Y*Y*X 
+        CASE(63)
+        SS = C2(J) *Y*Y*Y*Y*Y*Z 
+        CASE(64)
+        SS = C2(J) *Z*Z*Z*Z*Z*X 
+        CASE(65)
+        SS = C2(J) *Z*Z*Z*Z*Z*Y 
+        CASE(66)
+        SS = C2(J) *X*X*X*X*Y*Y 
+        CASE(67)
+        SS = C2(J) *X*X*X*X*Z*Z 
+        CASE(68)
+        SS = C2(J) *Y*Y*Y*Y*X*X 
+        CASE(69)
+        SS = C2(J) *Y*Y*Y*Y*Z*Z 
+        CASE(70)
+        SS = C2(J) *Z*Z*Z*Z*X*X 
+        CASE(71)
+        SS = C2(J) *Z*Z*Z*Z*Y*Y 
+        CASE(72)
+        SS = C2(J) *X*X*X*X*Y*Z 
+        CASE(73)
+        SS = C2(J) *Y*Y*Y*Y*X*Z 
+        CASE(74)
+        SS = C2(J) *Z*Z*Z*Z*X*Y 
+        CASE(75)
+        SS = C2(J) *X*X*X*Y*Y*Y 
+        CASE(76)
+        SS = C2(J) *X*X*X*Z*Z*Z 
+        CASE(77)
+        SS = C2(J) *Y*Y*Y*Z*Z*Z 
+        CASE(78)
+        SS = C2(J) *X*X*X*Y*Y*Z 
+        CASE(79)
+        SS = C2(J) *X*X*X*Z*Z*Y 
+        CASE(80)
+        SS = C2(J) *Y*Y*Y*X*X*Z 
+        CASE(81)
+        SS = C2(J) *Y*Y*Y*Z*Z*X 
+        CASE(82)
+        SS = C2(J) *Z*Z*Z*X*X*Y 
+        CASE(83)
+        SS = C2(J) *Z*Z*Z*Y*Y*X 
+        CASE(84)
+        SS = C2(J) *X*X*Y*Y*Z*Z 
+        END SELECT
+        SUM = SUM + SS * XTEMP
+      ENDDO
+      RETURN
+      END
+      SUBROUTINE ADDRF(H,L1,ISOL)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      DIMENSION H(*),RF(50000)
+      IF(ISOL.EQ.0) RETURN
+      L2 = L1*(L1+1)/2
+      IF(L2.GT.50000) CALL ABORT0("ADDRF00001")
+      CALL VBRF(RF,L1)
+      DO I=1, L2
+      H(I) = H(I) + RF(I)
+      END DO
+      RETURN
+      END
+      SUBROUTINE VBRF(RF,L1)
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     COMPUTE SOLVATION REACTION FIELD
+C     THE CONTRIBUTION IS STORED IN RF
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+C     PARAMETER (MXATM=2000,MXBAS=2047)
+C     PARAMETER (NUMATM=MXATM)
+      LOGICAL LGR,GGDONE,LCOULRD
+C     COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+C     COMMON /INTFAC/D(3,MXATM),ZVAL(MXATM),NATM,KAN(MXATM),NU(MXBAS)
+C     COMMON /VOLCOM/ RLIO(NUMATM,NUMATM),URLIO(3,NUMATM,NUMATM)
+C     COMMON /INRLPA/ALPH(MXATM),DFUSE(MXATM),NBU(MXBAS),ISHL(MXATM)
+C     LOGICAL LRLPA,LCM3,LCM4
+C     LOGICAL LExt
+C     COMMON /CM3LOG/LRLPA,LCM3,LExt,LCM4
+C     COMMON /CKDD/CK(105,105),DD(105,105),CRLPA(118),Bo
+C     COMMON /GBADDS/LS,LSH,LFGB,LBOND,LFSOL,LGB,LWK1,LWK2,IEND
+      COMMON /GBCNTL/EDIELE,ETGAS,DAMP,SOLN,SOLA,SOLB,SOLG,SOLC,SOLH,
+     .               ISOL,ISCRF,ICMD,ICDS,IAQU,IDOSOL,ICSAVE,ICREAD,
+     .               ISREAD,IGAS,LGR,GGDONE,LCOULRD
+C     COMMON /GBSOLV/EGAS,ESOL,CDST,GPGAS,GPSOL,
+C    .               TCDST,TCDSA(1000),
+C    *               DIPCM2,DP2XYZ(3),
+C    *               DIPLOW,DPLXYZ(3),GPA(1000),CDSA(1000),
+C    *               CHGLOW(1000),CHGCM2(1000),
+C    &               V(1000),RLPA(1000),DPRLPA,DPRXYZ(3)
+      DIMENSION RF(*)
+      L2 = L1*(L1+1)/2
+      DO 200 I=1, L2
+      RF(I) = 0.0D0
+ 200  CONTINUE
+      IF(ISOL.LT.0) RETURN
+CGSOL CALL GBSCRF(RF,L1,0)
+      RETURN
+      END
+      SUBROUTINE PRTVBSOL()
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     PRINT VBSCRF RESULTS (CHARGES, GP, GCDS ETC.)
+C
+C     First created Nov. 29, 2006
+C
+C     Author Jiabo Li
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (MXATM=2000,MXBAS=2047)
+C     PARAMETER (NUMATM=MXATM)
+      LOGICAL LGR,GGDONE,LCOULRD
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /INTFAC/D(3,MXATM),ZVAL(MXATM),NATM,KAN(MXATM),NU(MXBAS)
+      COMMON /GBCNTL/EDIELE,ETGAS,DAMP,SOLN,SOLA,SOLB,SOLG,SOLC,SOLH,
+     .               ISOL,ISCRF,ICMD,ICDS,IAQU,IDOSOL,ICSAVE,ICREAD,
+     .               ISREAD,IGAS,LGR,GGDONE,LCOULRD
+      COMMON /GBSOLV/EGAS,ESOL,CDST,GPGAS,GPSOL,
+     .               TCDST,TCDSA(1000),
+     *               DIPCM2,DP2XYZ(3),
+     *               DIPLOW,DPLXYZ(3),GPA(1000),CDSA(1000),
+     *               CHGLOW(1000),CHGCM2(1000),
+     &V(1000),RLPA(1000),DPRLPA,DPRXYZ(3)
+      IF(ISOL.EQ.0) RETURN
+      IF(ISOL.LT.0) THEN
+         D(1,1) = 0.0D+00
+         RETURN
+      ENDIF
+C     DIELEC=1.0D0/EDIELE
+      PCDST = CDST+TCDST
+      SOLENE = (GPSOL+PCDST)/627.5131018D0+ESOL
+      WRITE(IW,'(//,'' Solution'')')
+      WRITE(IW,1010)
+      WRITE(IW,1000)
+      WRITE(IW,1010)
+          DO I=1,NATM
+            WRITE(IW,1100)I,KAN(I),CHGCM2(I),CHGLOW(I)
+          END DO
+      WRITE(IW,1010)
+      WRITE(IW,*)
+      WRITE(IW,'(/'' Solution dipole moment (Debye)'')')
+      WRITE(IW,1010)
+      WRITE(IW,1110)
+      WRITE(IW,1200)(DP2XYZ(I),I=1,3),DIPCM2
+      WRITE(IW,1210)(DPLXYZ(I),I=1,3),DIPLOW
+      WRITE(IW,1010)
+      WRITE(IW,*)
+      WRITE(IW,'(/'' Summary VBSCRF results'')')
+      WRITE(IW,1700)
+          WRITE  (IW,4400) GPSOL
+ 4400     FORMAT ('(1)  G-P(liq) polarization free energy of solvation',
+     .            T54,F12.3,' kcal/mol')
+
+          WRITE  (IW,4600) PCDST
+ 4600     FORMAT ('(2)  G-CDS(liq) cavity-dispersion-solvent structure',
+     .      '     free energy',T54,F12.3,' kcal/mol')
+
+          WRITE  (IW,4700) GPSOL+PCDST
+ 4700     FORMAT ('(3)  G-P-CDS(liq) = G-P(liq) + G-CDS(liq) ',
+     .            '= (1) + (2)',T54,F12.3,' kcal/mol')
+          WRITE  (IW,4800) SOLENE
+ 4800     FORMAT ('(4)  G-S(liq) free energy of system ) ',
+     .            '= ',T53,F18.8,' a.u.')
+
+      WRITE(IW,1700)
+
+ 1000     FORMAT(' Center     Atomic         CM2          Lowdin  ',/
+     &           ' Number     Number         Charge       Charge  ')
+C1001     FORMAT(' Center     Atomic         CM3          Lowdin  ',/
+C    &           ' Number     Number         Charge       Charge  ')
+C1002     FORMAT(' Center     Atomic         Lowdin       RLPA     ',/
+C    &           ' Number     Number         Charge       Charge  ')
+C1003     FORMAT(' Center     Atomic         CM3          RLPA  ',/
+C    &           ' Number     Number         Charge       Charge  ')
+ 1010 FORMAT('--------------------------------------------------------')
+ 1100 FORMAT(I5,6X,I5,5X,F12.3,1X,F12.3,F12.3)
+C1103 FORMAT(I5,3X,I5,2X,3F10.3)
+C1105 FORMAT(I5,6X,I5,5X,F12.3)
+ 1110 FORMAT(2X,'            X        Y        Z      Total')
+ 1200 FORMAT(1X,'CM2    ',4F9.3)
+ 1210 FORMAT(1X,'Lowdin ',4F9.3)
+C1300 FORMAT(' Center     Atomic                Atomic contribution',/
+C    &  ' Number     Number          G_P          G_CDS     DeltaG_CDS')
+C1600 FORMAT(/2X,'     TOTAL         ',F12.3,1X,F12.3,1X,F12.3)
+ 1700 FORMAT(75(1H-)/)
+      RETURN
+      END
+      SUBROUTINE CENTROID(VX,WRK,X,CC2,L1,L2,LNA)
+C BSD Updated memory use and entry to be more like vb2gau version.
+C BSD Note that Gaussian version does not do extents - next G09 revision
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C
+C     FOR ALL VB ORBITALS CALCULATES AND WRITES THE CENTROIDS OF CHARGE
+C     AND THE ORBITAL EXTENT.
+C
+C     First created Nov. 6, 2009
+C
+C     Author Brian Duke
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      PARAMETER (MXATM=2000)
+      CHARACTER*80 BUFF,WORD,VBPATH
+      CHARACTER*20 BASNAME
+      CHARACTER*12 BFLABE
+      LOGICAL TOCALC,GETORB
+      PARAMETER (MAXCEN=200,MAXBFN=1350,MWPROP=100000)
+      DIMENSION VX(L1,LNA),WRK(L2),X(*),CC2(3,LNA)
+     &,CC(3,MAXCEN),CM(3),DIST(5)
+C     DIMENSION ITAG(19)
+      DIMENSION ITEMP(99),IDIST(5)
+      COMMON /GENINF/NATOM,NELE,NSPIN,NBASIS,NATNUM(MAXCEN),
+     & NATBAS(MAXCEN),ENREP,XYZ(3,MAXCEN),BFLABE(MAXBFN),BASNAME
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /IOUNIT/IAO1E,IAO2E,IOHFORB,IOVBORB,IVBO2E,IOMAP,IOHES,
+     &               IOVBOLIB,IOENGI,IOTEMP,IOTEMPA,IOTEMPB,VBPATH
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+      COMMON /XYZPRP/ XP,YP,ZP,
+     *                DMX,DMY,DMZ,
+     *                QXX,QYY,QZZ,QXY,QXZ,QYZ,
+     *                QMXX,QMYY,QMZZ,QMXY,QMXZ,QMYZ,
+     *                OXXX,OXXY,OXXZ,OXYY,OYYY,OYYZ,
+     *                OXZZ,OYZZ,OZZZ,OXYZ,
+     *                OMXXX,OMXXY,OMXXZ,OMXYY,OMYYY,
+     *                OMYYZ,OMXZZ,OMYZZ,OMZZZ,OMXYZ
+      COMMON /ELPROP/ ELDLOC,ELMLOC,ELPLOC,ELFLOC,
+     *                IEDEN,IEMOM,IEPOT,IEFLD,MODENS,
+     *                IEDOUT,IEMOUT,IEPOUT,IEFOUT,
+     *                IEDINT,IEMINT,IEPINT,IEFINT
+      DATA ELMOM/8HELMOM   /
+      DATA COMASS  /8HCOMASS  /
+      DATA BOHR/0.52917724924D0/
+      DATA ZERO/0.0D0/
+C     DATA ITAG/4H   X,4H   Y,4H   Z,4H  XX,4H  YY,4H  ZZ,4H  XY,
+C    *          4H  XZ,4H  YZ,4H XXX,4H YYY,4H ZZZ,4H XXY,4H XXZ,
+C    *          4H XYY,4H YYZ,4H XZZ,4H YZZ,4H XYZ/
+      TOCALC(J,LCENT,ICENT) = ((METHOD(IBASIS(J)).GT.1.AND.
+     &  METHOD(IBASIS(J)).LT.99.AND.LCENT.LT.3)
+     &  .OR. (LCENT.EQ.2).OR.(LCENT.EQ.3.AND.IBASIS(J).EQ.ICENT))
+C
+C     Options:-
+C
+C     Default: Centroids printed for all groups with method > 1 (i.e VB).
+C     If the run is a reactor, optimisation or frequency run, centroids
+C     are printed for the first step only.
+C     The $CENTROID option allows:-
+C     LCENT = 1 'none':       No centroids printed.
+C     LCENT = 2 'hf':         Add Method 1 (HF) to default VB orbitals.
+C     LCENT = 3 'group n':    Print centroids only for group n. This can
+C                             only appear once.
+C     LCENT = 4 'orbitals n': Print centroids only for n (n < 100) orbitals
+C                             in a list on the following line, e.g.:-
+C              orbitals 3
+C              4 5 6
+C
+C     Optionally followed by 'distances n" and then a line giving n atoms.
+C     Distances of the centroids from these atoms will then be printed.
+C     The default is to use the first few atoms up to a maximum of 5.
+C
+      IF(L2.GT.MWPROP) THEN
+        WRITE(IW,
+     &    '(/," BASIS SIZE TOO LARGE FOR CENTROID CALCULATION")')
+        RETURN
+      ENDIF
+C
+      NDIST=0
+      LCENT = 0
+      ICENT=0
+      K=0
+      WRITE(IW,9)
+      CALL LOCTOR(IOENGI,'$CENTROID',9,IOK,0)
+      IF(IOK.EQ.1) THEN
+ 21     K=K+1
+        READ(IOENGI,'(A80)') BUFF
+        IF (BUFF(1:20).EQ.'                    ') THEN
+          IF(K.EQ.1) GOTO 23
+          GOTO 22
+        ENDIF
+        CALL CONVCASE(BUFF,80,1)
+        ICURSOR=1
+        LENW=0
+        LENBUF=80
+        WORD = ' '
+        CALL READWDM(BUFF,WORD,LENW,ICURSOR,LENBUF)
+        IF(WORD.EQ.'NONE') THEN
+          WRITE(IW,11)
+          RETURN
+        ENDIF
+        IF (WORD.EQ.'DISTANCES') THEN
+          IF(LCENT.EQ.0) WRITE(IW,16)
+          CALL READNUM(BUFF,NDIST,LENW,ICURSOR,LENBUF)
+          IF (NDIST.GT.5) GOTO 9998
+          READ(IOENGI,*,ERR=9998)(IDIST(J),J=1,NDIST)
+          WRITE(IW,17) NDIST,(IDIST(J),J=1,NDIST)
+          GOTO 22
+        ENDIF
+        IF (WORD.EQ.'HF') THEN
+          LCENT = 2
+          WRITE(IW,12)
+        ELSE IF (WORD.EQ.'GROUP') THEN
+          LCENT = 3
+          CALL READNUM(BUFF,ICENT,LENW,ICURSOR,LENBUF)
+          WRITE(IW,13) ICENT
+        ELSE IF (WORD.EQ.'ORBITALS') THEN
+          LCENT = 4
+          CALL READNUM(BUFF,ICENT,LENW,ICURSOR,LENBUF)
+          READ(IOENGI,*,ERR=9999)(ITEMP(J),J=1,ICENT)
+          WRITE(IW,14) ICENT,(ITEMP(J),J=1,ICENT)
+        ELSE
+          WRITE(IW,'(" IMPROPER $CENTROID OPTION FOUND")')
+          RETURN
+        ENDIF
+        GOTO 21
+      ENDIF
+ 23   WRITE(IW,16)
+ 22   WRITE(IW,4)
+C
+C     Save IEMOM
+      IEMOMS = IEMOM
+C     Set required ELMOM variables
+      WHERE  = COMASS
+      ELMLOC = WHERE
+      IEMOM = 2
+      CALL CALCOM(XP,YP,ZP)
+C
+      CM(1) = XP*BOHR
+      CM(2) = YP*BOHR
+      CM(3) = ZP*BOHR
+      DO J=1,NAT
+           WRITE(IW,1) J,NATNUM(J),(XYZ(I,J)-CM(I),I=1,3)
+      END DO
+      CALL FLUSH(IW)
+      NVAL = 9
+      IELM = 1
+      IEMW = IELM + NVAL * L2
+      CALL PRCALC(ELMOM,X(IELM),X(IEMW),NVAL,L2,.FALSE.)
+C
+C     PRINT INTEGRALS - needs ITAG, declared and given values in DATA above.
+C     IMIN = 1
+C     IMAX = 6
+C     INDEX = IELM+(IMIN-1)*L2
+C     DO I=IMIN,IMAX
+C        WRITE(IW,990) ITAG(I)
+C        CALL PRTRIL(X(INDEX),L1)
+C        INDEX = INDEX + L2
+C     ENDDO
+C 990 FORMAT(/10X,A4,' INTEGRALS'/11X,13(1H-))
+C
+      DO I = 1,3
+        DO J = 1,LNA
+          IF(TOCALC(J,LCENT,ICENT).OR.GETORB(J,ICENT,ITEMP,LCENT)) THEN
+            CALL TFTRI(CC(I,J),X(IELM+(I-1)*L2),VX(1,J),WRK,1,L1,L1)
+            CC(I,J) = CC(I,J)*BOHR
+          ENDIF
+        END DO
+      END DO
+C
+C     Now to calculate the extent of the VB orbitals as sqrt(<R**2>)
+C
+      DO I = 1,3
+        DO J = 1,LNA
+          IF(TOCALC(J,LCENT,ICENT).OR.GETORB(J,ICENT,ITEMP,LCENT)) THEN
+            CALL TFTRI(CC2(I,J),X(IELM+(2+I)*L2),VX(1,J),WRK,1,L1,L1)
+          ENDIF
+        END DO
+      END DO
+C
+      IF(NDIST.EQ.0) THEN
+        NDIST=NATOM
+        IF(NATOM.GT.5) NDIST=5
+        DO I=1,NDIST
+          IDIST(I)=I
+        ENDDO
+      ENDIF
+      WRITE(IW,2) NDIST
+      WRITE(IW,5)
+      WRITE(IW,3) (IDIST(I),I=1,NDIST)
+      JJ = 0
+      DO J=1,LNA
+        IF(TOCALC(J,LCENT,ICENT).OR.GETORB(J,ICENT,ITEMP,LCENT)) THEN
+          DO K=1,NDIST
+            SUM = ZERO
+            DO I=1,3
+              SUM = SUM + (CC(I,J) - XYZ(I,IDIST(K)) + CM(I))**2
+            ENDDO
+            DIST(K) = SQRT(SUM)
+          ENDDO
+          JJ = JJ + 1
+          DO I=1,3
+            VX(I,JJ) = CC(I,J)
+          ENDDO
+          WRITE(IW,1) J,IBASIS(J),(CC(I,J),I=1,3),(DIST(K),K=1,NDIST)
+        ENDIF
+      END DO
+C
+C     CALCULATE DISTANCE MATRIX FOR CENTROIDS
+C
+      IF(JJ.GT.1) THEN
+        WRITE(IW,1000) 
+        DO I=1, JJ
+          DO J=1, I
+            XXX=0.0D0
+            DO KK=1,3
+              XXX = XXX + (VX(KK,I) - VX(KK,J))**2
+            END DO
+            X(IJ00(I,J)) = SQRT(XXX)
+          END DO
+        END DO
+        NPRT=(JJ+11)/12
+        NFIST=1
+        DO I=1,NPRT
+          NLAST=NFIST+11
+          IF(NLAST.GT.JJ) NLAST=JJ
+          WRITE(IW,1200)(K,K=NFIST,NLAST)
+          WRITE(IW,1400)("=======",K=NFIST,NLAST)
+          DO J=NFIST, JJ
+            NLL = NLAST
+            IF(NLL.GT.J) NLL = J
+            WRITE(IW,1300)J,(X(IJ00(J,K)),K=NFIST,NLL)
+          END DO
+          NFIST=NLAST+1
+        END DO
+      END IF
+C
+C     CALL FLUSH(IW)
+      WRITE(IW,7)
+      WRITE(IW,8)
+      DO J=1,LNA
+        IF(TOCALC(J,LCENT,ICENT).OR.GETORB(J,ICENT,ITEMP,LCENT)) THEN
+          XEXT = 0.0D0
+          DO I=1,3
+            CC2(I,J) = CC2(I,J)*BOHR**2 - CC(I,J)**2
+            XEXT = XEXT + CC2(I,J)
+          ENDDO
+          XEXT1 = SQRT(XEXT)
+          WRITE(IW,1) J,IBASIS(J),(CC2(I,J),I=1,3),XEXT,XEXT1
+        ENDIF
+      END DO
+      CALL FLUSH(IW)
+C
+C     Refresh ELMOM input if this is a real ELMOM run.
+      IEMOM = IEMOMS
+      IF(IEMOM.GT.0) CALL INPELM
+C
+ 1    FORMAT(1X,I4,6X,I4,5X,8F9.4)
+ 2    FORMAT(/,
+     &' CENTROIDS OF CHARGE FOR EACH VB GROUP & DISTANCES'
+     & ,' FROM',I2,' ATOMS')
+ 3    FORMAT(' Orbital#   Group#',7X,'X',8X,'Y',8X,'Z',5I9,/)
+ 4    FORMAT(/,' MOLECULAR GEOMETRY ABOUT CENTER OF MASS',//,
+     & '  Atom#   ATOMIC NO.',5X,'X',8X,'Y',8X,'Z')
+ 5    FORMAT(/,50X,'DISTANCES FROM ATOMS')
+ 7    FORMAT(/,' EXTENT OF ORBITAL MEASURED BY (<R**2>)',/)
+ 8    FORMAT(' Orbital#   Group#',5X,'<X**2>',3X,'<Y**2>',3X,'<Z**2>'
+     &,3X,'<R**2>',1X,'Sqrt<R**2>',/)
+ 9    FORMAT(/,' CALCULATION OF POSITION AND EXTENT OF VB ORBITALS')
+ 11   FORMAT(/," $CENTROID found to not print centroids and extents.")
+ 12   FORMAT(/," $CENTROID found to add HF group centroids and",
+     &" extends.")
+ 13   FORMAT(/," $CENTROID found for GROUP",I3,".")
+ 14   FORMAT(/," $CENTROID found for",I3," orbitals - ",99I3)
+ 16   FORMAT(/," DEFAULT CENTROIDS AND EXTENTS.")
+ 17   FORMAT(/,I2," DISTANCES found for atoms - ",99I3)
+C
+ 1000 FORMAT(/" DISTANCE MATRIX OF VB ORBITALS CENTROIDS ")
+ 1200 FORMAT(/2X,12I7)
+ 1300 FORMAT(1X,I3,12F7.4)
+ 1400 FORMAT(1X,3(1H=),12(A7))
+C
+      RETURN
+ 9998 WRITE(IW,'("INCORRECT DISTANCES DATA")')
+      CALL ABORT0("CENTROID01")
+ 9999 WRITE(IW,'("INCORRECT ORBITAL DATA")')
+      CALL ABORT0("CENTROID01")
+      END
+      LOGICAL FUNCTION GETORB(M,N,I,L)
+      INTEGER I(99)
+      GETORB = .FALSE.
+      IF (L.NE.4) RETURN
+      DO J=1,N
+        IF(M.EQ.I(J)) THEN
+          GETORB = .TRUE.
+          RETURN
+        ENDIF
+      ENDDO
+      RETURN
+      END
+      SUBROUTINE ENDGMS
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      DIMENSION TIMSTR(3)
+      COMMON /MACHIN/ NWDVAR,MAXFM,MAXSM,LIMFM,LIMSM
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      CALL BIGFM(MAXFM)
+      CALL TMDATE(TIMSTR)
+      WRITE(IW,1) TIMSTR
+C     CALL TIMIT(1)
+      CALL ENDING
+ 1    FORMAT(' EXECUTION OF GAMESS TERMINATED NORMALLY ',3A8)
+      END
+      SUBROUTINE CKMEM(IPAR)
+      IMPLICIT DOUBLE PRECISION(A-H,O-Z)
+      COMMON /FMPARM/ LTOP,LOFFS,LENHI,LOCMEM,MEMLIM,MEMOK
+C
+C     RETURNS MAXIMUM MEMORY USED BY GAMESS FOR USE IN
+C     ALLOCATING VB2000 MEMORY
+C
+      IPAR = LENHI
+      RETURN
+      END
+      SUBROUTINE GETVBOLIB(K,BAS,IOLVBO,MAXATNO)
+      IMPLICIT NONE
+      CHARACTER*80 BAS
+      INTEGER K,IOLVBO,MAXATNO
+C
+      INTEGER NUCZ,I
+      LOGICAL NOTHING
+      DOUBLE PRECISION ZNUC
+C
+      DOUBLE PRECISION ZAN,C
+      INTEGER NAT,ICH,MUL,NUM,NX,NE,NA,NB,IAN,MXATM
+      PARAMETER (MXATM=2000)
+      COMMON/INFOA/ NAT, ICH, MUL, NUM, NX, NE, NA, NB,
+     1    ZAN(MXATM), C(3,MXATM), IAN(MXATM)
+C
+      INTEGER IR,IW,IP,IS,IPK,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+C
+      INTEGER MAXA,MAXL,IGAUSS,NDFUNC,NFFUNC,NPFUNC,IAGAUS,IRDBAS
+      LOGICAL DIFFS,DIFFSP
+      CHARACTER*8 GBASIS
+      DOUBLE PRECISION GBASISC,AEX,ABASIS,POLAR
+      PARAMETER (MAXA=103, MAXL=7)
+      COMMON /COMPBS/ IGAUSS,NDFUNC,NFFUNC,NPFUNC,DIFFSP,DIFFS,
+     *                POLAR
+      COMMON /BASISC/ GBASISC,AEX(MAXA,MAXL),ABASIS(MAXA,MAXL),
+     *                IAGAUS(MAXA,MAXL),IRDBAS
+C
+      NOTHING=NDFUNC.EQ.0.AND.NFFUNC.EQ.0.AND.NPFUNC.EQ.0.AND.
+     &.NOT.DIFFSP.AND..NOT.DIFFS
+C
+      WRITE(UNIT=GBASIS,FMT='(A8)') GBASISC
+      MAXATNO=1
+C     DEFAULT FOR ALTERING VBOLIB
+      ZNUC=0.0D0
+      DO I=1,NAT
+        IF(ZAN(I).GT.ZNUC) ZNUC=ZAN(I)
+      ENDDO
+      NUCZ=INT(ZNUC)
+      IF(GBASIS.NE.'        ') THEN
+        IF(IGAUSS.NE.0) WRITE(IW,1)  GBASIS,IGAUSS
+        IF(IGAUSS.EQ.0) WRITE(IW,4)  GBASIS
+        IF(NDFUNC.GT.0.OR.NFFUNC.GT.0.OR.NPFUNC.GT.0)
+     &     WRITE(IW,2) NDFUNC,NFFUNC,NPFUNC
+        IF(DIFFSP.OR.DIFFS) WRITE(IW,3) DIFFSP,DIFFS
+      ELSE
+        WRITE(IW,'(/," BASIS FROM #! LINE = ",A20)') BAS(1:20)   
+      ENDIF
+      IF(BAS(1:3).EQ.'D95') THEN
+C       D95 WAS THE ONLY BASIS ALLOWED ONLY FROM #! LINE, WITH BASIS 
+C       DEFINED IN $DATA BLOCK, BUT A FEW OTHERS ARE ALLOWED BELOW,
+C       FOR 6-31G.., 6-311G.. and STO.. BASIS SETS.
+        BAS='D95'
+        K=3
+        RETURN
+      ENDIF
+      IF(GBASIS(1:4).EQ.'MIDI') THEN
+C       This is the MIDI basis set, not the MIDI! basis set in the
+C       stand-alone version.
+        BAS='MIDI'
+        K=5
+        RETURN
+      ENDIF
+      IF(GBASIS(1:4).EQ.'MINI'.AND.NUCZ.LE.18) THEN
+C       STO-nG VBOLIB IS OK FOR MINI AT LEAST UP TO 2ND ROW.
+C       NDFUNC AND NFFUNC ARE ALLOWED.
+        BAS='STO-nG'
+        K=6
+        RETURN
+      ENDIF
+      IF(GBASIS(1:3).EQ.'STO'.OR.BAS(1:3).EQ.'STO') THEN
+C       ANY VALUE OF IGAUSS ALLOWED, BUT ADDITIONAL d FUNCTIONS 
+C       ARE FOR Na AND HEAVIER ATOMS ONLY. f FUNCTIONS LEAD TO
+C       FAILURE IN GAMESS.
+        BAS='STO-nG'
+        MAXATNO=11
+        K=6
+        RETURN
+      ENDIF
+      IF(GBASIS(1:3).EQ.'N21') THEN
+C       MUST ACCOMMODATE 3-21G AND 3-21G*.
+C       GAMESS HAS IGAUSS=3 OR 6. BOTH CAN USE THIS VBOLIB.
+C       d ORBITALS WITH NDFUNC ALLOWED ONLY FOR Na ON, BUT f 
+C       ORBITALS ARE NOT ALLOWED AS WITH STO. NPFUNC IS OK FOR H.
+        BAS='3-21G'
+        MAXATNO=11
+        K=5
+        RETURN
+      ENDIF
+      IF((GBASIS(1:4).EQ.'N311'.OR.BAS(1:5).EQ.'6-311')
+     & .AND.NUCZ.LE.10) THEN
+C       ONLY IGAUSS=6 IS ALLOWED. McLEAN/CHANDLER BEYOND Ne ARE
+C       NOT SUPPORTED. ALSO ALLOWS 6-31G FROM #! LINE.
+C       All 6-311 + polarisation and diffuse functions can use this.
+        BAS='6-311G'
+        K=6
+        RETURN
+      ENDIF
+      IF(GBASIS(1:3).EQ.'N31'.OR.BAS(1:5).EQ.'6-31G') THEN
+C       MUST ACCOMMODATE 6-31G*,6-31G**,6-31+G*,6-31++G** AND OTHERS.
+C       GAMESS HAS IGAUSS=4, 5 OR 6. ALL CAN USE THIS VBOLIB.
+C       ALSO ALLOWS 6-311G FROM #! LINE.
+C       All 6-31 + polarisation and diffuse functions can use this.
+        BAS='6-31G'
+        K=5
+        RETURN
+      ENDIF
+      IF(GBASIS(1:3).EQ.'CCD'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+        BAS='CCPVDZ'
+        K=6
+        RETURN
+      ENDIF
+      IF(GBASIS(1:3).EQ.'CCT'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+        BAS='CCPVTZ'
+        K=6
+        RETURN
+      ENDIF
+      IF(GBASIS(1:3).EQ.'CCQ'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+        BAS='CCPVQZ'
+        K=6
+        RETURN
+      ENDIF
+C     IF(GBASIS(1:3).EQ.'CC5'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+C       BAS='CCPV5Z'
+C       K=6
+C       RETURN
+C     ENDIF
+      IF(GBASIS(1:4).EQ.'ACCD'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+        BAS='AUG-CC-PVDZ'
+        K=11
+        RETURN
+      ENDIF
+      IF(GBASIS(1:4).EQ.'ACCT'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+        BAS='AUG-CC-PVTZ'
+        K=11
+        RETURN
+      ENDIF
+      IF(GBASIS(1:4).EQ.'ACCQ'.AND.NOTHING.AND.NUCZ.LE.18) THEN
+        BAS='AUG-CC-PVQZ'
+        K=11
+        RETURN
+      ENDIF
+      IF(GBASIS.EQ.'        ') THEN
+        WRITE(IW,103) 
+      ELSE
+        WRITE(IW,101) GBASIS
+      ENDIF
+      WRITE(IW,102)
+      IOLVBO = 0
+      RETURN
+ 1    FORMAT(/," BASIS IN $BASIS IS ",A8," WITH IGAUSS =",I2) 
+ 2    FORMAT(" NDFUNC =",I2," NFFUNC =",I2," NPFUNC =",I2)
+ 3    FORMAT(" DIFFSP =",L2," DIFFS =",L2)
+ 4    FORMAT(/," BASIS IN $BASIS IS ",A8) 
+ 101  FORMAT(/,' VBO LIB NOT AVAILABLE FOR GBASIS = ',A8)
+ 102  FORMAT(' ALL FUNCTIONALITY RELATED TO LIB VBO WILL BE DISABLED')
+ 103  FORMAT(/,' VBO LIB NOT AVAILABLE WITH BASIS DEFINED IN $DATA')
+      END
+      SUBROUTINE ADDVBOLIB(IOLVBO,IOTEMPA,FILENAME,BAS,MAXATNO,IOK)
+C     =================================================================
+C
+C     Modifies the VBOLIB of a simple basis set, such as 6-31G, to add
+C     polarisation and diffuse functions.
+C
+C     For GAMESS/VB2000 only.
+C
+C     Brian Duke - August 2013
+C
+C     =================================================================
+      IMPLICIT NONE
+      INTEGER IOTEMPA,IOLVBO,MAXATNO,IOK,NDF
+      CHARACTER*80 FILENAME,BAS
+C
+      INTEGER NAT(10),NEW(10),I,K,L,L1,NT,NOLD,NEWTOT,NATNO
+      CHARACTER*2 DOLLAR
+      CHARACTER*3 SYM,SSYM,DSYM(6),FSYM(10),PSYM(3),SPSYM(4)
+      CHARACTER*50 BUFF,BUFFER(120),BUFFER2(120)
+      LOGICAL LCC,LNATNO
+      DOUBLE PRECISION ZERO
+C
+      LOGICAL DIFFS,DIFFSP
+      INTEGER IGAUSS,NDFUNC,NFFUNC,NPFUNC
+      DOUBLE PRECISION POLAR
+      COMMON /COMPBS/ IGAUSS,NDFUNC,NFFUNC,NPFUNC,DIFFSP,DIFFS,
+     *                POLAR
+C
+      INTEGER IR,IW,IP,IS,IPK,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+C
+      DATA DSYM/'xx','yy','zz','xy','xz','yz'/
+      DATA PSYM/' x',' y',' z'/
+      DATA SPSYM/' s',' x',' y',' z'/
+      DATA FSYM/
+     & 'xxx','yyy','zzz','xxy','xxz','yyx','yyz','zzx','zzy','xyz'/
+      DATA SSYM/' s'/
+      DATA DOLLAR/'$'/
+      DATA ZERO/0.0D0/
+      LNATNO(NATNO) =(NATNO.GE.3.AND.NATNO.LE.9)
+     &    .OR.(NATNO.GE.11.AND.NATNO.LE.17)
+     &    .OR.(NATNO.GE.31.AND.NATNO.LE.35)
+     &    .OR.(NATNO.GE.49.AND.NATNO.LE.53)
+C
+      LCC=.FALSE.
+      LCC=(BAS(1:2).EQ.'CC').OR.(BAS(1:2).EQ.'AUG')
+      IF(NDFUNC.EQ.0.AND.NFFUNC.EQ.0.AND.NPFUNC.EQ.0.AND..NOT.DIFFSP
+     & .AND..NOT.DIFFS.AND..NOT.LCC) RETURN
+C     NOTHING TO DO
+C
+      NDF=NDFUNC
+      IF(LCC) NDF=1
+      WRITE(IW,100)
+      OPEN(UNIT=IOTEMPA, FILE=FILENAME, STATUS="UNKNOWN",ERR=3)
+ 1    READ(IOLVBO,101,END=2) BUFF
+      DO I=1,20
+        IF(BUFF(I:I).EQ.DOLLAR) GOTO 4
+      ENDDO
+      WRITE(IOTEMPA,101) BUFF
+      GOTO 1
+ 4    WRITE(IOTEMPA,101) BUFF
+      READ(IOLVBO,101,END=2) BUFF
+      READ(BUFF,*) NT
+      WRITE(IOTEMPA,101) BUFF
+      NT=NT+1
+      DO I=1,NT
+        READ(IOLVBO,101,END=2) BUFF
+        IF(I.EQ.1) READ(BUFF(1:3),'(I3)') NATNO
+        WRITE(IOTEMPA,101) BUFF
+      ENDDO
+      READ(IOLVBO,101,END=2) BUFF
+      READ(BUFF(1:3),'(I3)') NT
+C     NT IS NUMBER OF ATOMS INVOLVED, USUALLY JUST 1
+      WRITE(IOTEMPA,101) BUFF
+      READ(IOLVBO,101,END=2) BUFF
+      WRITE(IOTEMPA,101) BUFF
+      READ(IOLVBO,101,END=2) BUFF
+      READ(BUFF,*) (NAT(I),I=1,NT)
+      K=1
+      NOLD=0
+      DO L=1,NT
+        I=(L-1)*NAT(L) + 1
+        NOLD=NOLD+NAT(L)
+        DO L1=I,NOLD
+          READ(IOLVBO,101,END=2) BUFF
+          WRITE(BUFF(1:4),'(I4)') K
+          WRITE(BUFFER(L1),101) BUFF
+          WRITE(BUFFER2(K),101) BUFFER(L1)
+          K=K+1
+        ENDDO
+        READ(BUFFER(1),'(A50)') BUFF
+        READ(BUFF(9:10),'(A2)') SYM
+        IF(DIFFSP.AND.LNATNO(NATNO)) THEN
+          DO I=1,4
+            WRITE(BUFF(1:4),'(I4)') K
+            WRITE(BUFF(5:7),'(I3)') L
+            WRITE(BUFF(9:10),'(A2)') SYM
+            WRITE(BUFF(15:16),'(A2)') SPSYM(I)
+            WRITE(BUFF(17:26),'(F10.5)') ZERO
+            WRITE(BUFFER2(K),101) BUFF
+            K=K+1
+          ENDDO
+        ENDIF
+        IF(DIFFS.AND.SYM.EQ.' H') THEN
+          WRITE(BUFF(1:4),'(I4)') K
+          WRITE(BUFF(5:7),'(I3)') L
+          WRITE(BUFF(9:10),'(A2)') SYM
+          WRITE(BUFF(15:16),'(A2)') SSYM
+          WRITE(BUFF(17:26),'(F10.5)') ZERO
+          WRITE(BUFFER2(K),101) BUFF
+          K=K+1
+        ENDIF
+        IF((NDFUNC.GT.0.AND.SYM.NE.' H'.AND.NATNO.GE.MAXATNO).OR.
+     &   (LCC.AND.NATNO.GT.10)) THEN
+C         FOR 3-21G and STO-nG, d ADDED ONLY FOR Na ON.
+C         FOR CCn AND AUG-CCn, ADD EXTRA D FOR 2nd ROW TO GIVE 
+C         cc-pV(n+d)Z AND aug-cc-pV(n+d)Z.
+          DO L1=1,NDF
+            DO I=1,6
+              WRITE(BUFF(1:4),'(I4)') K
+              WRITE(BUFF(5:7),'(I3)') L
+              WRITE(BUFF(9:10),'(A2)') SYM
+              WRITE(BUFF(15:16),'(A2)') DSYM(I)
+              WRITE(BUFF(17:26),'(F10.5)') ZERO
+              WRITE(BUFFER2(K),101) BUFF
+              K=K+1
+            ENDDO
+          ENDDO
+        ENDIF
+        IF(NFFUNC.EQ.1.AND.SYM.NE.' H'.AND.NATNO.LE.18) THEN
+          DO I=1,10
+            WRITE(BUFF(1:4),'(I4)') K
+            WRITE(BUFF(5:7),'(I3)') L
+            WRITE(BUFF(9:10),'(A2)') SYM
+            WRITE(BUFF(14:16),'(A3)') FSYM(I)
+            WRITE(BUFF(17:26),'(F10.5)') ZERO
+            WRITE(BUFFER2(K),101) BUFF
+            K=K+1
+          ENDDO
+        ENDIF
+        IF(NPFUNC.GT.0.AND.SYM.EQ.' H') THEN
+          DO L1=1,NPFUNC
+            DO I=1,3
+              WRITE(BUFF(1:4),'(I4)') K
+              WRITE(BUFF(5:7),'(I3)') L
+              WRITE(BUFF(9:10),'(A2)') SYM
+              WRITE(BUFF(15:16),'(A2)') PSYM(I)
+              WRITE(BUFF(17:26),'(F10.5)') ZERO
+              WRITE(BUFFER2(K),101) BUFF
+              K=K+1
+            ENDDO
+          ENDDO
+        ENDIF
+        IF (L.EQ.1) THEN
+          NEW(L)=K-1
+        ELSE
+          NEW(L)=K-1-NEW(L-1)
+        ENDIF
+      ENDDO
+      WRITE(IOTEMPA,'(10I3)') (NEW(L1),L1=1,NT)
+      NEWTOT=0
+      DO L1=1,NT
+        NEWTOT=NEWTOT+NEW(L1)
+      ENDDO
+      DO I=1,NEWTOT
+        WRITE(IOTEMPA,101) BUFFER2(I)
+      ENDDO
+      GOTO 1
+ 2    CLOSE(IOTEMPA)
+      CLOSE(IOLVBO)
+      OPEN(UNIT=IOLVBO, FILE=FILENAME, STATUS="OLD",ERR=3)
+      REWIND(IOLVBO)
+ 3    CONTINUE
+      IF(IOK.EQ.1) THEN
+        WRITE(IW,'(/," LISTING VBOLIB ",80A,/)') FILENAME
+ 11     READ(IOLVBO,101,END=22) BUFF
+        WRITE(IW,101) BUFF
+        GOTO 11
+      ENDIF
+ 22   REWIND(IOLVBO)
+      RETURN
+ 100  FORMAT(' MODIFYING VBOLIB FOR GAMESS',/)
+ 101  FORMAT(A50)
+      END
+      SUBROUTINE GETGVB(TRANS,NBASIS,VBOLAB,LGVB)
+C     =================================================================
+C
+C     This routine gets the GVB orbitals calculated by GAMESS if
+C     SCFTYP=GVB. These can then be used for the VB guess, allowing a
+C     much better guess for variations on the GVB wavefunction.
+C
+C     The code has been blatantly copied from SUBROUTINE GVBOUT in
+C     gvb.src as the orbitals are not stored by GAMESS and have to be
+C     recalculated.
+C
+C     Written: Brian J. Duke, December 2013 
+C
+C     =================================================================
+C
+      IMPLICIT NONE
+      INTEGER NBASIS,MAXBFN
+      LOGICAL LGVB
+      PARAMETER (MAXBFN=1350)
+      DOUBLE PRECISION TRANS(NBASIS,NBASIS)
+      CHARACTER*8  VBOLAB(1000)
+C
+      INTEGER I,K,M1,M2,IPH1,IPH2,L2
+      DOUBLE PRECISION ALPH,BET,RMAX1,RMAX2,C1,C2,RGVB,GI(MAXBFN,2)
+C
+      INTEGER IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)
+C
+      INTEGER NO,NCO,NSETO,NOPEN,NPAIR,NORB,NCONF,NHAM,MXAO
+      PARAMETER (MXAO=8192)
+      DOUBLE PRECISION CICOEF,F,ALPHA,BETA
+      COMMON /GVBWFN/ CICOEF(2,12),F(25),ALPHA(325),BETA(325),NO(10),
+     *                NCO,NSETO,NOPEN,NPAIR,NORB,NCONF(MXAO),NHAM
+C
+      INTEGER JPAIR,KONE,KTWO,KCORB
+      DOUBLE PRECISION CIHAM,CILOW
+      COMMON /GVBCI / CIHAM(91),CILOW(12),JPAIR,KONE,KTWO,KCORB(2,12)
+C
+      INTEGER MPLEVL,MPCTYP
+      DOUBLE PRECISION SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP
+      COMMON /WFNOPT/ SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP,
+     *                MPLEVL,MPCTYP
+C
+      DOUBLE PRECISION ZERO,ONE
+      PARAMETER (ZERO=0.0D+0, ONE=1.0D+00)
+      DATA RGVB  /8HGVB     /
+C
+      IF(SCFTYP.NE.RGVB) RETURN
+C     CHECKS SUCH AS NOT APPLICABLE TO OPEN-SHELL GVB ARE DONE IN
+C     SUBROUTINE MODGVB CALLED FIRST.
+C
+      WRITE(IW,9001)
+      LGVB = .TRUE.
+      L2 = NBASIS*NBASIS
+      CALL DAREAD(IDAF,IODA,TRANS,L2,15,0)
+C
+C     WRITE (IW,9188)
+      DO 360 I = 1,NPAIR
+         C1 = CICOEF(1,I)
+         C2 = CICOEF(2,I)
+         M1 = KCORB(1,I)
+         M2 = KCORB(2,I)
+         ALPH = SQRT(-C1/C2)
+         BET = ONE/SQRT(ONE+ALPH**2)
+         ALPH = ALPH*BET
+         RMAX1 = ZERO
+         RMAX2 = ZERO
+         IPH1 = 1
+         IPH2 = 1
+         DO 320 K = 1,NBASIS
+            GI(K,1) = ALPH*TRANS(K,M1) + BET*TRANS(K,M2)
+            GI(K,2) = -ALPH*TRANS(K,M1)+BET*TRANS(K,M2)
+            IF ( ABS(GI(K,1)) .GT. RMAX1) THEN
+               IPH1 = 1
+               RMAX1 = ABS(GI(K,1))
+               IF (GI(K,1) .LT. ZERO) IPH1 = -1
+            END IF
+            IF (ABS(GI(K,2)) .GT. RMAX2) THEN
+               IPH2 = 1
+               RMAX2 = ABS(GI(K,2))
+               IF (GI(K,2) .LT. ZERO) IPH2 = -1
+            END IF
+  320    CONTINUE
+         DO 350 K = 1,NBASIS
+            IF (IPH1 .GT. 0) GO TO 340
+            GI(K,1) = -GI(K,1)
+            IF (IPH2 .GT. 0) GO TO 340
+            GI(K,2) = -GI(K,2)
+  340    CONTINUE
+            TRANS(K,M1) = GI(K,1)
+            TRANS(K,M2) = GI(K,2)
+  350    CONTINUE
+C        WRITE (IW,9208) I
+C        CALL PRSQL(GI,2,NBASIS,500)
+  360 CONTINUE
+      DO K=1, NBASIS
+        VBOLAB(K) = '       '
+      END DO
+      RETURN
+ 9001 FORMAT(" GVB INITIAL GUESS SELECTED FOR VB RUN",/)
+C9188 FORMAT(/,1X,"GVB Orbitals",/," ============")
+C9208 FORMAT(/,25X,5HPAIR ,I3)
+      END
+      SUBROUTINE MODGVB(TRANS,TEMP,E,NBASIS,IFLAG)
+C     =================================================================
+C
+C     This modifies the GVB orbitals so the set of NPAIR bonding and
+C     antibonding pairs is replaced by NPAIR bonding followed by NPAIR
+C     antibonding orbitals, in order that correct LMOs can be generated
+C     for the contribution to the initial 1-el density - that is to use
+C     existing code prior to reading the GVB orbitals as the initial
+C     guess in GETGVB.
+C
+C     Written: Brian J. Duke, August 2014 
+C
+C     =================================================================
+C
+      IMPLICIT NONE
+      INTEGER NBASIS,IFLAG
+      DOUBLE PRECISION TRANS(NBASIS,NBASIS),TEMP(NBASIS,NBASIS)
+     &  ,E(NBASIS)
+C
+      INTEGER I,J,K,L
+      DOUBLE PRECISION RGVB,E1(1000)
+C
+      INTEGER IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)
+C
+      INTEGER NO,NCO,NSETO,NOPEN,NPAIR,NORB,NCONF,NHAM,MXAO
+      PARAMETER (MXAO=8192)
+      DOUBLE PRECISION CICOEF,F,ALPHA,BETA
+      COMMON /GVBWFN/ CICOEF(2,12),F(25),ALPHA(325),BETA(325),NO(10),
+     *                NCO,NSETO,NOPEN,NPAIR,NORB,NCONF(MXAO),NHAM
+C
+      INTEGER MPLEVL,MPCTYP
+      DOUBLE PRECISION SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP
+      COMMON /WFNOPT/ SCFTYP,VBTYP,DFTYPE,TDDFTYP,CITYP,CCTYP,
+     *                MPLEVL,MPCTYP
+C
+      DATA RGVB   /8HGVB     /
+      IF(SCFTYP.NE.RGVB) RETURN
+      IF(IFLAG.EQ.6) RETURN
+      IF(NSETO.NE.0) THEN
+        WRITE(IW,9000)
+        CALL ABRT
+        RETURN
+      ENDIF
+      DO I=1,NCO
+        E1(I)=E(I)
+        DO J=1,NBASIS
+          TEMP(J,I)=TRANS(J,I)
+        ENDDO
+C       WRITE(IW,1) (TEMP(J,I),J=1,NBASIS)
+      ENDDO
+      DO I=1,NPAIR
+        K=2*I+NCO
+        L=I+NCO
+        E1(L)=E(K-1)
+        E1(L+NPAIR)=E(K)
+        DO J=1,NBASIS
+          TEMP(J,L)=TRANS(J,K-1)
+          TEMP(J,L+NPAIR)=TRANS(J,K)
+        ENDDO
+      ENDDO
+      L=NCO+1
+      K=NCO+2*NPAIR
+      DO I=L,K
+C       WRITE(IW,1) (TEMP(J,I),J=1,NBASIS)
+      ENDDO
+      K=NCO+2*NPAIR
+      DO I=1,K
+        E(I)=E1(I)
+        DO J=1,NBASIS
+          TRANS(J,I)=TEMP(J,I)
+        ENDDO
+      ENDDO
+      WRITE(IW,'(" GVB ORBITALS REORDERED TO GET LMOS")')
+      RETURN
+C1    FORMAT(5F10.5)
+ 9000 FORMAT(" GVB INITIAL GUESS NOT ALLOWED FOR OPEN-SHELL GVB")
+      END
+      SUBROUTINE GETVEC(W,EIG,NBASIS,NORB,IFLAG)
+C     =================================================================
+C
+C     $READMOS is a directive that reads the HF orbitals from the $VEC
+C     group in the main input stream. This can be useful when the
+C     GAMESS run is MCSCF and giving a poor order for the LMOs. The
+C     $VEC group will be present for use by the MCSCF. This routine
+C     replaces the MCSCF orbitals by these HF orbitals to get LMOS and
+C     the initial VB guess.
+C
+C     The  HF orbitals from the $VEC group in the main input stream 
+C     are also read if $SKIPGMSHF is present, usually for a input file
+C     that has been generated from a Molden file.
+C
+C     It will also read the eigenvalues in a $EIGENVALUE block, but if
+C     this is absent, ther are set to zero.
+C
+C     Written: Brian J. Duke, January 2015.
+C     $SKIPGMSHF addition: May 2015.
+C
+C     =================================================================
+C
+      IMPLICIT NONE
+      INTEGER NBASIS,NORB,IFLAG,I,J,K,IOK,N2
+      DOUBLE PRECISION W(*),XX(1000),EIG(*)
+      CHARACTER*80 RECORD
+C
+      INTEGER IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)
+C
+      INTEGER LPROP,NOSYMV,MAXOCC,LNOS,JSTEP,MGMS
+      DOUBLE PRECISION VBENGY
+      COMMON /VBINTF/ VBENGY,LPROP,NOSYMV,MAXOCC,LNOS,JSTEP,MGMS
+C
+      REWIND IR
+      CALL LOCTOR(IR,'$READMOS',8,IOK,0)
+C     WRITE(IW,'("IOK - MGMS",2I4)') IOK,MGMS
+      IF(IOK.EQ.0.AND.MGMS.EQ.0) RETURN
+      IFLAG=6
+      N2=NBASIS*NBASIS
+      REWIND IR
+ 1    READ(IR,4,END=2,ERR=2) RECORD
+C     WRITE(IW,4) RECORD
+      IF(RECORD(1:6).NE." $VEC ") GOTO 1
+      K=1
+      DO I=1,NORB
+        READ(IR,3) (XX(J),J=1,NBASIS)
+C       WRITE(IW,3) (XX(J),J=1,NBASIS)
+        DO J=1,NBASIS
+          W(K)=XX(J)
+          K=K+1
+        ENDDO
+      ENDDO
+      CALL DAWRIT(IDAF,IODA,W,N2,15,0)
+      REWIND IR
+ 5    READ(IR,4,END=7,ERR=7) RECORD
+C     WRITE(IW,4) RECORD
+      IF(RECORD(1:12).NE." $EIGENVALUE") GOTO 5
+      READ(IR,'(I3)') N2
+      READ(IR,6) (EIG(J),J=1,N2)
+      REWIND IR
+      GOTO 8
+ 7    WRITE(IW,'(" NO $EIGENVALUE GROUP FOUND -",
+     &" CONTINUING WITH ZERO EIGENVALUES")')
+      DO J=1,NBASIS
+        EIG(J)=0.0D0
+      ENDDO
+ 8    CALL DAWRIT(IDAF,IODA,EIG,NBASIS,17,0)
+      RETURN
+ 2    WRITE(IW,'(" NO $VEC GROUP FOUND -",
+     &" CONTINUING AS IF NO $READMOS")')
+      IFLAG = 4
+      RETURN
+ 3    FORMAT(5X,5E15.8)
+ 4    FORMAT(A80)
+ 6    FORMAT(5E16.8)
+      END
+      SUBROUTINE PRINT_NOS(VEC,OCC,M,L1)
+C     =================================================================
+C
+C     $PRINTNOS is a directive that prints the natural orbitals of the
+C     VB function that have been calculated by the use of the directive
+C     AIMPAC=.TRUE. in the GAMESS $CONTRL group. $PRINTNOS has no data 
+C     and AIMPAC=.TRUE. must be set.
+C
+C     Written: Brian J. Duke, October 2015 
+C
+C     =================================================================
+C
+      IMPLICIT NONE
+      INTEGER M,L1
+      DOUBLE PRECISION VEC(L1,L1),OCC(L1)
+C
+      INTEGER I,J,K,IOK,NPRT,NFIST,NLAST
+C
+      INTEGER MAXCEN,MAXBFN,NATOM,NELE,NSPIN,NBASIS,NATNUM,NATBAS
+      DOUBLE PRECISION ENREP,XYZ
+      CHARACTER*12 BFLABE
+      CHARACTER*20 BASNAME
+      PARAMETER (MAXCEN=200,MAXBFN=1350)
+      COMMON /GENINF/NATOM,NELE,NSPIN,NBASIS,NATNUM(MAXCEN),
+     & NATBAS(MAXCEN),ENREP,XYZ(3,MAXCEN),BFLABE(MAXBFN),BASNAME
+
+      INTEGER IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA
+      COMMON /IOFILE/ IR,IW,IP,IJK,IJKT,IDAF,NAV,IODA(950)
+C
+      REWIND IR
+      CALL LOCTOR(IR,'$PRINTNOS',8,IOK,0)
+      IF(IOK.EQ.0) RETURN
+      NPRT=(M+5)/6
+      WRITE(IW,1)
+      NFIST=1
+      DO I=1,NPRT
+        NLAST=NFIST+5
+        IF(NLAST.GT.M) NLAST=M
+        WRITE(IW,2)(K,K=NFIST,NLAST)
+        WRITE(IW,3) (OCC(K),K=NFIST,NLAST)
+        DO J=1,NBASIS
+          WRITE(IW,4) J,BFLABE(J),(VEC(J,K),K=NFIST,NLAST)
+        END DO
+        WRITE(IW,*)
+        NFIST=NLAST+1
+      END DO
+      RETURN
+ 1    FORMAT(/' Natural orbitals and occupancy numbers'/1X,79(1H=))
+ 2    FORMAT(1X,'NO#              ',6I10)
+ 3    FORMAT(1X,'Occupation No.   ',6F10.3)
+ 4    FORMAT(1X,I3,A12,2X,6F10.5)
+      END
+C*=====================================================================*
+C|                                                                     |
+C|   Generalized Product Function Energy Partitioning - GPF-EP         |
+C|                    Version 0.6.1 - May, 2018                        |
+C|                                                                     |
+C*=====================================================================*
+C                                                                      C
+C   Version 0.1 - July 2009 written by Thiago Messias Cardozo          C
+C   Incorporated into VB2000/GAMESS by Carlos Eduardo Vieira de Moura  C
+C                                                                      C
+C   Version 0.2 - June 2015 updated by David W.O. Sousa                C
+C   CHANGES IN VERSION 0.2:                                            C
+C   * Calculation of occupation numbers                                C
+C   * Corrected formulas generalized to SCVB(N,M)                      C
+C   * Simple Error Handling and Warning Messages                       C
+C   * Improved result printing for gpfep and density matrix            C
+C   * Fixed: Pair interference energies for more than one group        C
+C                                                                      C
+C   Version 0.3 - September 2015 updated by David W.O. Sousa           C
+C   CHANGES IN VERSION 0.3:                                            C
+C   * Implementation of Dipole Moment Partitioning                     C
+C   * Corrected Warnings                                               C
+C                                                                      C
+C   Version 0.4 - September 2015 updated by David W.O. Sousa           C
+C   CHANGES IN VERSION 0.4:                                            C
+C   * Updated COMMON blocks for VB2000 version 2.7 / GAMESS 2014       C
+C   * Removed dummy input variable from RGMST routine                  C
+C   * print occupations only if SCVB(n,m)                              C
+C                                                                      C
+C   Version 0.5 - January 2016 updated by David W.O. Sousa             C
+C   CHANGES IN VERSION 0.5:                                            C
+C   * Fixed: don't skip GPFDP if execute PRTOCCPS                      C
+C   * Fixed: version label for output file                             C
+C                                                                      C
+C   Version 0.6 - March 2016 updated by David W.O. Sousa               C
+C   CHANGES IN VERSION 0.6:                                            C
+C   * Commenting in the code and write Documentation                   C
+C                                                                      C
+C   Version 0.6.1 - May 2018 updated by David W.O. Sousa               C
+C   CHANGES IN VERSION 0.6.1:                                          C
+C   * Minor Bug fixes and adaptation to VB2000 version 2.8             C
+C                                                                      C
+C   Universidade Federal do Rio de Janeiro                             C
+C   Instituto de Química                                               C
+C   Departamento de Físico-Química                                     C
+C   Laboratório de Química Teórica e Modelagem Molecular - LQTMM       C
+C                                                                      C
+C*=====================================================================*
+C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine OCCPCALC                         C
+C     Apr 08, 2015 - David Sousa                  C
+C --> Fills the vector OCCPS with occupation      C
+C     numbers of each orbital.of the group K      C
+C     The occupation number of the I-th orbital   C
+C     is given by the expression                  C
+C      $ OCCP(I) = Sum_J DM(I,J)*S(I,J) $         C
+C                                                 C
+C     In GAMESS, the overlap (S) and density      C
+C     (DM) matrices are written in triangular     C
+C     form as a unidimensional vector, so it is   C
+C     necessary to convert the indexes in order   C
+C     to read them adequately.                    C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE OCCPCALC(K,NORBG,S,DM,OCCPS)
+      IMPLICIT NONE
+      INTEGER K, NORBG(*)
+      DOUBLE PRECISION S(*),DM(*), OCCPS(1000)
+      DOUBLE PRECISION OCCP
+      INTEGER I,J,IJ,IRES,N,MRES
+      N=NORBG(K)
+      IRES = 0
+      MRES = 0
+      IF ( K .GT. 1) THEN
+         DO I=1,K-1
+            IRES = IRES + NORBG(I)
+            MRES = MRES + NORBG(I)*( NORBG(I) + 1 )/2
+         END DO
+      END IF
+      DO 100 I=1,N
+         OCCP = 0.0D0
+         DO 200 J=1, N
+            IF (I .GE. J) THEN
+               IJ = ((I-1)*I)/2 + J
+            ELSE
+               IJ = ((J-1)*J)/2 + I
+            END IF
+            OCCP = OCCP + DM(IJ + MRES)*S(IJ + MRES)
+200      END DO
+         OCCPS( I + IRES ) = OCCP
+100   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine PRTOCCPS                         C
+C     Apr 08, 2015 - David Sousa                  C
+C --> Prints the occupation numbers of            C
+C     the orbitals.                               C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE PRTOCCPS(NG,NORBG,OCCPS,NUNIT)
+      IMPLICIT NONE
+      INTEGER NG,NUNIT, NORBG(*)
+      DOUBLE PRECISION OCCPS(*)
+      INTEGER M,I,IRES
+      IRES = 0
+      WRITE (NUNIT,1100) "                      "
+      WRITE (NUNIT,1000) "OCCUPATION NUMBERS"
+      WRITE (NUNIT,1100) "======================"
+      DO 100 M=1, NG                        
+         WRITE (NUNIT,1200) "GROUP",M
+         WRITE (NUNIT,1100) "----------------------"
+         DO 200 I=1,NORBG(M)
+            WRITE (NUNIT,1500) "ORB",I,OCCPS( I + IRES )
+200      END DO
+         IRES = IRES + NORBG(M)
+         WRITE (NUNIT,1100) "                      "
+100   END DO
+1000  FORMAT (3X,A18)
+1100  FORMAT (1X,A22)
+1200  FORMAT (1X,A5,I4)
+1500  FORMAT (3X,A3,I4,F12.6)
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine GPFDP                            C
+C     Ago 20, 2015 - David Sousa                  C
+C --> Partitioning of electric dipole moment      C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE GPFDP(ORBS,DENS,S,NORB,DEBUG)
+      IMPLICIT NONE
+      DOUBLE PRECISION XMU(10000),YMU(10000),ZMU(10000)
+      DOUBLE PRECISION XMO(5000), YMO(5000), ZMO(5000)
+      DOUBLE PRECISION DMTQCX,DMTQCY,DMTQCZ,DMTQC,XP,YP,ZP
+      DOUBLE PRECISION DMQCX(99),DMQCY(99),DMQCZ(99),DMQC(99)
+      DOUBLE PRECISION DMTIX,DMTIY,DMTIZ,DMTI,DMX,DMY,DMZ,DIP
+      DOUBLE PRECISION DMIX(99),DMIY(99),DMIZ(99),DMI(99)
+      DOUBLE PRECISION DFAC,ORBS,DENS,S,ZAN,ZERO,C
+      INTEGER MAXBFN,NEXTRA,MAXEXT,MAXGRP,MXATM,NORB,L1,L2,NOFF1,NOFF2,
+     & NUNIT,I,J,K,L,M,N,II,JJ,IK,JL,IJ,IJA,KL,IR,IW,IP,IS,IPK,IDAF,
+     & NAV,IODA,NAT,ICH,MUL,NUM,NQMT,NE,NA,NB,IAN
+      INTEGER NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE,MSPIN,MNORBIT,MLORBIT,MWIN,MSTR,METHOD,
+     &IBASIS,NOCC,NOBIAS,NEPS,NVIR,NOTROT,LTEST,IRESTART,IGUESSREAD,
+     &MTHEORY,NGPF,MBASIS,KEY
+      LOGICAL          DEBUG
+      DIMENSION        DENS(*),ORBS(*),S(5000)
+      PARAMETER (DFAC=2.541766D+00,ZERO=0.0D+00,MXATM=2000)
+C     Following code is for VB2000 version 2.8
+      CHARACTER*40 EPFILE,DENMAT
+      INTEGER NFGPF,NFDM,NEPFILE
+      COMMON /EPFILES/ NFGPF,NFDM,NEPFILE,EPFILE,DENMAT
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      COMMON /INFOA / NAT,ICH,MUL,NUM,NQMT,NE,NA,NB,ZAN(MXATM),
+     &C(3,MXATM),IAN(MXATM)
+      PARAMETER (MAXBFN=1350)
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+C     Size of arrays 
+C     NVAL=3
+C     Following line is for VB2000 version 2.8
+      NUNIT = NFGPF
+C     Following line is for VB2000 version 2.7
+C     NUNIT = 45
+      L1 = (NORB+NORB*NORB)/2
+      L2 = (NUM+NUM*NUM)/2
+C     Read Dipole Moment Integrals in AO Basis
+      CALL DAREAD(IDAF,IODA,XMU,L2,95,0)
+      CALL DAREAD(IDAF,IODA,YMU,L2,96,0)
+      CALL DAREAD(IDAF,IODA,ZMU,L2,97,0)
+C     Change integrals to MO Basis
+      DO 100 I=1,L1
+         XMO(I)=ZERO
+         YMO(I)=ZERO
+         ZMO(I)=ZERO
+100   END DO
+      DO 200 I=1,NORB
+         DO 300 J=1,I
+            CALL BIDX1(I,J,IJ)
+            DO 400 K=1,NUM
+               IK=(I-1)*NUM+K
+               DO 500 L=1,NUM
+                  JL=(J-1)*NUM+L
+                  CALL BIDX1(K,L,KL)
+                  XMO(IJ) = XMO(IJ) + ORBS(IK)*ORBS(JL)*XMU(KL)
+                  YMO(IJ) = YMO(IJ) + ORBS(IK)*ORBS(JL)*YMU(KL)
+                  ZMO(IJ) = ZMO(IJ) + ORBS(IK)*ORBS(JL)*ZMU(KL)
+500            END DO
+400         END DO
+300      END DO
+200   END DO
+C     Calculate center of mass (GAMESS routine)
+      CALL CALCOM(XP,YP,ZP)
+C     Quasiclassical dipole moment
+      DMTQCX=ZERO
+      DMTQCY=ZERO
+      DMTQCZ=ZERO
+      DMTQC =ZERO
+      NOFF1 = 0
+      NOFF2 = 0
+      DO 600 M=1,NSUB
+         DMQCX(M)=ZERO
+         DMQCY(M)=ZERO
+         DMQCZ(M)=ZERO
+         DMQC(M) =ZERO
+         N=MLORBIT(M)
+         DO 700 I=1,N
+            DO 800 J=1,N
+               CALL BIDX1(I+NOFF2,I+NOFF2,II)
+               CALL BIDX1(J+NOFF2,J+NOFF2,JJ)
+               CALL BIDX1(I,J,IJA)
+               IJA=IJA+NOFF1
+            DMQCX(M) = DMQCX(M) - 0.5D0*
+     &                (XMO(II)+XMO(JJ))*DENS(IJA)*S(IJA)
+            DMQCY(M) = DMQCY(M) - 0.5D0*
+     &                (YMO(II)+YMO(JJ))*DENS(IJA)*S(IJA)
+            DMQCZ(M) = DMQCZ(M) - 0.5D0*
+     &                (ZMO(II)+ZMO(JJ))*DENS(IJA)*S(IJA)
+800         END DO
+700      END DO
+         NOFF1 = NOFF1 + N*(N+1)/2
+         NOFF2 = NOFF2 + N
+         DMQCX(M) = DMQCX(M)*DFAC
+         DMQCY(M) = DMQCY(M)*DFAC
+         DMQCZ(M) = DMQCZ(M)*DFAC
+         DMQC(M)  =DMQCX(M)*DMQCX(M)+DMQCY(M)*DMQCY(M)+DMQCZ(M)*DMQCZ(M)
+         DMQC(M)  =SQRT(DMQC(M))
+         DMTQCX = DMTQCX + DMQCX(M)
+         DMTQCY = DMTQCY + DMQCY(M)
+         DMTQCZ = DMTQCZ + DMQCZ(M)
+600   END DO
+C     Nuclear contribution
+      M=NSUB+1
+      DO 850  I=1,NAT
+         DMQCX(M) = DMQCX(M) + ZAN(I)*( C(1,I) -XP )
+         DMQCY(M) = DMQCY(M) + ZAN(I)*( C(2,I) -YP )
+         DMQCZ(M) = DMQCZ(M) + ZAN(I)*( C(3,I) -ZP )
+850   END DO
+      DMQCX(M) = DMQCX(M)*DFAC
+      DMQCY(M) = DMQCY(M)*DFAC
+      DMQCZ(M) = DMQCZ(M)*DFAC
+      DMQC(M)  = DMQCX(M)*DMQCX(M)+DMQCY(M)*DMQCY(M)+DMQCZ(M)*DMQCZ(M)
+      DMQC(M)  = SQRT(DMQC(M))
+      DMTQCX = DMTQCX + DMQCX(M)
+      DMTQCY = DMTQCY + DMQCY(M)
+      DMTQCZ = DMTQCZ + DMQCZ(M)
+C     Total QC 
+      DMTQC  = SQRT( DMTQCX*DMTQCX + DMTQCY*DMTQCY + DMTQCZ*DMTQCZ )
+C     Dipole moment due to interference
+      DMTIX=ZERO
+      DMTIY=ZERO
+      DMTIZ=ZERO
+      DMTI =ZERO
+      NOFF1 = 0
+      NOFF2 = 0
+      DO 900 M=1,NSUB
+         DMIX(M)=ZERO
+         DMIY(M)=ZERO
+         DMIZ(M)=ZERO
+         DMI(M) =ZERO
+         N=MLORBIT(M)
+         DO 910 I=1,N
+            DO 920 J=1,N
+               IF (I .EQ. J) CYCLE
+               CALL BIDX1(I,J,IJA)
+               CALL BIDX1(I+NOFF2,I+NOFF2,II)
+               CALL BIDX1(J+NOFF2,J+NOFF2,JJ)
+               CALL BIDX1(I+NOFF2,J+NOFF2,IJ)
+               IJA=IJA+NOFF1
+      DMIX(M)=DMIX(M)-(XMO(IJ)-0.5D0*S(IJA)*(XMO(II)+XMO(JJ)))*DENS(IJA)
+      DMIY(M)=DMIY(M)-(YMO(IJ)-0.5D0*S(IJA)*(YMO(II)+YMO(JJ)))*DENS(IJA)
+      DMIZ(M)=DMIZ(M)-(ZMO(IJ)-0.5D0*S(IJA)*(ZMO(II)+ZMO(JJ)))*DENS(IJA)
+920         END DO
+910      END DO
+         NOFF1 = NOFF1 + N*(N+1)/2
+         NOFF2 = NOFF2 + N
+         DMIX(M) = DMIX(M)*DFAC
+         DMIY(M) = DMIY(M)*DFAC
+         DMIZ(M) = DMIZ(M)*DFAC
+         DMI(M)  = SQRT(DMIX(M)*DMIX(M)+DMIY(M)*DMIY(M)+DMIZ(M)*DMIZ(M))
+         DMTIX = DMTIX + DMIX(M)
+         DMTIY = DMTIY + DMIY(M)
+         DMTIZ = DMTIZ + DMIZ(M)
+900   END DO
+      DMTI  = SQRT( DMTIX*DMTIX + DMTIY*DMTIY + DMTIZ*DMTIZ )
+C     Sum QC and INT to get total dipole moment
+      DMX = DMTQCX + DMTIX
+      DMY = DMTQCY + DMTIY
+      DMZ = DMTQCZ + DMTIZ
+      DIP = SQRT( DMX*DMX+ DMY*DMY + DMZ*DMZ )
+C     Print out results
+      WRITE (NUNIT,*)
+      WRITE (NUNIT,960) "GPF DIPOLE MOMENT PARTITIONING"
+      WRITE (NUNIT,960) "=============================="
+      WRITE (NUNIT,*)
+      WRITE (NUNIT,970)" DM (Debye)            X           Y           Z
+     &          /D/    "
+      WRITE (NUNIT,970)"------------------------------------------------
+     &-----------------"
+      WRITE (NUNIT,*)
+      DO 930 I=1,NSUB
+         WRITE (NUNIT,980) I,DMQCX(I),DMQCY(I),DMQCZ(I),DMQC(I)
+930   CONTINUE
+      WRITE (NUNIT,990) DMQCX(M),DMQCY(M),DMQCZ(M),DMQC(M)
+      WRITE (NUNIT,*)
+      WRITE (NUNIT,992) DMTQCX,DMTQCY,DMTQCZ,DMTQC
+      WRITE (NUNIT,*)
+      DO 940 I=1,NSUB
+         WRITE (NUNIT,993) I,DMIX(I),DMIY(I),DMIZ(I),DMI(I)
+940   CONTINUE
+      WRITE (NUNIT,*)
+      WRITE (NUNIT,994) DMTIX,DMTIY,DMTIZ,DMTI
+      WRITE (NUNIT,*)
+      WRITE (NUNIT,995) DMX,DMY,DMZ,DIP
+960   FORMAT(16X,A30)
+970   FORMAT(A65)
+980   FORMAT(1X,'DM(QC) GROUP ', I2,4F12.6)
+990   FORMAT(1X,'DM(QC) NUCLEAR',1X,4F12.6)
+992   FORMAT(1X,'DM(QC) TOTAL',  3X,4F12.6)
+993   FORMAT(1X,'DM(I)  GROUP ', I2,4F12.6)
+994   FORMAT(1X,'DM(I) TOTAL',   4X,4F12.6)
+995   FORMAT(1X,'TOTAL DM',      7X,4F12.6)
+C     Debug printing
+      IF (DEBUG) THEN
+         WRITE (NUNIT,*)
+         WRITE (NUNIT,*)"GPF-DP DEBUG INFORMATION"
+         WRITE (NUNIT,*)
+         WRITE (NUNIT,*)"NUMBER OF ATOMS",NAT
+         DO 996 I=1,NAT
+         WRITE (NUNIT,*)"COORD X",I, C(1,I)
+         WRITE (NUNIT,*)"COORD Y",I, C(2,I)
+         WRITE (NUNIT,*)"COORD Z",I, C(3,I)
+         WRITE (NUNIT,*)"NCHARGE",I, ZAN(I)
+996      CONTINUE
+         WRITE (NUNIT,*)
+         WRITE (NUNIT,*)"X CENTER",XP
+         WRITE (NUNIT,*)"Y CENTER",YP
+         WRITE (NUNIT,*)"Z CENTER",ZP
+         WRITE (NUNIT,*)
+         DO 997 I=1,L1
+         WRITE (NUNIT,*)"XMO INTEGRAL",I, XMO(I)
+997      CONTINUE
+         DO 998 I=1,L1
+         WRITE (NUNIT,*)"YMO INTEGRAL",I, YMO(I)
+998      CONTINUE 
+         DO 999 I=1,L1
+         WRITE (NUNIT,*)"ZMO INTEGRAL",I, ZMO(I)
+999      CONTINUE
+      END IF
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine RGMST                            C
+C     Jul 14, 2009 - Thiago M. Cardozo            C
+C --> Collects KE Integrals from GAMESS           C
+C                                                 C
+C     Sep 21, 2015 - David Sousa                  C
+C --> Removed dummy input variable                C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE RGMST(T,N)
+      IMPLICIT NONE
+      DOUBLE PRECISION T(*)
+      INTEGER N,I,NBA2,IR,IW,IP,IS,IPK,IDAF,NAV,IODA
+C     DIMENSION T(*)
+      COMMON /IOFILE/ IR,IW,IP,IS,IPK,IDAF,NAV,IODA(950)
+      NBA2=N*(N+1)/2
+      DO I=1,NBA2
+        T(I)=0.0D0
+      END DO
+      CALL DAREAD(IDAF,IODA,T(1),NBA2,13,0)
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine GPFEP1E                          C
+C     Jul 15, 2009 - Thiago M. Cardozo            C
+C --> Partitions the 1-e energy contributions     C
+C     into its interference and quasi-classical   C
+C     parts.                                      C
+C                                                 C
+C     Sep 21, 2015 - David Sousa                  C
+C --> updated COMMON blocks for VB2000 2.7        C
+C --> calculates occupations and indexes          C
+C     orbital pairs                               C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE GPFEP1E (ORBS,DM1,WRK,TI,VI,TQC,VQC,TIPO,VIPO,NORB,SS,
+     &TT,VV,OCCPS)
+      IMPLICIT NONE
+      DOUBLE PRECISION ORBS,DM1,WRK,TI,VI,TQC,VQC,TIPO,VIPO,SS,TT,VV,
+     & ENREP,XYZ
+      INTEGER NORB,MAXCEN,MAXBFN,NEXTRA,MAXEXT,MAXGRP
+      INTEGER NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,LPTALL,
+     &LHYBRD,MELE,MSPIN,MNORBIT,MLORBIT,MWIN,MSTR,METHOD,IBASIS,NOCC,
+     &NOBIAS,NEPS,NVIR,NOTROT,LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,
+     &MBASIS,KEY
+C     INTEGER NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,LD2STA,
+C    &LGDMP,N1DADD,N2DADD,NB1ADD,NB2ADD,ISTRUC
+C     DOUBLE PRECISION CSTRUC
+      INTEGER NATOM,NELE,NSPIN,NBASIS,NATNUM,NATBAS,MLSYM
+      INTEGER I,IPOFF,NADDS,NADDH,NADDV,NADSCS,NADSCT,NOFF,NOFFOR,
+     & NSPFLG,NADDT,NADSCV
+      CHARACTER*20 BASNAME
+      CHARACTER*12 BFLABE
+      PARAMETER (MAXCEN=200,MAXBFN=1350)
+      COMMON /GENINF/NATOM,NELE,NSPIN,NBASIS,NATNUM(MAXCEN),
+     & NATBAS(MAXCEN),ENREP,XYZ(3,MAXCEN),BFLABE(MAXBFN),BASNAME
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+C     COMMON /ROTADD/NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,
+C    & LD2STA,LGDMP,N1DADD(100),N2DADD(100),NB1ADD(100),NB2ADD(100)
+C     COMMON /CSTRUC/CSTRUC(5000),ISTRUC(100)
+      DIMENSION TI(MAXGRP),VI(MAXGRP),TQC(MAXGRP),VQC(MAXGRP)
+      DIMENSION MLSYM(MAXGRP)
+      DIMENSION TIPO(1000),VIPO(1000)
+      DIMENSION ORBS(*),DM1(*),WRK(*)
+      DIMENSION SS(5000),TT(5000),VV(5000)
+      DOUBLE PRECISION OCCPS(1000)
+C     Size and Address Variables
+C     Following line just in VB2000 version 2.7
+C     NF=45
+      NADDS=1
+      NADDH=NADDS+NBASIS*(NBASIS+1)/2
+      NADDT=NADDH+NBASIS*(NBASIS+1)/2
+      NADDV=NADDT+NBASIS*(NBASIS+1)/2
+      NADSCS=NADDV+NBASIS*(NBASIS+1)/2
+      NADSCT=NADSCS+NORB*NBASIS
+      NADSCV=NADSCT+NORB*NBASIS
+C     Read 1-e energy data from GAMESS
+      CALL RGMS1E(WRK(NADDS),WRK(NADDH),NBASIS)
+      CALL RGMST(WRK(NADDT),NBASIS)
+      CALL MATMIN(WRK(NADDT),WRK(NADDH),WRK(NADDV),NBASIS)
+C     Start Offset Variables
+C     IFLAG=0
+      NOFFOR=1
+      NOFF=1
+      IPOFF=0 ! orbital pair index offset
+C     Calculate S, T, and V in orbital basis
+      CALL MMULT1(NORB,NBASIS,ORBS,WRK(NADDS),WRK(NADSCS))
+      CALL MMULT1(NORB,NBASIS,ORBS,WRK(NADDT),WRK(NADSCT))
+      CALL MMULT1(NORB,NBASIS,ORBS,WRK(NADDV),WRK(NADSCV))
+      DO I=1, NSUB
+      NSPFLG=0
+      CALL MMULT2(MLORBIT(I),NBASIS,WRK(NADSCS+NOFFOR-1),ORBS(NOFFOR),
+     &SS(NOFF))
+      CALL MMULT2(MLORBIT(I),NBASIS,WRK(NADSCT+NOFFOR-1),ORBS(NOFFOR),
+     &TT(NOFF))
+      CALL MMULT2(MLORBIT(I),NBASIS,WRK(NADSCV+NOFFOR-1),ORBS(NOFFOR),
+     &VV(NOFF))
+C     Calculate orbital occupations
+      CALL OCCPCALC(I,MLORBIT,SS,DM1,OCCPS)
+C     Partioning HF Groups
+      IF (METHOD(I).EQ.1) THEN
+         TI(I)=0.0D0
+         VI(I)=0.0D0
+         CALL NCALC(MLORBIT(I),TT(NOFF),DM1(NOFF),TQC(I))
+         CALL NCALC(MLORBIT(I),VV(NOFF),DM1(NOFF),VQC(I))
+C     Partioning VB, SC or CAS Groups
+      ELSE
+         IF (MLORBIT(I).GT.2) THEN
+            NSPFLG=1
+         END IF
+         CALL ICALC(MLORBIT(I),SS(NOFF),TT(NOFF),DM1(NOFF),TI(I),TIPO,
+     &        NSPFLG,IPOFF)
+         CALL ICALC(MLORBIT(I),SS(NOFF),VV(NOFF),DM1(NOFF),VI(I),VIPO,
+     &        NSPFLG,IPOFF)
+         CALL QCCALC(MLORBIT(I),SS(NOFF),TT(NOFF),DM1(NOFF),TQC(I))
+         CALL QCCALC(MLORBIT(I),SS(NOFF),VV(NOFF),DM1(NOFF),VQC(I))
+         IF (MLORBIT(I).GT.2) THEN
+            IPOFF=IPOFF + (MLORBIT(I)-1)*(MLORBIT(I)-2)/2 + MLORBIT(I)
+         END IF
+      END IF
+C     Update Offset Variables
+      NOFFOR=NOFFOR+MLORBIT(I)*NBASIS
+      MLSYM(I)=(MLORBIT(I)*(MLORBIT(I)+1))/2
+      NOFF=NOFF+MLSYM(I)
+      END DO
+      RETURN
+      END
+
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine GPFEP2E                          C
+C     Ago 03, 2009 - Thiago M. Cardozo            C
+C --> Partitions the 2-e energy contributions     C
+C     into its many contributions:                C
+C                                                 C
+C     V2I ---- Intra-group Vee[I]                 C
+C     V2QC1G - Intra-group Vee[QC]                C
+C     V2QC2G - Intergroup  Vee[QC]                C
+C     V2II1G - Intra-group Vee[II]                C
+C     V2II2G - Intergroup  Vee[II]                C
+C     V2X2G -- Intergroup  Vee[X]                 C
+C                                                 C
+C     Vee: electron-electron potential energy     C
+C     [QC]: quasi-classical                       C
+C     [X]:  exchange (quasi-classical)            C
+C     [I]:  1st order interference                C
+C     [II]: 2nd order interference                C
+C                                                 C
+C     Sep 21, 2015 - David Sousa                  C
+C --> updated COMMON blocks for VB2000 2.7        C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE GPFEP2E(ORBS,DM1,DM2,W,SS,MSIZE,V2I,V2QC1G,V2QC2G,
+     &V2II1G,V2II2G,V2X2G,V2IPO,OCCPS)
+      IMPLICIT NONE
+      DOUBLE PRECISION ORBS,DM1,DM2,W,SS,V2I,V2QC1G,V2QC2G,V2II1G,
+     & V2II2G,V2X2G,V2IPO,ENREP,XYZ
+      CHARACTER*20 BASNAME
+      CHARACTER*12 BFLABE
+      INTEGER I,J,IJ,INDX,INDXI,INDXJ,IAO2E,IOTEMPA,IOTEMPB,LBUFF,
+     &NEEORB,NNOA2,NOA2,NORBI,MSIZE
+      INTEGER MAXCEN,MAXBFN,NEXTRA,MAXEXT,MAXGRP
+      INTEGER NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,LPTALL,
+     &LHYBRD,MELE,MSPIN,MNORBIT,MLORBIT,MWIN,MSTR,METHOD,IBASIS,NOCC,
+     &NOBIAS,NEPS,NVIR,NOTROT,LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,
+     &MBASIS,KEY
+      INTEGER NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,
+     & LD2STA,LGDMP,N1DADD,N2DADD,NB1ADD,NB2ADD
+C     INTEGER ISTRUC
+C     DOUBLE PRECISION CSTRUC
+      INTEGER NATOM,NELE,NSPIN,NBASIS,NATNUM,NATBAS
+      INTEGER IPOFF,MLSYM,NOFF,NSPFLG
+      PARAMETER (MAXCEN=200,MAXBFN=1350)
+      COMMON /GENINF/NATOM,NELE,NSPIN,NBASIS,NATNUM(MAXCEN),
+     & NATBAS(MAXCEN),ENREP,XYZ(3,MAXCEN),BFLABE(MAXBFN),BASNAME
+      PARAMETER (NEXTRA=20,MAXEXT=MAXBFN+NEXTRA,MAXGRP=49)
+      COMMON /GENCTL/NSUB,IMACRO,IPNT,MROT,ICON,LFROZN,LCIONLY,IMOLDEN,
+     &LPTALL,LHYBRD,MELE(MAXGRP),MSPIN(MAXGRP),MNORBIT(MAXGRP),
+     &MLORBIT(MAXGRP),MWIN(MAXGRP),MSTR(MAXGRP),METHOD(MAXGRP),
+     &IBASIS(MAXEXT),NOCC(MAXEXT),NOBIAS,NEPS,NVIR,NOTROT(5000),
+     &LTEST,IRESTART,IGUESSREAD,MTHEORY,NGPF,MBASIS,KEY(MAXGRP)
+      COMMON /ROTADD/NAOBAS,LAOBAS,NOCBAS,LOCBAS,ND1STA,ND2STA,LD1STA,
+     & LD2STA,LGDMP,N1DADD(100),N2DADD(100),NB1ADD(100),NB2ADD(100)
+C     COMMON /CSTRUC/CSTRUC(5000),ISTRUC(100)
+      DIMENSION V2I(MAXGRP),V2QC1G(MAXGRP),V2QC2G(999),V2II1G(99)
+      DIMENSION MLSYM(MAXGRP),NOFF(MAXGRP)
+C      DIMENSION MLIJ(999),V2II2G(999),V2X2G(999),V2IPO(1000)
+      DIMENSION V2II2G(999),V2X2G(999),V2IPO(1000)
+      DIMENSION ORBS(*),DM1(*),DM2(*),W(*)
+C     DIMENSION II(20000),JJ(20000),KK(20000),LL(20000),GG(20000)
+      DIMENSION SS(5000)
+      DOUBLE PRECISION OCCPS(1000)
+C     IFLAG=0
+      IPOFF=0
+      NOFF(1)=1
+      DO I=1, NSUB
+       MLSYM(I)=(MLORBIT(I)*(MLORBIT(I)+1))/2
+       NOFF(I+1)=NOFF(I)+MLSYM(I)
+      END DO
+C     Setting up 2e integral transformation
+      NORBI=0
+      NVIR=0
+      LBUFF=4095
+      DO I=1, NSUB
+       NORBI=NORBI+MLORBIT(I)
+      END DO
+      NOA2=(NORBI*(NORBI+1))/2
+      NNOA2=(NOA2*(NOA2+1))/2
+      NEEORB=1
+C     NWRK1=NEEORB+NNOA2
+C     Full 2-e Integral transformation
+      CALL GETIOUNIT('IAO2E   ',IAO2E)
+      CALL GETIOUNIT('IOTEMPA ',IOTEMPA)
+      CALL GETIOUNIT('IOTEMPB ',IOTEMPB)
+      DO I=1, NNOA2
+       W(NEEORB+I-1)=0.0D0
+      END DO
+      CALL TRANP2E(NBASIS,NORBI,NVIR,ORBS,W(NEEORB),MSIZE,LBUFF,
+     &IOTEMPA,IOTEMPB)
+C
+C      CALL READ2E(IAO2E,W(NEEBAS))
+C      CALL IJKLGG(IAO2E,GG,II,JJ,KK,LL,NINT)
+C      DO I=1, NINT
+C       WRITE(45,102) II(I),JJ(I),KK(I),LL(I),GG(I)
+C      END DO
+C102   FORMAT (1X,4I2,F10.6)
+C
+C     Zero variables
+      DO I=1, MAXGRP
+       V2QC1G(I)=0.0D0
+       V2II1G(I)=0.0D0
+       V2I(I)=0.0D0
+      END DO
+      DO I=1,999
+       V2QC2G(I)=0.0D0
+       V2X2G(I)=0.0D0
+       V2II2G(I)=0.0D0
+      END DO
+C     Calculate the purely Intragroup Contributions
+      INDX=1
+      DO I=1, NSUB
+         NSPFLG=0
+         IF (METHOD(I).EQ.1) THEN
+            CALL QC2HF(MLORBIT(I),W(NEEORB),V2QC1G(I),INDX)
+         ELSE
+            IF (MLORBIT(I).GT.2) THEN
+               NSPFLG=1
+            END IF
+            CALL QC2GR(MLORBIT(I),DM2(N2DADD(I)),SS(NOFF(I)),W(NEEORB),
+     &V2QC1G(I),INDX)
+            CALL II2GR(MLORBIT(I),DM2(N2DADD(I)),SS(NOFF(I)),W(NEEORB),
+     &V2II1G(I),INDX)
+            CALL I2GR(MLORBIT(I),DM2(N2DADD(I)),SS(NOFF(I)),W(NEEORB),
+     &V2I(I),V2IPO,NSPFLG,INDX,IPOFF)
+            IF (MLORBIT(I).GT.2) THEN
+               IPOFF=IPOFF+ (MLORBIT(I)-1)*(MLORBIT(I)-2)/2 + MLORBIT(I)
+            END IF
+         END IF
+         INDX=INDX+MLORBIT(I)
+      END DO
+C     Calculate the Intergroup Contributions
+      IPOFF=0
+      INDXI=1
+      DO I=1, NSUB
+       NSPFLG=0
+       INDXJ=1
+       DO J=1, NSUB
+        IF (I.EQ.J) THEN
+         INDXJ=INDXJ+MLORBIT(J)
+         CYCLE
+        END IF
+        CALL BIDX2(I,J,IJ)
+        CALL GXXCALC(MLORBIT(I),MLORBIT(J),DM1(N1DADD(I)),
+     &DM1(N1DADD(J)),W(NEEORB),V2X2G(IJ),INDXI,INDXJ)
+        IF (METHOD(J).EQ.1) THEN
+         IF (METHOD(I).EQ.1) THEN
+          CALL GNNCALC(MLORBIT(I),MLORBIT(J),DM1(N1DADD(I)),
+     &               W(NEEORB),V2QC2G(IJ),INDXI,INDXJ)
+C    &DM1(N1DADD(J)),W(NEEORB),V2QC2G(IJ),INDXI,INDXJ)
+         ELSE
+          IF (MLORBIT(I).GT.2) THEN
+           NSPFLG=1
+          END IF
+          CALL G0NCALC(MLORBIT(I),MLORBIT(J),DM1(N1DADD(J)),
+     &W(NEEORB),V2QC2G(IJ),INDXI,INDXJ,OCCPS)
+          CALL G1NCALC(MLORBIT(I),MLORBIT(J),DM1(N1DADD(I)),
+     &DM1(N1DADD(J)),SS(NOFF(I)),W(NEEORB),V2I(I),V2IPO,NSPFLG,
+     &INDXI,INDXJ,IPOFF)
+         END IF
+        ELSE
+         IF (METHOD(I).NE.1) THEN
+          IF (MLORBIT(I).GT.2) THEN
+           NSPFLG=1
+          END IF
+          CALL G10CALC(MLORBIT(I),MLORBIT(J),DM1(N1DADD(I)),
+     &SS(NOFF(I)),W(NEEORB),V2I(I),V2IPO,NSPFLG,INDXI,INDXJ,OCCPS,IPOFF)
+          CALL G00CALC(MLORBIT(I),MLORBIT(J),W(NEEORB),V2QC2G(IJ),
+     &INDXI,INDXJ,OCCPS)
+          CALL G11CALC(MLORBIT(I),MLORBIT(J),DM1(N1DADD(I)),
+     &DM1(N1DADD(J)),SS(NOFF(I)),SS(NOFF(J)),W(NEEORB),V2II2G(IJ),
+     &INDXI,INDXJ)
+         END IF
+        END IF
+        INDXJ=INDXJ+MLORBIT(J)
+       END DO
+       INDXI=INDXI+MLORBIT(I)
+       IF ((METHOD(I).NE.1).AND.(MLORBIT(I).GT.2)) THEN
+          IPOFF=IPOFF+ (MLORBIT(I)-1)*(MLORBIT(I)-2)/2 + MLORBIT(I)
+       END IF
+      END DO
+C999  FORMAT (1X,2I6)
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine G11CALC                          C
+C     Ago 21, 2009 - Thiago M. Cardozo            C
+C --> Calculates the intergroup second-order      C
+C     interference energy contribution for        C
+C     groups A and B.                             C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE G11CALC(MLA,MLB,DMA,DMB,SA,SB,OPMA,VEE,INDXA,INDXB)
+      IMPLICIT NONE
+      DOUBLE PRECISION VEE,VSUM
+      DOUBLE PRECISION DMA(*),DMB(*),SA(*),SB(*),OPMA(*)
+      INTEGER MLA,MLB,INDXA,INDXB,I,J,IJ,K,L,KL,IIEE,JJEE,IJEE,KKEE,
+     & LLEE,KLEE,IIKKEE,JJKKEE,IJKKEE,IILLEE,JJLLEE,IJLLEE,IIKLEE,
+     & JJKLEE,IJKLEE
+      VSUM=0.0D0
+      DO 400 I=1, MLA
+       CALL BIDX1(I+INDXA-1,I+INDXA-1,IIEE)
+       DO 300 J=1, MLA
+        IF (I.EQ.J) CYCLE
+        CALL BIDX1(I,J,IJ)
+        CALL BIDX1(J+INDXA-1,J+INDXA-1,JJEE)
+        CALL BIDX1(I+INDXA-1,J+INDXA-1,IJEE)
+        DO 200 K=1, MLB
+         CALL BIDX1(K+INDXB-1,K+INDXB-1,KKEE)
+         CALL BIDX1(IIEE,KKEE,IIKKEE)
+         CALL BIDX1(JJEE,KKEE,JJKKEE)
+         CALL BIDX1(IJEE,KKEE,IJKKEE)
+         DO 100 L=1, MLB
+          IF (K.EQ.L) CYCLE
+          CALL BIDX1(K,L,KL)
+          CALL BIDX1(L+INDXB-1,L+INDXB-1,LLEE)
+          CALL BIDX1(K+INDXB-1,L+INDXB-1,KLEE)
+          CALL BIDX1(IIEE,LLEE,IILLEE)
+          CALL BIDX1(IIEE,KLEE,IIKLEE)
+          CALL BIDX1(JJEE,LLEE,JJLLEE)
+          CALL BIDX1(JJEE,KLEE,JJKLEE)
+          CALL BIDX1(IJEE,LLEE,IJLLEE)
+          CALL BIDX1(IJEE,KLEE,IJKLEE)
+          VSUM=VSUM+DMA(IJ)*DMB(KL)*(OPMA(IJKLEE)-0.5D0*SB(KL)*
+     &(OPMA(IJKKEE)+OPMA(IJLLEE))-0.5D0*SA(IJ)*(OPMA(IIKLEE)+
+     &OPMA(JJKLEE))+0.25D0*SA(IJ)*SB(KL)*(OPMA(IIKKEE)+OPMA(JJKKEE)+
+     &OPMA(IILLEE)+OPMA(JJLLEE)))
+100      END DO
+200     END DO
+300    END DO
+400   END DO
+      VEE=VEE+0.5D0*VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine GXXCALC                          C
+C     Sep 21, 2009 - Thiago M. Cardozo            C
+C --> Calculates the electrostatic exchange       C
+C     energy between the densities of groups      C
+C     A and B                                     C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE GXXCALC(MLA,MLB,DMA,DMB,OPMA,VEE,INDXA,INDXB)
+      IMPLICIT NONE
+      DOUBLE PRECISION VSUM,VEE
+      DOUBLE PRECISION DMA(*),DMB(*),OPMA(*)
+      INTEGER MLA,MLB,INDXA,INDXB,I,J,L,K,JL,IK,IJEE,KLEE,IJKLEE
+      VSUM=0.0D0
+      DO 400 I=1, MLA
+       DO 300 J=1, MLB
+        CALL BIDX1(I+INDXA-1,J+INDXB-1,IJEE)
+        DO 200 K=1, MLA
+        CALL BIDX1(I,K,IK)
+         DO 100 L=1, MLB
+          CALL BIDX1(K+INDXA-1,L+INDXB-1,KLEE)
+          CALL BIDX1(IJEE,KLEE,IJKLEE)
+          CALL BIDX1(J,L,JL)
+          VSUM=VSUM-0.5D0*DMA(IK)*DMB(JL)*OPMA(IJKLEE)
+100      END DO
+200     END DO
+300    END DO
+400   END DO
+      VEE=VEE+0.5D0*VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
+C                                                 C           
+C     Subroutine G00CALC                          C           
+C     Sep 20, 2009 - Thiago M. Cardozo            C           
+C --> Calculates the electrostatic interaction    C           
+C     between the quasi-classical densities of    C           
+C     groups A and B.                             C
+C                                                 C           
+C     Apr 13, 2015 - David Sousa                  C
+C --> adapted for SC(n,m) case                    C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE G00CALC(MLA,MLB,OPMA,VEE,INDXA,INDXB,OCCPS)
+      IMPLICIT NONE
+      DOUBLE PRECISION OPMA(*),OCCPS(*),VEE,VSUM
+      INTEGER MLA,MLB,INDXA,INDXB,I,K,IIEE,KKEE,IIKKEE
+      VSUM=0.0D0
+      DO 200 I=1, MLA
+       CALL BIDX1(I+INDXA-1,I+INDXA-1,IIEE)
+       DO 100 K=1, MLB
+        CALL BIDX1(K+INDXB-1,K+INDXB-1,KKEE)
+        CALL BIDX1(IIEE,KKEE,IIKKEE)
+        VSUM=VSUM+OPMA(IIKKEE)*OCCPS(INDXA+I-1)*OCCPS(INDXB+K-1)
+100    END DO
+200   END DO
+      VEE=VEE+0.5D0*VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
+C                                                 C           
+C     Subroutine G10CALC                          C           
+C     Sep 20, 2009 - Thiago M. Cardozo            C           
+C --> Calculates the electrostatic interaction    C           
+C     between the interference density of group   C           
+C     A and the quasi-classical density of group  C           
+C     B. This is calculated for each ordered pair C           
+C     (A,B)                                       C           
+C                                                 C
+C     April 13 / Jun 24, 2015 - David Sousa       C
+C --> adapted for SC(n,m)                         C
+C --> Storing E[I] for orbital pairs in each      C
+C     group                                       C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE G10CALC(MLA,MLB,DMA,SA,OPMA,VEE,OIPO,IFLAG,
+     &INDXA,INDXB,OCCPS,IPOFF)
+      IMPLICIT NONE 
+      DOUBLE PRECISION VSUM,VEE
+      DOUBLE PRECISION DMA(*),OPMA(*),SA(*),OCCPS(*),OIPO(1000)
+      INTEGER MLA,MLB,IFLAG,INDXA,INDXB,IPOFF,I,J,K,IJ,IIEE,JJEE,
+     & IJEE,KKEE,IIKKEE,JJKKEE,IJKKEE,IJPO
+      VSUM=0.0D0
+      DO 300 I=1, MLA
+       CALL BIDX1(I+INDXA-1,I+INDXA-1,IIEE)
+       DO 200 J=1, MLA
+        IF (I.EQ.J) CYCLE                                                
+        CALL BIDX1(I,J,IJ)
+        CALL BIDX1(J+INDXA-1,J+INDXA-1,JJEE)
+        CALL BIDX1(I+INDXA-1,J+INDXA-1,IJEE)
+        DO 100 K=1, MLB
+         CALL BIDX1(K+INDXB-1,K+INDXB-1,KKEE)
+         CALL BIDX1(IIEE,KKEE,IIKKEE)                         
+         CALL BIDX1(JJEE,KKEE,JJKKEE)                         
+         CALL BIDX1(IJEE,KKEE,IJKKEE)
+         IF (IFLAG.EQ.1) THEN
+             CALL BIDX2(I,J,IJPO)
+             IJPO=IJPO+IPOFF
+             OIPO(IJPO)=OIPO(IJPO)+DMA(IJ)*(OPMA(IJKKEE)-0.5D0*SA(IJ)*
+     &(OPMA(IIKKEE)+OPMA(JJKKEE)))*OCCPS(INDXB+K-1)
+         END IF
+         VSUM=VSUM+DMA(IJ)*(OPMA(IJKKEE)-0.5D0*SA(IJ)*(OPMA(IIKKEE)+
+     &OPMA(JJKKEE)))*OCCPS(INDXB+K-1)
+100     END DO                                               
+200    END DO                                                
+300   END DO
+      VEE=VEE+VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine G1NCALC                          C
+C     Sep 19, 2009 - Thiago M. Cardozo            C
+C --> Calculates the electrostatic interaction    C
+C     between the interference density of group   C
+C     A and the density of group B. This is       C
+C     only calculated once for each pair (A,B)    C
+C                                                 C
+C     Jun 24, 2015 - David Sousa                  C
+C --> Adapted for SC(n,m)                         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE G1NCALC(MLA,MLB,DMA,DMB,SA,OPMA,VEE,OIPO,IFLAG,INDXA,
+     &INDXB,IPOFF)
+      IMPLICIT NONE 
+      DOUBLE PRECISION OIPO(1000),VSUM,VEE
+      INTEGER MLA,MLB,IFLAG,INDXA,INDXB,IPOFF,I,J,K,L,IJ,KL,IIEE,JJEE,
+     & IJEE,KLEE,IIKLEE,JJKLEE,IJKLEE,IJPO
+      DOUBLE PRECISION DMA(*),DMB(*),OPMA(*),SA(*)
+      VSUM=0.0D0
+      DO 400 I=1, MLA
+       CALL BIDX1(I+INDXA-1,I+INDXA-1,IIEE)
+       DO 300 J=1, MLA
+        IF (I.EQ.J) CYCLE
+        CALL BIDX1(I,J,IJ)
+        CALL BIDX1(J+INDXA-1,J+INDXA-1,JJEE)
+        CALL BIDX1(I+INDXA-1,J+INDXA-1,IJEE)
+        DO 200 K=1, MLB
+         DO 100 L=1, MLB
+         CALL BIDX1(K,L,KL)
+         CALL BIDX1(K+INDXB-1,L+INDXB-1,KLEE)
+         CALL BIDX1(IIEE,KLEE,IIKLEE)
+         CALL BIDX1(JJEE,KLEE,JJKLEE)
+         CALL BIDX1(IJEE,KLEE,IJKLEE)
+         IF (IFLAG.EQ.1) THEN
+            CALL BIDX2(I,J,IJPO)
+            IJPO=IJPO+IPOFF
+            OIPO(IJPO)=OIPO(IJPO)+DMA(IJ)*DMB(KL)*(OPMA(IJKLEE)-
+     &0.5D0*SA(IJ)*(OPMA(IIKLEE)+OPMA(JJKLEE)))
+         END IF
+         VSUM=VSUM+DMA(IJ)*DMB(KL)*(OPMA(IJKLEE)-0.5D0*SA(IJ)*
+     &(OPMA(IIKLEE)+OPMA(JJKLEE)))
+100      END DO
+200     END DO
+300    END DO
+400   END DO
+      VEE=VEE+VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
+C                                                 C           
+C     Subroutine G0NCALC                          C           
+C     Ago 18, 2009 - Thiao M. Cardozo             C           
+C --> Calculates the electrostatic interaction    C           
+C     between the quasi-classical density from    C           
+C     group A and the density of group B.         C           
+C     this is only calculated once for each       C           
+C     pair (A,B)                                  C
+C                                                 C
+C     Apr 13, 2015 -  David Sousa                 C
+C --> Adapted for SC(n,m)                         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
+      SUBROUTINE G0NCALC(MLA,MLB,DMB,OPMA,VEE,INDXA,INDXB,OCCPS) 
+      IMPLICIT NONE
+      DOUBLE PRECISION VEE,VSUM,DMB(*),OPMA(*),OCCPS(*)
+      INTEGER MLA,MLB,INDXA,INDXB,I,K,L,KL,IIEE,KLEE,IIKLEE
+      VSUM=0.0D0                                               
+      DO 300 I=1, MLA                                          
+        CALL BIDX1(I+INDXA-1,I+INDXA-1,IIEE)                  
+        DO 200 K=1, MLB                                       
+         DO 100 L=1, MLB                                      
+          CALL BIDX1(K,L,KL)                                  
+          CALL BIDX1(K+INDXB-1,L+INDXB-1,KLEE)                
+          CALL BIDX1(IIEE,KLEE,IIKLEE)                        
+          VSUM=VSUM+DMB(KL)*OPMA(IIKLEE)*OCCPS(INDXA+I-1)
+100     END DO                                               
+200    END DO                                                
+300   END DO
+      VEE=VEE+VSUM
+      RETURN                                                  
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine GNNCALC                          C
+C     Aug 18, 2009 - Thiago M. Cardozo            C
+C --> Calculates the electrostatic interaction    C
+C     between the densities from groups A and B.  C
+C     This is calculated twice for each pair      C
+C     (A,B) and (B,A).                            C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C      SUBROUTINE GNNCALC(MLA,MLB,DMA,DMB,OPMA,VEE,INDXA,
+       SUBROUTINE GNNCALC(MLA,MLB,DMA,OPMA,VEE,INDXA,
+     &INDXB)
+      IMPLICIT NONE
+C     DOUBLE PRECISION DMA(*),DMB(*),OPMA(*)
+      DOUBLE PRECISION VEE,VSUM,DMA(*),OPMA(*)
+      INTEGER MLA,MLB,INDXA,INDXB,I,J,K,L,IJ,KL,IJEE,KLEE,IJKLEE
+      VSUM=0.0D0
+      DO 400 I=1, MLA                                          
+       DO 300 J=1, MLA
+        CALL BIDX1(I,J,IJ)
+        CALL BIDX1(I+INDXA-1,J+INDXA-1,IJEE)
+        DO 200 K=1, MLB
+         DO 100 L=1, MLB
+          CALL BIDX1(K,L,KL)
+          CALL BIDX1(K+INDXB-1,L+INDXB-1,KLEE)
+          CALL BIDX1(IJEE,KLEE,IJKLEE)
+          VSUM=VSUM+DMA(IJ)*DMA(KL)*OPMA(IJKLEE)
+100      END DO                                               
+200     END DO                                                
+300    END DO                                                 
+400   END DO                                                  
+      VEE=VEE+0.5D0*VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine I2GR                             C
+C     Ago 17, 2009 - Thiago M. Cardozo            C
+C --> Calculates the purely intragroup part       C
+C     of the intragroup first-order interference  C
+C     contribution to the electron-electron       C
+C     repulsion from a non-HF group.              C
+C                                                 C
+C     Jun 24, 2015 - David Sousa                  C
+C --> Adapted for SC(n,m)                         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE I2GR(ML,DM2,S,OPMA,VEE,OIPO,IFLAG,INDX,IPOFF)
+      IMPLICIT NONE
+      DOUBLE PRECISION VEE,VSUM,DM2(*),OPMA(*),S(*),OIPO(1000)
+      INTEGER ML,INDX,IFLAG,IPOFF,I,J,K,L,IJ,KL,IJEE,IIEE,JJEE,KKEE,
+     &IIKKEE,JJKKEE,IJKKEE,IJPO,IJKL
+      VSUM=0.0D0
+      DO 400 I=1, ML                                         
+       DO 300 J=1, ML                                         
+        IF (I.EQ.J) CYCLE
+        CALL BIDX1(I,J,IJ)                                    
+        CALL BIDX1(I+INDX-1,J+INDX-1,IJEE)
+        CALL BIDX1(I+INDX-1,I+INDX-1,IIEE)
+        CALL BIDX1(J+INDX-1,J+INDX-1,JJEE)
+        DO 200 K=1, ML                                        
+         DO 100 L=1, ML                                       
+          CALL BIDX1(K,L,KL)                                  
+          CALL BIDX1(K+INDX-1,K+INDX-1,KKEE)                  
+          CALL BIDX1(IJ,KL,IJKL)                              
+          CALL BIDX1(IIEE,KKEE,IIKKEE)                        
+          CALL BIDX1(JJEE,KKEE,JJKKEE)                        
+          CALL BIDX1(IJEE,KKEE,IJKKEE)
+          IF (IFLAG.EQ.1) THEN
+              CALL BIDX2(I,J,IJPO)
+              IJPO=IJPO+IPOFF
+              OIPO(IJPO)=OIPO(IJPO)+2.0D0*S(KL)*DM2(IJKL)*(OPMA(IJKKEE)-
+     &0.5D0*S(IJ)*(OPMA(IIKKEE)+OPMA(JJKKEE)))
+          END IF
+          VSUM=VSUM+2.0D0*S(KL)*DM2(IJKL)*(OPMA(IJKKEE)-0.5D0*S(IJ)*
+     &(OPMA(IIKKEE)+OPMA(JJKKEE)))
+100      END DO                                               
+200     END DO                                                
+300    END DO                                                 
+400   END DO
+      VEE=VEE+VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine II2GR                            C
+C     Ago 17, 2009 - Thiago M. Cardozo            C
+C --> Calculates the intragroup second-order      C
+C     interference contribution to the electron-  C
+C     electron repulsion from a non-HF group.     C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE II2GR(ML,DM2,S,OPMA,VEE,INDX)
+      IMPLICIT NONE
+      DOUBLE PRECISION VEE,VSUM,DM2(*),OPMA(*),S(*)
+      INTEGER ML,INDX,I,J,K,L,IJ,KL,IJEE,IIEE,JJEE,KLEE,KKEE,LLEE,
+     &IIKKEE,JJKKEE,IJKKEE,IILLEE,JJLLEE,IJLLEE,IJKLEE,IJKL
+      VSUM=0.0D0
+       DO 400 I=1, ML
+       DO 300 J=1, ML
+        IF (I.EQ.J) CYCLE
+        CALL BIDX1(I,J,IJ)
+        CALL BIDX1(I+INDX-1,J+INDX-1,IJEE)
+        CALL BIDX1(I+INDX-1,I+INDX-1,IIEE)
+        CALL BIDX1(J+INDX-1,J+INDX-1,JJEE)
+        DO 200 K=1, ML
+         DO 100 L=1, ML
+          IF (K.EQ.L) CYCLE
+          CALL BIDX1(K,L,KL)
+          CALL BIDX1(K+INDX-1,L+INDX-1,KLEE)
+          CALL BIDX1(K+INDX-1,K+INDX-1,KKEE)
+          CALL BIDX1(L+INDX-1,L+INDX-1,LLEE)
+          CALL BIDX1(IJ,KL,IJKL)
+          CALL BIDX1(IIEE,KKEE,IIKKEE)
+          CALL BIDX1(IIEE,LLEE,IILLEE)
+          CALL BIDX1(JJEE,KKEE,JJKKEE)
+          CALL BIDX1(JJEE,LLEE,JJLLEE)
+          CALL BIDX1(IJEE,KKEE,IJKKEE)
+          CALL BIDX1(IJEE,LLEE,IJLLEE)
+          CALL BIDX1(IJEE,KLEE,IJKLEE)
+          VSUM=VSUM+DM2(IJKL)*(OPMA(IJKLEE)-S(KL)*(OPMA(IJKKEE)+
+     &OPMA(IJLLEE))+0.25D0*S(IJ)*S(KL)*(OPMA(IIKKEE)+OPMA(IILLEE)+
+     &OPMA(JJKKEE)+OPMA(JJLLEE)))
+100      END DO                                               
+200     END DO                                                
+300    END DO                                                 
+400   END DO
+      VEE=VEE+VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine QC2GR                            C
+C     Ago 12, 2009 - Thiago M. Cardozo            C
+C --> Calculates the quasi-classical electron-    C
+C     electron repulsion from a non-HF group.     C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE QC2GR(ML,DM2,S,OPMA,VEE,INDX)
+      IMPLICIT NONE
+      DOUBLE PRECISION DM2(*),OPMA(*),S(*),VEE,VSUM
+      INTEGER ML,INDX,I,J,K,L,IJ,KL,IIEE,KKEE,IIKKEE,IJKL
+      VSUM=0.0D0
+      DO 400 I=1, ML                             
+       DO 300 J=1, ML                            
+        CALL BIDX1(I,J,IJ)
+        CALL BIDX1(I+INDX-1,I+INDX-1,IIEE)
+        DO 200 K=1, ML                           
+         DO 100 L=1, ML                           
+          CALL BIDX1(K,L,KL)
+          CALL BIDX1(K+INDX-1,K+INDX-1,KKEE)
+          CALL BIDX1(IJ,KL,IJKL)
+          CALL BIDX1(IIEE,KKEE,IIKKEE)
+          VSUM=VSUM+DM2(IJKL)*S(IJ)*S(KL)*OPMA(IIKKEE)
+100      END DO                                            
+200     END DO                                             
+300    END DO                                              
+400   END DO
+      VEE=VEE+VSUM
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine QCHF                             C
+C     Ago 11, 2009 - Thiago M. Cardozo            C
+C --> Calculates the electron-electron repulsion  C
+C     from a Hartree-Fock group.                  C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE QC2HF(ML,OPMA,VEE,INDX)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      DOUBLE PRECISION OPMA(*),VEE
+      INTEGER ML,INDX,I,J,IJ,K,L,KL,IJKL
+      VEE=0.0D0
+      DO 400 I=INDX, INDX+ML-1
+         DO 300 J=INDX, INDX+ML-1
+            CALL BIDX1(I,J,IJ)
+            DO 200 K=INDX, INDX+ML-1
+               DO 100 L=INDX,INDX+ML-1
+                  CALL BIDX1(K,L,KL)
+                  CALL BIDX1(IJ,KL,IJKL)
+                  IF ((I.EQ.J).AND.(K.EQ.L).AND.(IJ.EQ.KL)) THEN
+                     VEE=VEE+OPMA(IJKL)
+                  ELSE
+                     IF ((I.EQ.J).AND.(K.EQ.L)) THEN
+                        VEE=VEE+2.0D0*OPMA(IJKL)
+                     ELSE
+                        IF ((I.EQ.K).AND.(J.EQ.L)) THEN
+                           VEE=VEE-1.0D0*OPMA(IJKL) 
+                        END IF
+                     END IF
+                  END IF
+100            END DO
+200         END DO
+300      END DO
+400   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine ICALC                            C
+C     Jul 16, 2009 - Thiago M. Cardozo            C
+C --> Calculates the interference contribution    C
+C     from a group for a one-body operator.       C
+C                                                 C
+C     Jun 24, 2015 - David Sousa                  C
+C --> Adapted for SC(n,m)                         C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE ICALC(ML,S,OPMA,DM,EI,OIPO,IFLAG,IPOFF)
+      IMPLICIT DOUBLE PRECISION (A-H,O-Z)
+      DOUBLE PRECISION S(*),OPMA(*),DM(*),OIPO(1000),EI
+      INTEGER ML,IFLAG,IPOFF,IJPO,I,J,II,JJ,IJ
+      EI=0.0D0
+      DO 200 I=1, ML
+         DO 100 J=1, ML
+            IF (I.EQ.J) CYCLE
+            II=I*(I+1)/2
+            JJ=J*(J+1)/2
+            CALL BIDX1(I,J,IJ)
+            IF (IFLAG.EQ.1) THEN
+               CALL BIDX2(I,J,IJPO)
+               IJPO=IJPO+IPOFF
+               OIPO(IJPO)=OIPO(IJPO)+(OPMA(IJ)-0.5D0*S(IJ)*(OPMA(II)+
+     &OPMA(JJ)))*DM(IJ)
+            END IF
+            EI=EI+(OPMA(IJ)-0.5D0*S(IJ)*(OPMA(II)+OPMA(JJ)))*DM(IJ)
+100      END DO
+200   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine QC1CALC                          C
+C     Jul 16, 2009 - Thiago M. Cardozo            C
+C --> Calculates the quasi-classical contribution C
+C     from a group for a one-body operator.       C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE QCCALC(ML,S,OPMA,DM,EREF)
+      IMPLICIT NONE
+      DOUBLE PRECISION S(*),OPMA(*),DM(*)
+      DOUBLE PRECISION EREF
+      INTEGER ML,I,J,II,JJ,IJ
+      EREF=0.0D0
+      DO 200 I=1, ML
+         DO 100 J=1, ML
+            II=I*(I+1)/2
+            JJ=J*(J+1)/2
+            CALL BIDX1(I,J,IJ)
+            EREF=EREF+0.5D0*S(IJ)*(OPMA(II)+OPMA(JJ))*DM(IJ)
+100      END DO
+200   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine NCALC                            C
+C     Jul 16, 2009 - Thiago M. Cardozo            C
+C --> Calculates the contribution                 C
+C     from a group for a one-body operator.       C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE NCALC(ML,OPMA,DM,E)
+      IMPLICIT NONE
+      DOUBLE PRECISION OPMA(*),DM(*),E
+      INTEGER I,J,IJ,ML
+      E=0.0D0
+      DO 200 I=1, ML
+         DO 100 J=1, ML
+            CALL BIDX1(I,J,IJ)
+            E=E+OPMA(IJ)*DM(IJ)
+100      END DO
+200   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine BIDX1                            C
+C     Jul 16, 2009 - Thiago M. Cardozo            C
+C --> Given two indexes A and B, constructs       C
+C     the corresponding superindex associated     C
+C     with a triangular symmetric matrix.         C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE BIDX1(A,B,AB)
+      IMPLICIT NONE
+      INTEGER A,B,AB
+      IF (A.GT.B) THEN
+         AB=(A*(A-1)/2)+B
+      ELSE
+         AB=(B*(B-1)/2)+A
+      END IF
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine BIDX2                            C
+C     Jul 18, 2009 - Thiago M. Cardozo            C
+C --> Given two indexes A and B, constructs       C 
+C     the corresponding superindex associated     C
+C     with the pair (A,B), where A.NE.B           C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE BIDX2(A,B,AB)
+      IMPLICIT NONE
+      INTEGER A,B,AB
+      IF (A.GT.B) THEN
+         AB=((A-1)*(A-2)/2)+B
+      ELSE
+         AB=((B-1)*(B-2)/2)+A
+      END IF
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine MATMIN                           C
+C     Jul 15, 2009 - Thiago M. Cardozo            C
+C --> Subtracts matrix A from matrix B.           C
+C     A and B are square matrices of N x N        C
+C     dimensions.                                 C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE MATMIN (A,B,C,N)
+      IMPLICIT NONE
+      DOUBLE PRECISION A(*),B(*),C(*)
+      INTEGER N,NBA2,I
+      NBA2=N*(N+1)/2
+      DO I=1, NBA2
+         C(I)=0.0D0
+         C(I)=B(I)-A(I)
+      END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine MMULT1                           C
+C     Jul 18, 2009 - Thiago M. Cardozo            C
+C --> Mulitplies the MxN matrix A for the         C
+C     NxN symmetric matrix B, resulting in the    C
+C     MxN matrix W = AB.                          C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE MMULT1(M,N,A,B,W)
+      IMPLICIT NONE
+      DOUBLE PRECISION A(*),B(*),W(*),MSUM
+      INTEGER M,N,I,J,K,II,IAJ,IAK
+      DO 400 I=1, M
+         II=(I-1)*N
+         DO 300 J=1, N
+            MSUM=0.0D0
+            IAJ=J*(J-1)/2
+            DO 100 K=1, J
+               MSUM=MSUM+B(IAJ+K)*A(II+K)
+100         END DO
+            IAK=J*(J+3)/2
+            DO 200 K=J+1, N
+               MSUM=MSUM+B(IAK)*A(II+K)
+               IAK=IAK+K
+200         END DO
+            W(II+J)=MSUM
+300      END DO
+400   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine MMULT2                           C
+C     Jul 18, 2009 - Thiago M. Cardozo            C
+C --> Multiplies the MxN matrix A for the NxM     C
+C     matrix B, resulting in the MxM matrix W.    C
+C     This subroutine was constructed under       C
+C     the presuposition that the resulting        C
+C     matrix W is triangular symmetric. In this   C
+C     way, it only calculates M*(M+1)/2           C
+C     matrix elements.                            C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE MMULT2(M,N,A,B,W)
+      IMPLICIT NONE
+      DOUBLE PRECISION A(*),B(*),W(*),MSUM
+      INTEGER M,N,I,J,K,II,JJ,IJ
+      IJ=0
+      DO 300 J=1, M
+         JJ=(J-1)*N
+         DO 200 I=1, J
+            II=(I-1)*N
+            IJ=IJ+1
+            MSUM=0.0D0
+            DO 100 K=1, N
+               MSUM=MSUM+A(II+K)*B(JJ+K)
+100         END DO
+            W(IJ)=MSUM
+200      END DO
+300   END DO
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine PRDM1                            C
+C     Sep 27, 2007 - Thiago M. Cardozo            C
+C --> Prints the first-order density matrix in    C
+C     terms of the local non-orthogonal orbitals. C
+C                                                 C
+C     Jun 16, 2015 - David Sousa                  C
+C --> Reader-friendly printing                    C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE PRDM1(NE,NG,A,M,NF)
+      IMPLICIT NONE      
+      DOUBLE PRECISION A(*),B(1000,1000)  
+      INTEGER NE,NG,M,NF,J,K,IAJ,IAK                  
+      CHARACTER *40 TITLE                        
+C     IF BOUNDS OF B ARE ALTERED, ALTER TEST AND 999 FORMAT BELOW
+C     ALTER ALSO IN MAPRNT ROUTINE
+C     Code added by B Duke to VB2000 version 2.8
+      CHARACTER*3 FUNIT(10)
+      INTEGER IOUTVB,LENFIL
+      CHARACTER*64 FSTR,RWFFILE,INTFILE,LOCFILE
+      COMMON /FILNAM/IOUTVB,FSTR,RWFFILE,INTFILE,LOCFILE,LENFIL,FUNIT
+      IF(M.GT.1000) THEN
+        WRITE(IOUTVB,999) M
+        CALL ABRT
+      ENDIF 
+ 999  FORMAT(" M =",I4," > 1000. ALTER DECLARATION OF B IN PRDM1",
+     & " AND RECOMPILE."/)
+C
+      DO 100 J=1,M
+         IAJ=J*(J-1)/2                              
+         DO 200 K=1,J                               
+            B(J,K)=0.0D0                            
+            B(J,K)=A(IAJ+K)                         
+200      END DO
+         IAK=J*(J+3)/2                              
+         DO 250 K=J+1,M                             
+            B(J,K)=0.0D0                            
+            B(J,K)=A(IAK)                           
+            IAK=IAK+K                               
+250      END DO
+100   END DO                                     
+      IF (NE.EQ.1) THEN
+         TITLE="ONE-ELECTRON DENSITY MATRIX - GROUP "
+      ELSE
+         IF (NE .EQ. 2) THEN
+            TITLE="TWO-ELECTRON DENSITY MATRIX - GROUP "
+         END IF
+      END IF
+      CALL MAPRNT(NG,B,M,TITLE,NF)                  
+      RETURN                                     
+      END                                        
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine MAPRNT                           C
+C     Sep 27, 2007 - Thiago M. Cardozo            C
+C --> General matrix printing.                    C
+C                                                 C
+C     Jun 16, 2015 - David Sousa                  C
+C --> Reader-friendly printing                    C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE MAPRNT(NG,B,M,TEXT,NF)
+      IMPLICIT NONE
+      DOUBLE PRECISION B(1000,1000)                           
+      INTEGER BLOCK,COL,I,J,K,L,M,NF,NG,RST                      
+      CHARACTER*40 TEXT                          
+      WRITE (NF,1300) TEXT,NG                    
+      WRITE (NF,1400) M                          
+      COL=10
+      BLOCK=INT((M-1)/COL)+1                     
+      RST=M-(BLOCK-1)*COL                        
+      DO 200 K=1, BLOCK                          
+         L=(K-1)*COL+1                           
+         IF (K.NE.BLOCK) THEN                    
+            WRITE (NF,1100) (J, J=L, L+COL-1)    
+            DO 100 I=L, M                        
+               WRITE (NF,1200) I,(B(I,J), J=L, L+COL-1)         
+100         END DO                               
+            WRITE (NF,*) " "                     
+         ELSE                                    
+            WRITE (NF,1100) (J, J=L, L+RST-1)    
+            DO 150 I=L, M                        
+               WRITE (NF,1200) I,(B(I,J), J=L, L+RST-1)         
+150         END DO                               
+         END IF                                  
+200   END DO
+      WRITE (NF,*) " "
+      RETURN                                     
+1100  FORMAT (4X,10I13)                          
+1200  FORMAT (I2,1X,10F13.9)                     
+1300  FORMAT (1X,A38,I3)
+1400  FORMAT (I4)
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine CHKPART                          C
+C     Ago 24, 2009 - Thiago M. Cardozo            C
+C --> Sums the various energy parts in order to   C
+C     obtain the total energy. This is done to    C
+C     verify whether the partitioning is well     C
+C     done, by checking for any bugs that might   C
+C     be hidden.                                  C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE CHKPART(NSUB,TI,VI,TQC,VQC,V2QC1G,
+     &V2II1G,V2I,V2QC2G,V2X2G,V2II2G,VNN,CHKSUM,EI,EII,EX,EREF)
+      IMPLICIT NONE
+      INTEGER NSUB,MAXGRP,I,J,IJ
+      PARAMETER (MAXGRP=49)
+      DOUBLE PRECISION TI(MAXGRP),VI(MAXGRP),TQC(MAXGRP),VQC(MAXGRP)
+      DOUBLE PRECISION V2QC1G(MAXGRP),V2II1G(MAXGRP),V2I(MAXGRP)
+      DOUBLE PRECISION V2QC2G(999),V2X2G(999),V2II2G(999)
+      DOUBLE PRECISION VNN,CHKSUM,EI,EII,EX,EREF
+      CHKSUM=0.0D0
+      EI=0.0D0
+      EII=0.0D0
+      EX=0.0D0
+      EREF=0.0D0
+      DO I=1, NSUB
+         EI=EI+TI(I)+VI(I)+V2I(I)
+         EII=EII+V2II1G(I)
+         EREF=EREF+TQC(I)+VQC(I)+V2QC1G(I) 
+         DO J=1, I
+            IF (I.EQ.J) CYCLE
+            CALL BIDX2(I,J,IJ)
+            EII=EII+V2II2G(IJ)
+            EX=EX+V2X2G(IJ)
+            EREF=EREF+V2QC2G(IJ)
+         END DO
+      END DO
+      EREF=EREF+VNN
+      CHKSUM=EI+EII+EX+EREF
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine PRGPFEP                          C
+C     Ago 19, 2009 - Thiago M. Cardozo            C
+C --> Prints the energy partitioning results.     C
+C                                                 C
+C                                                 C
+C     Jun 16 / Jun 24, 2015 - David Sousa         C
+C --> Several modifications                       C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C     SUBROUTINE PRGPFEP(NF,NSUB,METHOD,ML,NORB,TI,VI,TQC,VQC,V2QC1G,
+      SUBROUTINE PRGPFEP(NF,NSUB,METHOD,ML,TI,VI,TQC,VQC,V2QC1G,
+     &V2II1G,V2I,V2QC2G,V2X2G,V2II2G,CHKSUM,EI,EII,EX,EREF,TIPO,VIPO,
+     &V2IPO)
+C    &V2IPO,EPFILE,DENMAT)
+C    &V2IPO,SS,TT,VV)
+      IMPLICIT NONE
+      INTEGER MAXGRP,NF,NSUB,LENFIL,IOUTVB,NFGPF,NFDM,NEPFILE,
+     & I,J,IJ,M,N,MN,IPOFF
+      PARAMETER (MAXGRP=49)
+      INTEGER ML(MAXGRP),METHOD(MAXGRP)
+      DOUBLE PRECISION TI(MAXGRP),VI(MAXGRP),TQC(MAXGRP),VQC(MAXGRP)
+      DOUBLE PRECISION V2QC1G(MAXGRP),V2II1G(MAXGRP),V2I(MAXGRP)
+      DOUBLE PRECISION V2QC2G(1000),V2X2G(1000),V2II2G(1000)
+      DOUBLE PRECISION TIPO(1000),VIPO(1000),V2IPO(1000)
+C     DOUBLE PRECISION SS(5000),TT(5000),VV(5000)
+      DOUBLE PRECISION CHKSUM,EI,EII,EX,EREF
+C     Code for VB2000 version 2.8
+      CHARACTER*40 EPFILE,DENMAT
+      COMMON /EPFILES/ NFGPF,NFDM,NEPFILE,EPFILE,DENMAT
+      CHARACTER*64 FSTR,RWFFILE,INTFILE,LOCFILE
+      CHARACTER*3 FUNIT(10)
+      COMMON /FILNAM/ IOUTVB,FSTR,RWFFILE,INTFILE,LOCFILE,LENFIL,FUNIT
+C
+      WRITE (NF,1000) "  GROUP CONTRIBUTIONS                            
+     &                       "
+      WRITE (NF,*)
+      WRITE (NF,1000) "                T[I]          Ven[I]        T[QC]
+     &         Ven[QC]       "
+      WRITE (NF,1000) "-------------------------------------------------
+     &-----------------------"
+      DO I=1, NSUB
+         WRITE (NF,1100) "GROUP ",I," +",TI(I),VI(I),TQC(I),VQC(I)
+      END DO
+      WRITE (NF,*)
+      WRITE (NF,*)
+      WRITE (NF,1000) "                Vee[I]        Vee[QC]       Vee[I
+     &I]                     "
+      WRITE (NF,1000) "-------------------------------------------------
+     &-----------------------"
+      DO I=1, NSUB 
+         WRITE (NF,1100) "GROUP ",I," -",V2I(I),V2QC1G(I),V2II1G(I)
+      END DO
+      IF (NSUB.GT.1) THEN
+      WRITE (NF,*)
+      WRITE (NF,*)
+      WRITE (NF,1000) "  INTERGROUP CONTRIBUTIONS                       
+     &                       "
+      WRITE (NF,*)
+      WRITE (NF,1000) "                Vee[QC]       Vee[X]        Vee[I
+     &I]                     "
+      WRITE (NF,1000) "-------------------------------------------------
+     &-----------------------"
+      DO J=1, NSUB
+         DO I=1, J
+            IF (I.EQ.J) CYCLE
+            CALL BIDX2(I,J,IJ)
+            WRITE (NF,1200) "G(",I,",",J,") -",V2QC2G(IJ),V2X2G(IJ),
+     &V2II2G(IJ)
+         END DO
+      END DO
+      END IF
+      IPOFF=0
+      DO I=1, NSUB
+         IF ((METHOD(I).NE.1).AND.(ML(I).GT.2)) THEN
+            WRITE (NF,*)
+            WRITE (NF,*)
+            WRITE (NF,1001) " INDIVIDUAL ORBITAL PAIR CONTRIBUTION TO IN
+     &TERFERENCE - GROUP ",I
+            WRITE (NF,*)
+            WRITE (NF,1000) "                T[I]          Ven[I]       
+     & Vee[I]                      "
+            WRITE (NF,1000) "-------------------------------------------
+     &-----------------------------"
+            DO N=1, ML(I)
+               DO M=1, N
+                  IF (M.EQ.N) CYCLE
+                  CALL BIDX2(M,N,MN)
+                  MN=MN+IPOFF
+                  WRITE (NF,1200) "P(",M,",",N,") -",TIPO(MN),VIPO(MN),
+     &V2IPO(MN)
+               END DO
+            END DO
+            IPOFF=IPOFF+ (ML(I)-1)*(ML(I)-2)/2 + ML(I)
+         END IF
+      END DO
+      WRITE (NF,*)
+      WRITE (NF,*)
+      WRITE (NF,1300) "  TOTAL ENERGY = ",CHKSUM
+      WRITE (NF,1301) "  ==============================="
+      WRITE (NF,1300) "  TOTAL E[I]   = ",EI
+      WRITE (NF,1300) "  TOTAL E[REF] = ",EREF
+      WRITE (NF,1300) "  TOTAL E[X]   = ",EX
+      WRITE (NF,1300) "  TOTAL E[II]  = ",EII
+      WRITE (NF,*)
+C     Code from VB2000 version 2.8
+      WRITE (IOUTVB,*)
+      WRITE (IOUTVB,'("   GPF-EP OUTPUT FILES")')
+      WRITE (IOUTVB,'("   ===================")')
+      WRITE (IOUTVB,'(3X,A40)') EPFILE
+      WRITE (IOUTVB,'(3X,A40)') DENMAT
+      WRITE (IOUTVB,*)
+      WRITE (IOUTVB,1300) "  TOTAL ENERGY = ",CHKSUM
+      WRITE (IOUTVB,1301) "  ==============================="
+      WRITE (IOUTVB,1300) "  TOTAL E[I]   = ",EI
+      WRITE (IOUTVB,1300) "  TOTAL E[REF] = ",EREF
+      WRITE (IOUTVB,1300) "  TOTAL E[X]   = ",EX
+      WRITE (IOUTVB,1300) "  TOTAL E[II]  = ",EII
+C
+1000  FORMAT (1X,A72)
+1001  FORMAT (1X,A62,I3)
+1100  FORMAT (1X,A6,I2,A2,4F14.6)
+1200  FORMAT (1X,A2,I2,A1,I2,A3,4F14.6)
+1300  FORMAT (1X,A17,F14.6)
+1301  FORMAT (1X,A33)
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine PRTERROR                         C
+C     Jun 16, 2015 - David Sousa                  C
+C --> Prints error messages                       C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE PRTERROR(NERR,NF)
+      IMPLICIT NONE
+      INTEGER NF,NERR
+      IF (NERR .EQ. 1) THEN
+         WRITE (NF,1100) "WARNING!                                     "
+         WRITE (NF,1100)"Splitting the system in more than one HF group"
+         WRITE (NF,1100)"(METHOD=1) causes errors in the reference     "
+         WRITE (NF,1100)"energy calculation. Please run again this job "
+         WRITE (NF,1100)"with only 1 HF group. Following results might "
+         WRITE (NF,1100)"be wrong."
+      ELSE IF (NERR .EQ. 2) THEN
+         WRITE (NF,1100) "WARNING!                                     "
+         WRITE (NF,1100)"Using VB groups (METHOD=2) might cause errors "
+         WRITE (NF,1100)"in energy partitioning if the structures are  "
+         WRITE (NF,1100)"not choosen adequately.                       "
+      ELSE IF (NERR .EQ. 3) THEN
+         WRITE (NF,1100) "WARNING!                                     "
+         WRITE (NF,1100)"If you are running just a HF calculation, GPF "
+         WRITE (NF,1100)"energy partitioning is meaningless since there"
+         WRITE (NF,1100)"is no interference energy. Aborting job...    "
+      ENDIF
+      WRITE (NF,*)
+      WRITE (NF,1000) "*================================================
+     &======================*"
+1000  FORMAT (1X,A72)
+1100  FORMAT (1X,A55)
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     Subroutine PRTHEADR                         C
+C     Jun 16, 2015 - David Sousa                  C
+C --> Prints header of output files.              C
+C                                                 C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE PRTHEADR(NF)
+      IMPLICIT NONE
+      INTEGER NF
+      WRITE (NF,1000) "*================================================
+     &======================*"
+      WRITE (NF,1000) "|                                                
+     &                      |"
+      WRITE (NF,1000) "|    Generalized Product Function Energy Partitio
+     &ning - GPF-EP         |"
+      WRITE (NF,1000) "|                       Version 0.6.1 - May, 2018
+     &                      |"
+      WRITE (NF,1000) "|                                                
+     &                      |"
+      WRITE (NF,1000) "*================================================
+     &======================*"
+      WRITE (NF,*)
+      WRITE (NF,*)
+1000  FORMAT (1X,A72)
+      RETURN
+      END
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+C                                                 C
+C     TEST PRINTING                               C
+C --> Prints any vector.                          C
+CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      SUBROUTINE TESTPT(N,TEXT,VEC,NUNIT)
+      IMPLICIT NONE
+      INTEGER N,I,NUNIT
+      DOUBLE PRECISION VEC(*),TEXT
+      WRITE (NUNIT,1000) TEXT
+      DO 100 I=1,N
+        WRITE (NUNIT,2000) I,VEC(I)
+100   END DO
+1000  FORMAT (1X,A20)
+2000  FORMAT (2X,I3,F15.9)
+      RETURN
+      END

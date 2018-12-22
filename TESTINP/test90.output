@@ -1,0 +1,242 @@
+ FILES AVAILABLE 
+ TESTINP/test90.ED3                      
+0
+BASIS SET                                                                       
+
+
+ THE CONTRACTED PRIMITIVE FUNCTIONS HAVE BEEN UNNORMALIZED
+ THE CONTRACTED BASIS FUNCTIONS ARE NOW NORMALIZED TO UNITY
+
+          ********************
+
+          MOLECULAR BASIS SET
+
+          ********************
+
+
+ ******************************************************************************
+
+  ATOM     NUCLEAR               COORDINATES                 NUMBER OF
+           CHARGE       X             Y              Z       SHELLS
+
+ ******************************************************************************
+
+ ATOM        1.0   0.0000000      0.0000000      0.7067575   12
+                                                                 S   S   S   
+                                                                 S   S   P   
+                                                                 P   P   P   
+                                                                 D   D   D   
+
+ ATOM        1.0   0.0000000      0.0000000     -0.7067575   12
+                                                                 S   S   S   
+                                                                 S   S   P   
+                                                                 P   P   P   
+                                                                 D   D   D   
+
+ ******************************************************************************
+
+ CONTRACTED PRIMITIVE FUNCTIONS
+
+ Atom Shell Type Primitive  Exponents            Contraction coefficients
+
+ ATOM    
+
+
+        1    S        1      402.000000       0.325563  (  0.000279 )
+        1    S        2       60.240000       0.608462  (  0.002165 )
+        1    S        3       13.730000       1.038417  (  0.011201 )
+        1    S        4        3.905000       1.620359  (  0.044878 )
+
+
+        2    S        5        1.283000       0.859172  (  1.000000 )
+
+
+        3    S        6        0.465500       0.401652  (  1.000000 )
+
+
+        4    S        7        0.181100       0.197856  (  1.000000 )
+
+
+        5    S        8        0.072790       0.099877  (  1.000000 )
+
+
+        6    P        9        4.516000       9.383881  (  1.000000 )
+
+
+        7    P       10        1.712000       2.791385  (  1.000000 )
+
+
+        8    P       11        0.649000       0.830321  (  1.000000 )
+
+
+        9    P       12        0.246000       0.246950  (  1.000000 )
+
+
+       10    D       13        2.950000      10.929442  (  1.000000 )
+
+
+       11    D       14        1.206000       2.284374  (  1.000000 )
+
+
+       12    D       15        0.493000       0.477410  (  1.000000 )
+
+ ATOM    
+
+
+       13    S       16      402.000000       0.325563  (  0.000279 )
+       13    S       17       60.240000       0.608462  (  0.002165 )
+       13    S       18       13.730000       1.038417  (  0.011201 )
+       13    S       19        3.905000       1.620359  (  0.044878 )
+
+
+       14    S       20        1.283000       0.859172  (  1.000000 )
+
+
+       15    S       21        0.465500       0.401652  (  1.000000 )
+
+
+       16    S       22        0.181100       0.197856  (  1.000000 )
+
+
+       17    S       23        0.072790       0.099877  (  1.000000 )
+
+
+       18    P       24        4.516000       9.383881  (  1.000000 )
+
+
+       19    P       25        1.712000       2.791385  (  1.000000 )
+
+
+       20    P       26        0.649000       0.830321  (  1.000000 )
+
+
+       21    P       27        0.246000       0.246950  (  1.000000 )
+
+
+       22    D       28        2.950000      10.929442  (  1.000000 )
+
+
+       23    D       29        1.206000       2.284374  (  1.000000 )
+
+
+       24    D       30        0.493000       0.477410  (  1.000000 )
+ BOND LENGTHS IN BOHR (ANGSTROM)
+      NONE
+ BOND ANGLES
+      NONE
+ DIHEDRAL ANGLES
+      NONE
+
+
+
+
+
+
+
+
+
+
+
+
+ MAIN FILE ON     TESTINP/test90.ED3                       STARTING AT BLOCK   1
+
+
+0START
+
+ TIME LIMIT =  72705.600
+ OUTPUT OPTION =     3
+ PREFACTOR TOLERANCE FOR INTEGRALS = 1.0D-18
+ INTEGRAL CUTOFF = 1.0D-10
+ OPTION FOR NORMALIZATION OF BASIS FUNCTIONS =     0
+ OPTION FOR UNNORMALIZATION OF PRIMITIVES =     0
+ RESTART OPTION =    -1
+
+ STARTING SHELLS FOR 2E-INTEGRALS =     1    1    1    1
+ RECORD NUMBER =          1
+ LOCATION OF FIRST INTEGRAL IN THIS RECORD =     1
+
+          INTERNUCLEAR DISTANCES ( A.U.)
+          ------------------------------
+ 
+                    ATOM           ATOM    
+ 
+  1  ATOM           0.000000     1.413515
+  2  ATOM           1.413515     0.000000
+
+          INTERNUCLEAR DISTANCES (ANGS.)
+          ------------------------------
+ 
+                    ATOM           ATOM    
+ 
+  1  ATOM           0.000000     0.748000
+  2  ATOM           0.748000     0.000000
+
+ TOTAL NUMBER OF SHELLS                      =   24
+ TOTAL NUMBER OF BASIS FUNCTIONS             =   70
+ NUMBER OF ELECTRONS                         =    2
+ CHARGE OF MOLECULE                          =    0
+ STATE MULTIPLICITY                          =    1
+ NUMBER OF DOUBLY OCCUPIED ORBITALS          =    1
+ NO OF SINGLY OCCUPIED ORBITALS (ALPHA)      =    0
+ NO OF SINGLY OCCUPIED ORBITALS (BETA)       =    0
+ TOTAL NUMBER OF ATOMS                       =    2
+ SCFTYP = CLOSED  
+ RUNTYP = INTEGRAL
+  GUESS = HCORE   
+
+
+          ********************
+
+          1 ELECTRON INTEGRALS
+
+          ********************
+
+
+ -------------------------------------------------------------------------------
+
+          LAST STEP USED     0.00 SECS 
+
+          TOTAL USED     0.00 SECS 
+
+          REMAINING 73440.00 SECS
+
+ -------------------------------------------------------------------------------
+
+        POSITIONED
+ DDNAME   AT BLOCK
+ TESTINP/test90.ED2                                192
+ TESTINP/test90.ED3                                  3
+ Time for integral evaluation                    0.115
+
+
+
+     ATOM       1             2
+
+
+       E'X     0.0000000     0.0000000
+       E'Y     0.0000000     0.0000000
+       E'Z    -0.5004943     0.5004943
+
+          ----------------------
+          HELLMANN-FEYNMAN FORCE
+          ----------------------
+
+
+     ATOM       1             2
+
+
+       E'X     0.0000000     0.0000000
+       E'Y     0.0000000     0.0000000
+       E'Z    -0.5004943     0.5004943
+
+ ...... END OF HELLMANN-FEYNMAN FORCE ......
+
+
+
+
+
+
+
+ --------------------------------------------------------------------------------
+                              ALL FINISHED
+ --------------------------------------------------------------------------------

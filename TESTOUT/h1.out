@@ -1,0 +1,228 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ *       An ab initio Valence-Bond Program Based on the       *
+ *           Generalized Product Function Method and          *
+ *                  the Algebrant Algorithm                   *
+ *                                                            *
+ *                Version 2.0, November 2007                  *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *    * SciNet Technologies, 9943 Fieldthorn St., San Diego   *
+ *      CA 92127, USA                                         *
+ *                                                            *
+ *   ** Department of Medicinal Chemistry, Monash University, *
+ *      381 Royal Pde, Parkville, Victoria, 3052, Australia   *
+ *                                                            *
+ *  *** Department of Chemistry, University of Pisa,          *
+ *      56100 Pisa, Italy                                     *
+ *                                                            *
+ *  Reference for the software:                               *
+ *      Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version *
+ *      2.0, SciNet Technologies, San Diego, CA, 2007         *
+ *      URL: http//www.scinetec.com/                          *
+ *                                                            *
+ *  Reference for the theory:                                 *
+ *      Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence   *
+ *      Bond Theory to New Limits", Int. J. Quantum Chem.,    *
+ *      89(2002)208-216.                                      *
+ *                                                            *
+ *  Copyright (C) 2000-2007 by SciNet Technologies            *
+ **************************************************************
+
+ JOB NAME IS h1                                                              
+
+ VB2000 DIRECTORY IS: .                                                                               
+
+ MAXWK MEMORY IS:        6500000
+
+
+ Input of molecule
+ =================
+ #! VB(1)/AUG-CC-PVDZ PRINTALL                                           
+
+ Title: TEST FOR ONE ELECTRON VB                                                        
+
+ Charge =  0 Multiplicity =  2
+
+ BASIS SET FILE IS: ./BASET/AUG-cc-pVDZ                                                             
+
+ Cartesian coordinates of atoms in Angstrom
+ ------------------------------------------
+                 X         Y         Z   
+
+  H     1.0  0.000000  0.000000  0.000000
+ ------------------------------------------
+
+ Total number of two-electron integrals =      213
+ Time for integral evaluation                0.016
+
+ SKIPPED INTEGRALS= 336
+ Number of iter = 15, DMAX =        0.000007640467
+ Final Hartree-Fock Energy =       -0.357061495809
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3         4         5         6
+ E(a.u.)              -0.229     0.084     0.286     0.286     0.286     0.742
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.44788  -0.15725   0.00000   0.00000   0.00000   1.38657
+   2  1  H     s    -0.52740  -0.81576   0.00000   0.00000   0.00000  -1.72024
+   3  1  H     x     0.00000   0.00000   0.02399   0.00000  -0.00902   0.00000
+   4  1  H     y     0.00000   0.00000  -0.00902   0.00000  -0.02399   0.00000
+   5  1  H     z     0.00000   0.00000   0.00000  -0.02563   0.00000   0.00000
+   6  1  H     s    -0.16684   1.34908   0.00000   0.00000   0.00000   0.65956
+   7  1  H     x     0.00000   0.00000  -0.94701   0.00000   0.35604   0.00000
+   8  1  H     y     0.00000   0.00000   0.35604   0.00000   0.94701   0.00000
+   9  1  H     z     0.00000   0.00000   0.00000   1.01172   0.00000   0.00000
+
+ MO#                       7         8         9
+ E(a.u.)               1.744     1.744     1.744
+ -------------------------------------------------------------------------------
+
+   1  1  H     s     0.00000   0.00000   0.00000
+   2  1  H     s     0.00000   0.00000   0.00000
+   3  1  H     x     0.00000  -1.09230   0.29291
+   4  1  H     y     0.00000  -0.29291  -1.09230
+   5  1  H     z    -1.13089   0.00000   0.00000
+   6  1  H     s     0.00000   0.00000   0.00000
+   7  1  H     x     0.00000   0.48869  -0.13105
+   8  1  H     y     0.00000   0.13105   0.48869
+   9  1  H     z     0.50596   0.00000   0.00000
+
+ VBO LIB IS: ./VBOLIB/VBOLIBAUG-CC-PVDZ                                                      
+
+ Localized molecular orbitals and the bond labels
+ ===============================================================================
+ LMO#                      1
+ E(a.u.)              -0.229
+ Bond Label            1:(0)
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.44788
+   2  1  H     s    -0.52740
+   3  1  H     x     0.00000
+   4  1  H     y     0.00000
+   5  1  H     z     0.00000
+   6  1  H     s    -0.16684
+   7  1  H     x     0.00000
+   8  1  H     y     0.00000
+   9  1  H     z     0.00000
+
+
+ Mulliken population of localized molecular orbitals
+ ===============================================================================
+ LMO#                      1
+ E(a.u.)              -0.229
+ Bond Label            1:(0)
+ -------------------------------------------------------------------------------
+
+   1         H       2.00000
+
+ WARNING: MELEK != MELE(K)
+
+ MACROITERATION CONVERGENCE TOLERANCE
+ ALTERED TO 10.00**(-7).
+
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRP)
+ =======================================================================
+ LMO#     1
+ Group#   1
+ Split    0
+
+
+
+
+ Initial guess of orbitals
+ ===============================================================================
+ ORBITAL#                  1
+ Bond Label            1:(0)
+ -------------------------------------------------------------------------------
+
+   1  1  H     s    -0.44788
+   2  1  H     s    -0.52740
+   3  1  H     x     0.00000
+   4  1  H     y     0.00000
+   5  1  H     z     0.00000
+   6  1  H     s    -0.16684
+   7  1  H     x     0.00000
+   8  1  H     y     0.00000
+   9  1  H     z     0.00000
+
+
+
+ GENERAL CONTROLS ($GENCTL)
+ ==============================
+ Number of electron groups =  1
+ Maximum macro-iterations  = 12
+ Restart calculation(0/1/2)=  0
+ Group#               1
+ Num. of electrons    1
+ Num. of spins        1
+ Num. of orbitals     1
+ Method#              2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  1
+ STR. NO.       RUMER PATTERN  
+    1           1
+
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    1 =     -0.49872775     -0.49872775
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    2 =     -0.49933581     -0.00060806
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    3 =     -0.49933432      0.00000149
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000000000
+
+ ENERGY AND DIFF OF MACROITER    4 =     -0.49933432      0.00000000
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00000000000000
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   1
+
+       1
+ =========
+   1  1.00
+
+ ENERGY AND DIFF OF MACROITER    5 =     -0.49933432      0.00000000
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1
+      Group#             1
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  H     s  -0.58919
+   2  1  H     s  -0.48966
+   3  1  H     x   0.00000
+   4  1  H     y   0.00000
+   5  1  H     z   0.00000
+   6  1  H     s  -0.01678
+   7  1  H     x   0.00000
+   8  1  H     y   0.00000
+   9  1  H     z   0.00000
+
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION      0.016
+ CPU TIME FOR MACROITERATION      0.719
+ TOTAL CPU TIME                   0.735
+

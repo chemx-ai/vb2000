@@ -1,0 +1,160 @@
+#!/bin/csh
+#     Copyright (C) 2017 Jiabo Li, Brian Duke, and Roy McWeeny
+# 
+#     This program is free software: you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation, either version 3 of the License, or
+#     (at your option) any later version.
+# 
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+# 
+#     You should have received a copy of the GNU General Public License
+#     along with this program.  If not, see <https://www.gnu.org/licenses/>.
+###########################################################################
+#
+# This is a script for GAMESS/VB2000 to check compile with various
+# options. It does not link to give an executable
+#
+# Author: Brian Duke, January 2018.
+#
+###################################################################
+#
+# You will need to change the following lines.
+#
+#setenv VB_DIR ../../VB2000/SRC
+setenv VB_DIR ../SRC
+#
+# You may need to change COMPTAG below in the appropriate compiler case.
+#
+##################################################################
+#
+set TARGET1=$VB_DIR/vb2gms.src
+set TARGET2=$VB_DIR/vb2000.src
+set MBIT='64'
+set VERS='CGMS'
+set TAG='==========+++++=========='
+#set COMPTAG default
+set COMPTAG=$TAG
+set CC=gcc
+echo " Is your compile a 32 bit compile? Hit [y/Y] if so or <enter> for 64 bit:"
+set bit=$<
+if (${bit} =~ [yY]*) then
+   set MBIT='32'
+endif
+echo ""
+echo " Welcome to the script for checking the compile for GAMESS VB2000."
+echo ""
+echo " It does not install any executable."
+echo " If you want that, exit in the next menu."
+echo ""
+echo " You may want to exit at this menu to edit this script to change"
+echo " VB_DIR or COMPTAG for your compiler option to be the correct"
+echo " full name of your compiler including the version number." 
+echo ""
+echo " The current options are:"
+echo ""
+echo " 0. Exit."
+echo " 1. Using gfortran compiler in Linux."
+echo " 2. Using Intel ifort compiler."
+echo ""
+echo " Type the number of the option you want:"
+set opt=$<
+echo ""
+echo ""
+switch ( $opt )
+case 1:
+# gfortran. Assumes that gfortran is on your path.
+   echo " Compiling stand-alone version with gfortran and linux."
+   set F77=gfortran
+#  COMPTAG has to be 25 characters long
+#  set COMPTAG default
+#  set COMPTAG='   Compiler  GFORTRAN    '
+   set COMPTAG='Compiler  GFORTRAN 5.2.0 '
+   if($MBIT == '64') then
+     set CFLAGS='-DLINUX64 -m64'
+     set FLAGS="-O2 -fdefault-integer-8 -std=legacy -fno-whole-file"
+#    -std=legacy avoids warnings about Holorith comparisions
+#    set FLAGS="-O2 -fdefault-integer-8 -fno-whole-file"
+     set FLAGS1=""
+#    Other that can be used to help debugging and checking of new code"
+#    set FLAGS1="-Wall -fcheck=all -fbounds-check -fbacktrace"
+#    set FLAGS1="-finit-real=nan -fno-range-check -Wunreachable-code -Wunused -Wuninitialized" 
+#    set FLAGS1="-ffpe-trap=invalid -fdump-core -Wconversion -Wconversion-extra -Wextra "
+   else
+#    32 bit not tested
+     set CFLAGS='-DLINUX -m32'
+#    set FLAGS="-static -O2 -malign-double"
+     set FLAGS="-O2 -std=legacy"
+   endif
+   set LOG="comp-gfc.log"
+breaksw
+case 2:
+   echo " Compiling stand-alone version with Intel ifort."
+   set F77=ifort
+#  Change CC to icc from default gcc only for ifort if available
+#  set CC=icc 
+#  COMPTAG has to be 25 characters long
+#  set COMPTAG default
+   set COMPTAG='  Compiler  IFORT 16.0.3 '
+#  set COMPTAG='  Compiler  IFORT 12.1.5 '
+   if($MBIT == '64') then
+     set CFLAGS='-DLINUX64 -m64'
+#    This advice is in GAMESS comp file:-
+#    if ($GMS_IFORT_VERNO >=  8) set EXTRAOPT="$EXTRAOPT -assume byterecl"
+#    if ($GMS_IFORT_VERNO == 10) set EXTRAOPT="$EXTRAOPT -vec-report0"
+#    if ($GMS_IFORT_VERNO == 11) set EXTRAOPT="$EXTRAOPT -vec-report0"
+#    if ($GMS_IFORT_VERNO == 12) set EXTRAOPT="$EXTRAOPT -vec-report0"
+#    if ($GMS_IFORT_VERNO == 13) set EXTRAOPT="$EXTRAOPT -vec-report0"
+#    if ($GMS_IFORT_VERNO >= 14) set EXTRAOPT="$EXTRAOPT -qopt-report0"
+#    if ($GMS_IFORT_VERNO  < 12) set EXTRAOPT="$EXTRAOPT -w95 -cm"
+#    if ($GMS_IFORT_VERNO >= 12) set EXTRAOPT="$EXTRAOPT -warn nousage -inline-level=0"
+#    set FLAGS='-i8 -O2 -ftz -auto'
+#    -auto and -vec-report0 seems to cause problems but are used in GAMESS.
+#set FLAGS='-i8 -O2 -ftz -auto -assume byterecl -vec-report0 -warn nousage -inline-level=0'
+#set FLAGS='-i8 -O2 -ftz -assume byterecl -warn nousage -inline-level=0'
+set FLAGS='-i8 -O2 -ftz -assume byterecl -qopt-report0 -warn nousage -inline-level=0'
+     set FLAGS1=""
+   else
+     set CFLAGS='-DLINUX'
+     set FLAGS="-O2 -tpp7 -unroll -cm -w -WB -align -i4"
+#    This probably applies to older versions of ifort only.
+   endif
+   set LOG="comp-ifort.log"
+breaksw
+case 0:
+   echo " Exiting - option 0"
+   exit
+breaksw
+default:
+   echo " Option is $opt. It must be 1 or 2 - exiting."
+#  Remember to edit above line, if other options added.
+   exit
+endsw
+rm -f $LOG
+#
+echo " "
+# Compile vb2gms module
+echo "cp $TARGET1 vb2gms.f"
+cp $TARGET1 vb2gms.f
+echo " $F77 -c $FLAGS $FLAGS1 vb2gms.f  >& $LOG "
+$F77 -c $FLAGS vb2gms.f  >& $LOG 
+echo " "
+#
+# Compile vb2000 module
+echo " sed "s/^CL$MBIT/    /g" $TARGET2 | sed "s/$TAG/$COMPTAG/" | \"
+echo " sed "s/^CTMAP/     /g" | sed "s/^$VERS/    /g" > vb2000.f"
+sed "s/^CL$MBIT/    /g" $TARGET2 | sed "s/$TAG/$COMPTAG/" | \
+sed "s/^CTMAP/     /g" | sed "s/^$VERS/    /g" > vb2000.f
+
+echo " $F77 -c $FLAGS $FLAGS1 vb2000.f  >>& $LOG "
+$F77 -c $FLAGS vb2000.f >>& $LOG
+#rm -f *.f
+#rm -f *.o
+echo ""
+echo " Compilation is completed, but check $LOG! "
+echo ""
+cat $LOG
+

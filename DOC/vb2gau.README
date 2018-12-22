@@ -1,0 +1,243 @@
+How to use the new GAUSSIAN/VB2000 version
+------------------------------------------
+
+        Brian Duke, September 2013
+
+The new version is quite different from the old version, as you do not
+have to compile Gaussian to create a new link for the VB2000 code. You
+only need access to the Gaussian executables.
+
+1. Gaussian version.
+--------------------
+
+You must have Gaussian09 version D01 or later.
+
+2. Running a Gaussian job.
+--------------------------
+
+A typical job that runs water, first with the 6-31G basis set and then
+with the 6-31G(d) basis set is:-
+
+%chk=water631
+# rhf/6-31g scf=conventional noraff symm=noint extralink=l316
+iop(3/160=32) test
+
+water 6-31g
+
+0 1
+8    0.0000000000    0.0000000000   0.0000000000
+1    0.0000000000   -0.7572153434   0.5865355237
+1    0.0000000000    0.7572153434   0.5865355237
+
+water631.dat
+
+--Link1--
+%oldchk=water631
+%chk=water631-d
+# rhf/6-31G(d) scf=conventional noraff symm=noint extralink=l316
+iop(3/160=32) test geom=check guess=read
+
+water 6-31G(d)
+
+0 1
+
+water631-d.dat
+
+There are several key points:-
+
+a) You must have "scf=conventional noraff symm=noint extralink=l316
+iop(3/160=32)" in the command line. Link L316 outputs an unformatted
+file that contains the 1-el and 2-el integrals and other information.
+The integrals have to be using "scf=conventional noraff symm=noint".
+
+b) You must save a checkpoint file for each step - here they are
+water631.chk and water631-d.chk.
+
+c) You must name the unformatted file with a ".dat" extension after the
+coordinate data. You should use the same name base as the checkpoint
+file, so here they are water631.dat and water631-d.dat.
+
+3) Create a formatted checkpoint file.
+--------------------------------------
+
+You must then create a formatted checkpoint file by, in this case by
+typing at the prompt:-
+
+formchk water631.chk water631.fchk
+formchk water631-d.chk water631-d.fchk
+
+This must be done on the same machine that ran Gaussian. However you
+will probably get away with moving the *.dat and *.fchk to another
+machine, but this may not work if the unformatted files are defined in
+different ways.
+
+4) Compiling the Gaussian/VB2000 program.
+-----------------------------------------
+
+In the g09-vb2000 directory where you found this README file, there is 
+a script called "compvb". The fortran code is in subdirectory ../SRC,
+where there are all the VB2000 source files. The Gaussian version uses
+just two files - vb2000.src and vb2gau-so.src. The former, vb2000.src,
+is the same file that is used in the GAMESS/VB2000 and the stand-alone
+file. However "compvb" uses sed to remove "CGAU" from the beginning of
+lines that are specific to the Gaussian/VB2000 version. The latter,
+vb2gau-so.src, is the code specific to this version.
+
+Running, at the prompt:
+
+./compvb
+
+should create "vb2gau-so.exe". You are given a menu to select either the
+gfortran or the ifort compiler.
+
+It seems that you have to use a 64 bit compiler if the Gaussian version
+is 64 bit. We have no experience with a 32 bit version of Gaussian.
+
+We have compiled the Gaussian/VB2000 with gfortan 4.6.2, 4.6.3, 4.7.1
+and 4.8.0, but failed with 4.1.2, 4.4.4 and 4.5.3, and with the intel
+ifort compiler versions 12.1.3, 12.1.5 and 13.1.1.
+
+"checkgauvb" is a script for testing the source files with ftnchek, a
+wonderfull tool. 
+
+5) Running the tests.
+---------------------
+
+typing at the prompt:-
+
+./runall &
+
+The results will appear in the "tempout" directory. The restart files
+*.V84 will be put in the "testinp" directory and the outout files
+*.out will be in the "tempout" directory. You can compare the results
+woth those in the testout directory.
+
+You can also run just one example, by typing at the prompt, for
+example:-
+
+./run1 water-sto &
+
+which runs testinp/water-sto.inp, using water-sto.dat and
+water-sto.fchk. 
+
+These all use the appropriate formatted checkpoint file (*.fchk) and the
+unformatted integral file (*.dat). If these do not work, the file
+gauss.com is a script that you can modify to suit the machine that you
+run Gaussian on to obtain these files anew.
+
+The tests are explained in comments in each input file. A brief summary
+and timings on my machine (useful perhaps as relative timings) is:-
+
+water-sto.inp: Water STO-3G - < 1 s
+water-pvdz.inp: Water cc-pVDZ - < 1 s
+ho-midi.inp: OH- MIDIX - < 1 s
+water-631.inp: Water 6-31G* - < 1 s
+water1a.inp: Water 6-31G*(5D) - < 1 s
+ho-t.inp: OH- cc-pVTZ - 8 s
+h4-sto.inp: H4 TMM-like triplet - 9 s
+h2-pvqz.inp: H2 cc-pVQZ - 190 s
+
+There are some bigger tests in directory "biginp". The problem with
+these tests is not so much the time that they take but the size of the
+unformatted integral files (*.dat). Therefore these are not in the
+release. Only the *.inp files are in "biginp". You can create the other
+files with Gaussian using "gauss-big.com" as a guide. 
+
+The vb2gau-so timings are:-
+
+h2-pv5z.inp: H2 cc-pV5Z - 52 s
+cp-ccd.inp: Cyclopentadiene cc-pVDZ SC - 63 s
+h2-pv6z.inp: H2 cc-pV6Z - 172 s
+cp-accd.inp: Cyclopentadiene aug-cc-pVDZ SC - 1173 s
+
+6) Running you data.
+--------------------
+
+If your input file is in the same directory as vb2gau-so.exe, which is
+probably not a good idea, you can just type:-
+
+./vb2gau-so.exe file file > file.out
+
+which runs file.inp with file.dat and file.fchk.
+
+A better idea is to work in a directory below where vb2gau-so.exe is
+situated and then you type:-
+
+../vb2gau-so.exe file file > file.out
+
+An even better idea is to put vb2gau-so.exe on your path and then you
+can access it from any directory by typing:-
+
+vb2gau-so.exe file file > file.out
+
+7) Running on the same machine as Gaussian.
+-------------------------------------------
+
+The unformatted *.dat files can get quite large, and it is preferably to
+create them on the fly, and then delete them. How you do this will
+depend on how your machine queues Gaussian jobs. You need to submit a job
+that does several steps:-
+
+Run Gaussian
+Run formchk
+Run vb2gau-sos.,exe
+Clean up by deleting some or all of *.dat, *.chk and *.fchk
+
+I do it with the following as part of a script that is submitted to a 
+queue with qsub:-
+
+module load gaussian/g09-revd.01
+
+time G09-revd.01 << END
+
+%mem=4GB
+%chk=ho
+#p rhf/cc-pvdz scf=conventional extralink=l316 iop(3/160=32) test
+noraff symm=noint 
+pop=regular
+
+HO- cc-pvdz
+
+-1 1
+H   0.0000000000   0.0000000000   0.0000000
+O   0.0000000000   0.0000000000   0.9578095
+
+ho.dat
+
+END
+
+cd g09.$JOB_ID
+cp ../ho.inp .
+formchk ho.chk ho.fchk
+../vb2000/vb2gau-so.exe ho ho > ho.out
+rm -f ho.dat
+rm -f ho.chk
+rm -f ho.fchk
+rm -f ho.V80
+rm -f ho.V81
+rm -f ho.V82
+rm -f ho.V83
+rm -f ho.V85
+rm -f ho.V86
+rm -f ho.V87
+rm -f ho.V88
+rm -f ho.TEMP*
+echo "Job done. "
+
+8) Final remarks.
+-----------------
+
+This is the first release of this version and it may well have bugs.
+Please report any problems. It certainly does not yet take advantage of
+all the possabilities that this new Gaussian version allows. In
+particular, Gaussian09 Version D allows the use of an external file via
+an "external" keyword. VB2000 could be used in this way, but we have not
+yet tried that out as we wanted to get a full release of all versions in
+September 2013. This and other possabilities will be explored and may be
+in a later release.
+
+Our testing has also revealed a bug that is fixed for the next release.
+It results in errors if you try to run a cartesian basis set in Gaussian
+with functions of f or above angular momentum.
+
+

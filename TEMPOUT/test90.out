@@ -1,0 +1,70 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ * An ab initio Valence-Bond Program Based on the Generalized *
+ *    Product Function Method and the Algebrant Algorithm     *
+ *                                                            *
+ *                  Version 2.8 November 2017                 *
+ *                     Stand-alone Version                    *
+ *                      Compiler GFORTRAN                     *
+ *                                                            *
+ *     Memory = 12500000 for MAP file up to 16 electrons      *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *        * SciNet Technologies, 9943 Fieldthorn St.,         *
+ *                   San Diego, CA 92127, USA                 *
+ *                                                            *
+ *  ** Monash University Institute of Pharmaceutical Sciences,*
+ *          Monash University, 381 Royal Pde, Parkville,      *
+ *                    Victoria, 3052, Australia               *
+ *                                                            *
+ *      *** Department of Chemistry, University of Pisa,      *
+ *                       56100 Pisa, Italy                    *
+ *                                                            *
+ *  Reference for the software:                               *
+ *     Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version  *
+ *     2.8, SciNet Technologies, San Diego, CA, 2013          *
+ *     URL: http://www.scinetec.com or http://www.vb2000.net  *
+ *                                                            *
+ *  References for the theory:                                *
+ *     General:                                               *
+ *     Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence    *
+ *     Bond Theory to New Limits", Int. J. Quantum Chem.,     *
+ *     89(2002)208-216.                                       *
+ *                                                            *
+ *     Spin densities:-                                       *
+ *     Jiabo Li, Brian J. Duke, Thomas M. Klapoetke, and Roy  *
+ *     McWeeny, Spin-Density of Spin-Free Valence Bond Wave   *
+ *     Functions and Its Implementation in VB2000. J. Theor.  *
+ *     Comp. Chem. 7(2008)853-867.                            *
+ *                                                            *
+ *     Spin coupled - n electrons in m orbitals:-             *
+ *     Peter B. Karadakov, David L. Cooper, Brian J. Duke,    *
+ *     and Jiabo Li, Spin-Coupled Theory for N Electrons in   *
+ *     M Orbitals Active Spaces,  J. Phys. Chem. A, 116,      *
+ *     7238 - 7244, 2012                                      *
+ *                                                            *
+ *     Copyright (C) 2018 GNU General Public License          *
+ **************************************************************
+
+ JOB NAME IS test90                                                          
+
+ VB2000 DIRECTORY IS: .                                                                               
+ MAXIMUM DYNAMIC MEMORY IS:        6500000
+
+ Input of molecule
+ =================
+  #! VB(2)/GEN PRINTALL                                                          
+                                                                                 
+ Title: H2                                                                              
+
+ Charge =  0 Multiplicity =  1
+
+ BASIS SET FILE IS: /home/brian/qchem/VB2000/BASET/v5z                                              
+ BASIS SET FILE DOES NOT EXIST!
+ The file must be in BASET or a full path.
+ The file may really be missing, but check that you
+ do not have  the symbol & in your data elsewhere.

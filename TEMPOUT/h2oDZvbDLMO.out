@@ -1,0 +1,427 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ * An ab initio Valence-Bond Program Based on the Generalized *
+ *    Product Function Method and the Algebrant Algorithm     *
+ *                                                            *
+ *                  Version 2.8 November 2017                 *
+ *                     Stand-alone Version                    *
+ *                      Compiler GFORTRAN                     *
+ *                                                            *
+ *     Memory = 12500000 for MAP file up to 16 electrons      *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *        * SciNet Technologies, 9943 Fieldthorn St.,         *
+ *                   San Diego, CA 92127, USA                 *
+ *                                                            *
+ *  ** Monash University Institute of Pharmaceutical Sciences,*
+ *          Monash University, 381 Royal Pde, Parkville,      *
+ *                    Victoria, 3052, Australia               *
+ *                                                            *
+ *      *** Department of Chemistry, University of Pisa,      *
+ *                       56100 Pisa, Italy                    *
+ *                                                            *
+ *  Reference for the software:                               *
+ *     Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version  *
+ *     2.8, SciNet Technologies, San Diego, CA, 2013          *
+ *     URL: http://www.scinetec.com or http://www.vb2000.net  *
+ *                                                            *
+ *  References for the theory:                                *
+ *     General:                                               *
+ *     Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence    *
+ *     Bond Theory to New Limits", Int. J. Quantum Chem.,     *
+ *     89(2002)208-216.                                       *
+ *                                                            *
+ *     Spin densities:-                                       *
+ *     Jiabo Li, Brian J. Duke, Thomas M. Klapoetke, and Roy  *
+ *     McWeeny, Spin-Density of Spin-Free Valence Bond Wave   *
+ *     Functions and Its Implementation in VB2000. J. Theor.  *
+ *     Comp. Chem. 7(2008)853-867.                            *
+ *                                                            *
+ *     Spin coupled - n electrons in m orbitals:-             *
+ *     Peter B. Karadakov, David L. Cooper, Brian J. Duke,    *
+ *     and Jiabo Li, Spin-Coupled Theory for N Electrons in   *
+ *     M Orbitals Active Spaces,  J. Phys. Chem. A, 116,      *
+ *     7238 - 7244, 2012                                      *
+ *                                                            *
+ *     Copyright (C) 2018 GNU General Public License          *
+ **************************************************************
+
+ JOB NAME IS h2oDZvbDLMO                                                     
+
+ VB2000 DIRECTORY IS: .                                                                               
+ MAXIMUM DYNAMIC MEMORY IS:        6500000
+
+ Input of molecule
+ =================
+ #! VB(4)/D95 PRINTALL                                                           
+                                                                                 
+ Title: TEST H2O                                                                        
+
+ Charge =  0 Multiplicity =  1
+
+ BASIS SET FILE IS: ./BASET/D95                                                                     
+
+ Cartesian coordinates of atoms in Angstrom
+ ----------------------------------------------------
+                    X             Y             Z   
+
+  O     8.0      0.000000      0.000000      0.000000
+  H     1.0      0.801842      0.000000      0.555582
+  H     1.0     -0.801842      0.000000      0.555582
+ ----------------------------------------------------
+
+ Total number of two-electron integrals =         3009
+ Time for integral evaluation                    0.005
+
+ SKIPPED INTEGRALS =                              1812
+ Number of iter =     21, DMAX =        0.000008386251
+ Final Hartree-Fock Energy =          -76.009837660512
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3         4         5         6
+ E(a.u.)             -20.558    -1.346    -0.717    -0.553    -0.502     0.214
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.58101   0.13094   0.00000   0.04441   0.00000   0.05077
+   2  1  O     s     0.46124   0.18153   0.00000   0.06199   0.00000   0.06803
+   3  1  O     s    -0.00017  -0.51109  -0.00000  -0.18861  -0.00000  -0.11188
+   4  1  O     s     0.00188  -0.46045  -0.00000  -0.24976  -0.00000  -1.22771
+   5  1  O     x    -0.00000   0.00000   0.56928  -0.00000  -0.00000  -0.00000
+   6  1  O     y    -0.00000   0.00000  -0.00000   0.00000  -0.72768  -0.00000
+   7  1  O     z     0.00159  -0.11705   0.00000   0.63327   0.00000  -0.26343
+   8  1  O     x    -0.00000  -0.00000   0.17885   0.00000  -0.00000  -0.00000
+   9  1  O     y     0.00000   0.00000  -0.00000   0.00000  -0.41030   0.00000
+  10  1  O     z    -0.00045  -0.03248  -0.00000   0.33885   0.00000  -0.49498
+  11  2  H     s     0.00004  -0.13250   0.25314   0.13363  -0.00000   0.06606
+  12  2  H     s    -0.00018  -0.00773   0.12839   0.06141  -0.00000   1.03668
+  13  3  H     s     0.00004  -0.13250  -0.25314   0.13363   0.00000   0.06606
+  14  3  H     s    -0.00018  -0.00773  -0.12839   0.06141   0.00000   1.03668
+
+ MO#                       7         8         9        10
+ E(a.u.)               0.306     0.868     0.892     0.943
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.00000   0.00000  -0.02082  -0.00000
+   2  1  O     s    -0.00000   0.00000  -0.02919  -0.00000
+   3  1  O     s     0.00000   0.00000   0.07792   0.00000
+   4  1  O     s    -0.00000  -0.00000   0.35148   0.00000
+   5  1  O     x     0.40433   0.00000  -0.00000   0.54109
+   6  1  O     y    -0.00000  -0.90257  -0.00000   0.00000
+   7  1  O     z    -0.00000   0.00000  -0.86935  -0.00000
+   8  1  O     x     1.04459  -0.00000   0.00000  -1.71572
+   9  1  O     y     0.00000   1.08435   0.00000  -0.00000
+  10  1  O     z    -0.00000  -0.00000   1.28595   0.00000
+  11  2  H     s    -0.03612   0.00000  -0.16147   0.57157
+  12  2  H     s    -1.53387   0.00000  -0.24286   0.41914
+  13  3  H     s     0.03612   0.00000  -0.16147  -0.57157
+  14  3  H     s     1.53387  -0.00000  -0.24286  -0.41914
+
+
+                    PARAMETER LIMIT VALUES
+ Max. no. of atoms                    MAXCEN =    200
+ Max. no. of basis functions          MAXBFN =   1350
+ Max. no. of shells                   MAXSHL =    500
+ Max. no. of total primitives         MAXEXP =   4400
+ Max. no. of primitives per orbital   MAXPRM =     15
+ Max. no. of atoms * no. of orbitals  MAXNAB = 135000
+ Increase max basis set size by       NEXTRA =     20
+ Max. size for Rumer data             MAXST1 = 120000
+ Max. no. of orbitals in group        MAXNOB =    200
+ Max. no. of CUBE orbitals            MAXCUB =    100
+ Max. no. of groups                   MAXGRP =     49
+ BRILLMASK array sizes                MAXBLL =  12500
+
+ VBO LIB IS: ./VBOLIB/VBOLIBD95                                                              
+
+ Localized molecular orbitals and the bond labels
+ ===============================================================================
+ LMO#                      1         2         3         4         5
+ E(a.u.)             -20.183    -1.205    -0.502    -0.893    -0.893
+ Bond Label            1:(0)     1:(1)     1:(2)    3-1(1)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.59398   0.03872  -0.00001   0.03447   0.03447
+   2  1  O     s     0.48259   0.09945  -0.00001   0.05810   0.05811
+   3  1  O     s    -0.07393  -0.46230   0.00001  -0.19699  -0.19699
+   4  1  O     s    -0.07065  -0.47858   0.00001  -0.14207  -0.14207
+   5  1  O     x     0.00000   0.00000   0.00000   0.40254  -0.40254
+   6  1  O     y    -0.00001  -0.00001  -0.72768  -0.00000  -0.00000
+   7  1  O     z     0.03597   0.41776  -0.00001  -0.34563  -0.34563
+   8  1  O     x     0.00000   0.00000   0.00000   0.12646  -0.12646
+   9  1  O     y    -0.00000  -0.00001  -0.41030  -0.00000  -0.00000
+  10  1  O     z     0.02147   0.24236  -0.00000  -0.16833  -0.16833
+  11  2  H     s    -0.00524   0.02149  -0.00000   0.04685  -0.31115
+  12  2  H     s     0.00358   0.04280  -0.00000   0.05927  -0.12230
+  13  3  H     s    -0.00524   0.02149  -0.00000  -0.31115   0.04685
+  14  3  H     s     0.00358   0.04280  -0.00000  -0.12230   0.05927
+
+
+ Mulliken population of localized molecular orbitals
+ ===============================================================================
+ LMO#                      1         2         3         4         5
+ E(a.u.)             -20.183    -1.205    -0.502    -0.893    -0.893
+ Bond Label            1:(0)     1:(1)     1:(2)    3-1(1)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1         O       1.99983   2.05411   2.00000   1.37041   1.37041
+   2         H       0.00008  -0.02706  -0.00000  -0.01748   0.64707
+   3         H       0.00008  -0.02706  -0.00000   0.64707  -0.01748
+
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRPMODIFY)
+ ================================================
+ LMO#     1  2  3  4  5
+ Group#   1  1  1  2  2
+ Split    0  0  0  1  1
+
+
+ WRITING GUESS TO GUESS                                                           
+ Initial guess of orbitals
+ ===============================================================================
+ ORBITAL#                  1         2         3         4         5         6
+ Bond Label            1:(0)     1:(1)     1:(2)    3-1(1)    3-1(1)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.59398   0.03872  -0.00001   0.04885  -0.00318   0.04885
+   2  1  O     s     0.48259   0.09945  -0.00001   0.08487  -0.01265   0.08487
+   3  1  O     s    -0.07393  -0.46230   0.00001  -0.29652   0.06812  -0.29652
+   4  1  O     s    -0.07065  -0.47858   0.00001  -0.22166   0.07055  -0.22166
+   5  1  O     x     0.00000   0.00000   0.00000   0.55515  -0.00000  -0.55515
+   6  1  O     y    -0.00001  -0.00001  -0.72768  -0.00000  -0.00000  -0.00000
+   7  1  O     z     0.03597   0.41776  -0.00001  -0.45417  -0.06169  -0.45417
+   8  1  O     x     0.00000   0.00000   0.00000   0.17441  -0.00000  -0.17441
+   9  1  O     y    -0.00000  -0.00001  -0.41030  -0.00000  -0.00000  -0.00000
+  10  1  O     z     0.02147   0.24236  -0.00000  -0.21910  -0.03579  -0.21910
+  11  2  H     s    -0.00524   0.02149  -0.00000   0.00117  -0.00320   0.00117
+  12  2  H     s     0.00358   0.04280  -0.00000   0.00230  -0.00632   0.00230
+  13  3  H     s    -0.00524   0.02149  -0.00000   0.00117  -0.78049   0.00117
+  14  3  H     s     0.00358   0.04280  -0.00000   0.00230  -0.31184   0.00230
+
+ ORBITAL#                  7
+ Bond Label           2-1(1)
+ -------------------------------------------------------------------------------
+
+   1  1  O     s    -0.00318
+   2  1  O     s    -0.01265
+   3  1  O     s     0.06812
+   4  1  O     s     0.07055
+   5  1  O     x    -0.00000
+   6  1  O     y    -0.00000
+   7  1  O     z    -0.06169
+   8  1  O     x    -0.00000
+   9  1  O     y    -0.00000
+  10  1  O     z    -0.03579
+  11  2  H     s    -0.78049
+  12  2  H     s    -0.31184
+  13  3  H     s    -0.00320
+  14  3  H     s    -0.00632
+
+
+      GENERAL CONTROLS ($GENCTL)
+ ======================================
+ Number of electron groups       =    2
+ Maximum macro-iterations        =   12
+ Energy threshold           = 10**(- 6)
+ Restart calculation(0/1/2)      =    0
+ Group#                     1  2
+ Num. of electrons          6  4
+ Num. of spins              0  0
+ Num. of orbitals           3  4
+ Method#                    1  2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  2
+ STR. NO.       RUMER PATTERN  
+    1           1  2   3  4
+    2           1  3   2  4
+
+ CALCULATE INITIAL STRUCTURE COEFFICIENTS
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   2
+
+        1      2      3      4
+ ===============================
+   1 1.0000
+   2 0.5867 1.0000
+   3 0.1268 0.1173 1.0000
+   4 0.1173 0.1283 0.5867 1.0000
+
+ EIGENVALUES OF OVERLAP MATRIX OF VB ORBITALS
+ ============================================
+     0.4031D+00    0.4236D+00    0.1342D+01    0.1832D+01
+
+ MAP FILE IS: ./MAP/MAP0400t                                                                  
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.15000000000000
+ GROUP =  2  ITER =  2 CMAX =  0.15238004184708
+ GROUP =  2  ITER =  3 CMAX =  0.10517440625287
+ GROUP =  2  ITER =  4 CMAX =  0.05345890109339
+ GROUP =  2  ITER =  5 CMAX =  0.03513528264044
+ GROUP =  2  ITER =  6 CMAX =  0.04030723622954
+ GROUP =  2  ITER =  7 CMAX =  0.00236410825857
+ GROUP =  2  ITER =  8 CMAX =  0.00004183030513
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    1 =    -76.0470563975    -76.0470563975
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.02139500335005
+ GROUP =  2  ITER =  2 CMAX =  0.01406784396932
+ GROUP =  2  ITER =  3 CMAX =  0.00632149322438
+ GROUP =  2  ITER =  4 CMAX =  0.00933785514023
+ GROUP =  2  ITER =  5 CMAX =  0.02504635721717
+ GROUP =  2  ITER =  6 CMAX =  0.00165957160887
+ GROUP =  2  ITER =  7 CMAX =  0.00006068915017
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    2 =    -76.0543587361     -0.0073023385
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00778643448108
+ GROUP =  2  ITER =  2 CMAX =  0.02205660968166
+ GROUP =  2  ITER =  3 CMAX =  0.00348369246153
+ GROUP =  2  ITER =  4 CMAX =  0.00023489570625
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    3 =    -76.0554225612     -0.0010638251
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00185644055901
+ GROUP =  2  ITER =  2 CMAX =  0.00196936603227
+ GROUP =  2  ITER =  3 CMAX =  0.00010800304048
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    4 =    -76.0555558075     -0.0001332463
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00100370415203
+ GROUP =  2  ITER =  2 CMAX =  0.00135737717274
+ GROUP =  2  ITER =  3 CMAX =  0.00002376754682
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    5 =    -76.0555999928     -0.0000441853
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00057672366276
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    6 =    -76.0556154577     -0.0000154649
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00045836857922
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    7 =    -76.0556209421     -0.0000054844
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00042587565433
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    8 =    -76.0556230334     -0.0000020913
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00037287238000
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER    9 =    -76.0556238783     -0.0000008449
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  2 ...
+ GROUP =  2  ITER =  1 CMAX =  0.00030785378980
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   2
+
+        1      2      3      4
+ ===============================
+   1 1.0000
+   2 0.7240 1.0000
+   3 0.5308 0.1131 1.0000
+   4 0.1131-0.2953 0.7240 1.0000
+
+ EIGENVALUES OF OVERLAP MATRIX OF VB ORBITALS
+ ============================================
+     0.1448D+00    0.1843D+00    0.1620D+01    0.2051D+01
+
+ ====Normalized structure coefficients====
+  1.1284  0.1413
+
+ ====Mulliken Weight (Chirgwin-Coulson)====
+  1.1266 -0.1266
+
+ ====Inverse Overlap Weight (Gallup-Norbeck)====
+  0.9954  0.0046
+
+ ====Lowdin Weight====
+  0.8739  0.1261
+
+ ====Hiberty Weight====
+  0.9846  0.0154
+
+ WRITING GUESS TO GUESS                                                           
+
+ ENERGY AND DIFF OF MACROITER   10 =    -76.0556242338     -0.0000003555
+
+ MULLIKEN CHARGES ON ATOMS
+ -------------------------
+  ATOM             CHARGE 
+
+    1            -0.72247
+    2             0.36124
+    3             0.36124
+
+ -------------------------
+
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1         2         3         4         5         6
+      Group#             1         1         1         2         2         2
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  O     s  -0.59171  -0.06940   0.00001   0.05411   0.00626   0.05411
+   2  1  O     s  -0.47805  -0.13275   0.00001   0.07696   0.00753   0.07696
+   3  1  O     s   0.05552   0.51869  -0.00001  -0.26338   0.02675  -0.26338
+   4  1  O     s   0.05361   0.52201  -0.00001  -0.09113   0.00887  -0.09113
+   5  1  O     x  -0.00000  -0.00000  -0.00000   0.42505   0.24099  -0.42505
+   6  1  O     y   0.00001   0.00001   0.72846   0.00000   0.00000   0.00000
+   7  1  O     z  -0.03066  -0.28913   0.00000  -0.64906  -0.15862  -0.64906
+   8  1  O     x  -0.00000  -0.00000  -0.00000   0.06686   0.13062  -0.06686
+   9  1  O     y   0.00000   0.00000   0.40935  -0.00000   0.00000  -0.00000
+  10  1  O     z  -0.01736  -0.17515   0.00000  -0.19771  -0.18540  -0.19771
+  11  2  H     s   0.00268   0.02084  -0.00000  -0.03055   0.09662  -0.06804
+  12  2  H     s  -0.00347  -0.03604   0.00000   0.00759   0.08088  -0.03023
+  13  3  H     s   0.00268   0.02084  -0.00000  -0.06804  -0.53244  -0.03055
+  14  3  H     s  -0.00347  -0.03604   0.00000  -0.03023  -0.23553   0.00759
+
+ ===========================================================================
+    Orbital#             7
+      Group#             2
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  O     s   0.00626
+   2  1  O     s   0.00753
+   3  1  O     s   0.02675
+   4  1  O     s   0.00887
+   5  1  O     x  -0.24099
+   6  1  O     y  -0.00000
+   7  1  O     z  -0.15862
+   8  1  O     x  -0.13062
+   9  1  O     y   0.00000
+  10  1  O     z  -0.18540
+  11  2  H     s  -0.53244
+  12  2  H     s  -0.23553
+  13  3  H     s   0.09662
+  14  3  H     s   0.08088
+
+
+ WORDS OF DYNAMIC MEMORY USED IN VB2000 CODE ONLY:        9802
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION        0.003
+ CPU TIME FOR MACROITERATION        0.067
+ TOTAL CPU TIME                     0.070
+

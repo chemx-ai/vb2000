@@ -1,0 +1,335 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ * An ab initio Valence-Bond Program Based on the Generalized *
+ *    Product Function Method and the Algebrant Algorithm     *
+ *                                                            *
+ *                  Version 2.8 November 2017                 *
+ *                     Stand-alone Version                    *
+ *                      Compiler GFORTRAN                     *
+ *                                                            *
+ *     Memory = 12500000 for MAP file up to 16 electrons      *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *        * SciNet Technologies, 9943 Fieldthorn St.,         *
+ *                   San Diego, CA 92127, USA                 *
+ *                                                            *
+ *  ** Monash University Institute of Pharmaceutical Sciences,*
+ *          Monash University, 381 Royal Pde, Parkville,      *
+ *                    Victoria, 3052, Australia               *
+ *                                                            *
+ *      *** Department of Chemistry, University of Pisa,      *
+ *                       56100 Pisa, Italy                    *
+ *                                                            *
+ *  Reference for the software:                               *
+ *     Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version  *
+ *     2.8, SciNet Technologies, San Diego, CA, 2013          *
+ *     URL: http://www.scinetec.com or http://www.vb2000.net  *
+ *                                                            *
+ *  References for the theory:                                *
+ *     General:                                               *
+ *     Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence    *
+ *     Bond Theory to New Limits", Int. J. Quantum Chem.,     *
+ *     89(2002)208-216.                                       *
+ *                                                            *
+ *     Spin densities:-                                       *
+ *     Jiabo Li, Brian J. Duke, Thomas M. Klapoetke, and Roy  *
+ *     McWeeny, Spin-Density of Spin-Free Valence Bond Wave   *
+ *     Functions and Its Implementation in VB2000. J. Theor.  *
+ *     Comp. Chem. 7(2008)853-867.                            *
+ *                                                            *
+ *     Spin coupled - n electrons in m orbitals:-             *
+ *     Peter B. Karadakov, David L. Cooper, Brian J. Duke,    *
+ *     and Jiabo Li, Spin-Coupled Theory for N Electrons in   *
+ *     M Orbitals Active Spaces,  J. Phys. Chem. A, 116,      *
+ *     7238 - 7244, 2012                                      *
+ *                                                            *
+ *     Copyright (C) 2018 GNU General Public License          *
+ **************************************************************
+
+ JOB NAME IS ch4gvb4                                                         
+
+ VB2000 DIRECTORY IS: .                                                                               
+ MAXIMUM DYNAMIC MEMORY IS:        6500000
+
+ Input of molecule
+ =================
+ #! GPF(5)/D95                                                                   
+                                                                                 
+ Title: TEST CH4 5 GROUPS (1 CORE + 4 BONDS)                                            
+
+ Charge =  0 Multiplicity =  1
+
+ BASIS SET FILE IS: ./BASET/D95                                                                     
+
+ Cartesian coordinates of atoms in Angstrom
+ ----------------------------------------------------
+                    X             Y             Z   
+
+  C     6.0      0.000000      0.000000      0.000000
+  H     1.0     -0.880321      0.417906     -0.470561
+  H     1.0      0.259946      0.591217      0.868290
+  H     1.0     -0.202850     -1.018388      0.304590
+  H     1.0      0.823225      0.009265     -0.702319
+ ----------------------------------------------------
+
+ Total number of two-electron integrals =        13494
+ Time for integral evaluation                    0.019
+
+ SKIPPED INTEGRALS =                               468
+ Number of iter =     13, DMAX =        0.000005979149
+ Final Hartree-Fock Energy =          -40.185608503724
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3         4         5         6
+ E(a.u.)             -11.205    -0.948    -0.545    -0.545    -0.545     0.301
+ -------------------------------------------------------------------------------
+
+   1  1  C     s     0.60082   0.11952  -0.00000  -0.00000  -0.00000  -0.08260
+   2  1  C     s     0.43741   0.16107  -0.00000  -0.00000  -0.00000  -0.11482
+   3  1  C     s     0.00510  -0.42651   0.00000   0.00000   0.00000   0.22981
+   4  1  C     s    -0.00125  -0.40809   0.00000   0.00000   0.00000   3.39450
+   5  1  C     x     0.00000  -0.00000  -0.41385   0.22791  -0.21845  -0.00000
+   6  1  C     y    -0.00000   0.00000  -0.30892  -0.21815   0.35765   0.00000
+   7  1  C     z     0.00000  -0.00000  -0.06504  -0.41401  -0.30871  -0.00000
+   8  1  C     x    -0.00000  -0.00000  -0.10339   0.05693  -0.05457  -0.00001
+   9  1  C     y     0.00000   0.00000  -0.07717  -0.05450   0.08935   0.00000
+  10  1  C     z    -0.00000  -0.00000  -0.01625  -0.10342  -0.07712  -0.00000
+  11  2  H     s     0.00043  -0.13383   0.13800  -0.05034   0.25283   0.01834
+  12  2  H     s     0.00028  -0.01712   0.10903  -0.03978   0.19976  -1.31500
+  13  3  H     s     0.00043  -0.13383  -0.17997  -0.22281  -0.05886   0.01834
+  14  3  H     s     0.00028  -0.01712  -0.14220  -0.17604  -0.04650  -1.31499
+  15  4  H     s     0.00043  -0.13383   0.19661   0.02587  -0.21488   0.01834
+  16  4  H     s     0.00028  -0.01712   0.15534   0.02044  -0.16978  -1.31499
+  17  5  H     s     0.00043  -0.13383  -0.15463   0.24729   0.02092   0.01834
+  18  5  H     s     0.00028  -0.01712  -0.12218   0.19538   0.01653  -1.31499
+
+ MO#                       7         8         9        10
+ E(a.u.)               0.315     0.315     0.315     0.491
+ -------------------------------------------------------------------------------
+
+   1  1  C     s    -0.00000  -0.00000  -0.00000  -0.00000
+   2  1  C     s    -0.00000  -0.00000  -0.00000  -0.00000
+   3  1  C     s     0.00000   0.00000   0.00000   0.00000
+   4  1  C     s     0.00001   0.00000   0.00001   0.00000
+   5  1  C     x     0.01640   0.02526   0.04524   0.86421
+   6  1  C     y    -0.03435  -0.03022   0.02933  -0.30399
+   7  1  C     z     0.03879  -0.03744   0.00684   0.34243
+   8  1  C     x     0.61401   0.94529   1.69312  -0.31664
+   9  1  C     y    -1.28550  -1.13122   1.09776   0.11138
+  10  1  C     z     1.45180  -1.40143   0.25594  -0.12547
+  11  2  H     s     0.10146   0.03719   0.06639  -0.10250
+  12  2  H     s     1.56435   0.57340   1.02356   0.87699
+  13  3  H     s    -0.03804   0.09449  -0.07556   0.03344
+  14  3  H     s    -0.58650   1.45688  -1.16500  -0.28615
+  15  4  H     s    -0.09373  -0.03073   0.07971   0.02331
+  16  4  H     s    -1.44522  -0.47387   1.22902  -0.19946
+  17  5  H     s     0.03031  -0.10095  -0.07054   0.04574
+  18  5  H     s     0.46735  -1.55641  -1.08760  -0.39138
+
+
+ VBO LIB IS: ./VBOLIB/VBOLIBD95                                                              
+
+ End of file. String $GENCTL    was not found
+ WARNING: GENCTL IS MISSING, GVB IS ASSUMED
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRPMODIFY)
+ ================================================
+ LMO#     1  2  3  4  5
+ Group#   1  2  3  4  5
+ Split    0  1  1  1  1
+
+
+
+      GENERAL CONTROLS ($GENCTL)
+ ======================================
+ Number of electron groups       =    5
+ Maximum macro-iterations        =   12
+ Energy threshold           = 10**(- 6)
+ Restart calculation(0/1/2)      =    0
+ Group#                     1  2  3  4  5
+ Num. of electrons          2  2  2  2  2
+ Num. of spins              0  0  0  0  0
+ Num. of orbitals           1  2  2  2  2
+ Method#                    1  2  2  2  2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  2
+ STR. NO.       RUMER PATTERN  
+    1           1  2
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   2
+
+        1      2
+ =================
+   1 1.0000
+   2 0.6934 1.0000
+
+ MAP FILE IS: ./MAP/MAP0200t                                                                  
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  3
+ STR. NO.       RUMER PATTERN  
+    1           1  2
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   3
+
+        1      2
+ =================
+   1 1.0000
+   2 0.6934 1.0000
+
+ MAP FILE IS: ./MAP/MAP0200t                                                                  
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  4
+ STR. NO.       RUMER PATTERN  
+    1           1  2
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   4
+
+        1      2
+ =================
+   1 1.0000
+   2 0.6934 1.0000
+
+ MAP FILE IS: ./MAP/MAP0200t                                                                  
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  5
+ STR. NO.       RUMER PATTERN  
+    1           1  2
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   5
+
+        1      2
+ =================
+   1 1.0000
+   2 0.6934 1.0000
+
+ MAP FILE IS: ./MAP/MAP0200t                                                                  
+
+ ENERGY AND DIFF OF MACROITER    1 =    -40.2286176041    -40.2286176041
+
+ ENERGY AND DIFF OF MACROITER    2 =    -40.2421756458     -0.0135580417
+
+ ENERGY AND DIFF OF MACROITER    3 =    -40.2448599311     -0.0026842853
+
+ ENERGY AND DIFF OF MACROITER    4 =    -40.2455229806     -0.0006630495
+
+ ENERGY AND DIFF OF MACROITER    5 =    -40.2457281502     -0.0002051696
+
+ ENERGY AND DIFF OF MACROITER    6 =    -40.2457960527     -0.0000679024
+
+ ENERGY AND DIFF OF MACROITER    7 =    -40.2458182777     -0.0000222251
+
+ ENERGY AND DIFF OF MACROITER    8 =    -40.2458256483     -0.0000073706
+
+ ENERGY AND DIFF OF MACROITER    9 =    -40.2458281356     -0.0000024873
+
+ ENERGY AND DIFF OF MACROITER   10 =    -40.2458289730     -0.0000008374
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   2
+
+        1      2
+ =================
+   1 1.0000
+   2 0.8348 1.0000
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   3
+
+        1      2
+ =================
+   1 1.0000
+   2 0.8348 1.0000
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   4
+
+        1      2
+ =================
+   1 1.0000
+   2 0.8348 1.0000
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   5
+
+        1      2
+ =================
+   1 1.0000
+   2 0.8348 1.0000
+
+ ENERGY AND DIFF OF MACROITER   11 =    -40.2458292554     -0.0000002823
+
+ MULLIKEN CHARGES ON ATOMS
+ -------------------------
+  ATOM             CHARGE 
+
+    1            -0.69228
+    2             0.17308
+    3             0.17306
+    4             0.17307
+    5             0.17308
+
+ -------------------------
+
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1         2         3         4         5         6
+      Group#             1         2         2         3         3         4
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  C     s  -0.60118   0.07864   0.03391  -0.07864  -0.03391  -0.07864
+   2  1  C     s  -0.43798   0.10883   0.04377  -0.10883  -0.04377  -0.10884
+   3  1  C     s  -0.00374  -0.37122  -0.04237   0.37122   0.04237   0.37122
+   4  1  C     s   0.00280  -0.23416  -0.12834   0.23416   0.12834   0.23415
+   5  1  C     x  -0.00000  -0.16541  -0.04279  -0.12907  -0.03339   0.52382
+   6  1  C     y   0.00000  -0.37619  -0.09731  -0.64801  -0.16763   0.00590
+   7  1  C     z  -0.00000  -0.55250  -0.14292   0.19381   0.05014  -0.44689
+   8  1  C     x   0.00000  -0.03072  -0.01765  -0.02398  -0.01377   0.09730
+   9  1  C     y  -0.00000  -0.06988  -0.04014  -0.12037  -0.06914   0.00110
+  10  1  C     z   0.00000  -0.10263  -0.05895   0.03600   0.02068  -0.08302
+  11  2  H     s   0.00006   0.01810   0.01404  -0.01810  -0.01404  -0.01810
+  12  2  H     s  -0.00025   0.04944   0.05645  -0.04944  -0.05645  -0.04944
+  13  3  H     s   0.00006  -0.07412  -0.54922  -0.01810  -0.01404  -0.01810
+  14  3  H     s  -0.00025  -0.06919  -0.33966  -0.04944  -0.05645  -0.04944
+  15  4  H     s   0.00006   0.01810   0.01404   0.07412   0.54922  -0.01810
+  16  4  H     s  -0.00025   0.04944   0.05645   0.06919   0.33966  -0.04944
+  17  5  H     s   0.00006   0.01810   0.01404  -0.01810  -0.01404   0.07412
+  18  5  H     s  -0.00025   0.04944   0.05645  -0.04944  -0.05645   0.06919
+
+ ===========================================================================
+    Orbital#             7         8         9
+      Group#             4         5         5
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  C     s  -0.03391  -0.07864  -0.03391
+   2  1  C     s  -0.04377  -0.10884  -0.04377
+   3  1  C     s   0.04237   0.37122   0.04237
+   4  1  C     s   0.12834   0.23415   0.12834
+   5  1  C     x   0.13551  -0.56015  -0.14491
+   6  1  C     y   0.00152   0.26592   0.06879
+   7  1  C     z  -0.11560  -0.29942  -0.07746
+   8  1  C     x   0.05589  -0.10406  -0.05977
+   9  1  C     y   0.00063   0.04940   0.02837
+  10  1  C     z  -0.04769  -0.05562  -0.03195
+  11  2  H     s  -0.01404   0.07412   0.54922
+  12  2  H     s  -0.05645   0.06919   0.33965
+  13  3  H     s  -0.01404  -0.01810  -0.01404
+  14  3  H     s  -0.05645  -0.04944  -0.05645
+  15  4  H     s  -0.01404  -0.01810  -0.01404
+  16  4  H     s  -0.05645  -0.04944  -0.05645
+  17  5  H     s   0.54922  -0.01810  -0.01404
+  18  5  H     s   0.33965  -0.04944  -0.05645
+
+
+ WORDS OF DYNAMIC MEMORY USED IN VB2000 CODE ONLY:       22108
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION        0.003
+ CPU TIME FOR MACROITERATION        0.201
+ TOTAL CPU TIME                     0.204
+

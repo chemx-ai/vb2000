@@ -1,0 +1,504 @@
+
+ **************************************************************
+ *                                                            *
+ *                        V B 2 0 0 0                         *
+ *                                                            *
+ *                WinVB2000 - Windows Version                 *
+ *                                                            *
+ *       An ab initio Valence-Bond Program Based on the       *
+ *           Generalized Product Function Method and          *
+ *                  the Algebrant Algorithm                   *
+ *                                                            *
+ *                Version 2.0, November 2007                  *
+ *                                                            *
+ *         Jiabo Li*, Brian Duke** and Roy McWeeny***         *
+ *                                                            *
+ *    * SciNet Technologies, 9943 Fieldthorn St., San Diego   *
+ *      CA 92127, USA                                         *
+ *                                                            *
+ *   ** Department of Medicinal Chemistry, Monash University, *
+ *      381 Royal Pde, Parkville, Victoria, 3052, Australia   *
+ *                                                            *
+ *  *** Department of Chemistry, University of Pisa,          *
+ *      56100 Pisa, Italy                                     *
+ *                                                            *
+ *  Reference for the software:                               *
+ *      Jiabo Li, Brian Duke, and Roy McWeeny, VB2000 Version *
+ *      2.0, SciNet Technologies, San Diego, CA, 2007         *
+ *      URL: http//www.scinetec.com/                          *
+ *                                                            *
+ *  Reference for the theory:                                 *
+ *      Jiabo Li, and Roy McWeeny, "VB2000: Pushing Valence   *
+ *      Bond Theory to New Limits", Int. J. Quantum Chem.,    *
+ *      89(2002)208-216.                                      *
+ *                                                            *
+ *  Copyright (C) 2000-2007 by SciNet Technologies            *
+ **************************************************************
+
+ JOB NAME IS example19                                                       
+
+ VB2000 DIRECTORY IS: .                                                                               
+
+ MAXWK MEMORY IS:        6500000
+
+
+ Input of molecule
+ =================
+ #! VB(9)/D95 DIIS PRINTALL                                              
+
+ Title: TEST H O                                                                        
+
+ Charge =  0 Multiplicity =  2
+
+ BASIS SET FILE IS: ./BASET/D95                                                                     
+
+ Cartesian coordinates of atoms in Angstrom
+ ------------------------------------------
+                 X         Y         Z   
+
+  O     8.0  0.000000  0.000000  0.000000
+  H     1.0  1.000000  0.000000  0.000000
+ ------------------------------------------
+
+ Total number of two-electron integrals =      969
+ Time for integral evaluation                0.016
+
+ SKIPPED INTEGRALS= 1368
+ Number of iter = 15, DMAX =        0.000009968275
+ Final Hartree-Fock Energy =      -75.194854538543
+
+ Molecular orbitals by HF method
+ ===============================================================================
+ MO#                       1         2         3         4         5         6
+ E(a.u.)             -20.666    -1.323    -0.660    -0.555    -0.254     0.213
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.58119  -0.13653   0.04414   0.00000   0.00000  -0.03931
+   2  1  O     s     0.46132  -0.18949   0.06117   0.00000   0.00000  -0.05313
+   3  1  O     s    -0.00074   0.55061  -0.18102   0.00000   0.00000   0.10054
+   4  1  O     s     0.00172   0.47341  -0.26150   0.00000   0.00000   0.91186
+   5  1  O     x     0.00132   0.11750   0.61208   0.00000   0.00000   0.35489
+   6  1  O     y     0.00000   0.00000   0.00000   0.60198   0.41579   0.00000
+   7  1  O     z     0.00000   0.00000   0.00000  -0.46508   0.53818   0.00000
+   8  1  O     x    -0.00039   0.02763   0.23611   0.00000   0.00000   0.67120
+   9  1  O     y     0.00000   0.00000   0.00000   0.29258   0.28475   0.00000
+  10  1  O     z     0.00000   0.00000   0.00000  -0.22604   0.36857   0.00000
+  11  2  H     s     0.00008   0.15599   0.28066   0.00000   0.00000  -0.08541
+  12  2  H     s    -0.00017   0.01216   0.13629   0.00000   0.00000  -1.63781
+
+ MO#                       7         8         9        10        11        12
+ E(a.u.)               0.832     0.863     0.895     1.087     1.470    43.160
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.00000   0.00000  -0.03190  -0.01425   0.14342  -1.73111
+   2  1  O     s     0.00000   0.00000  -0.04846  -0.01880   0.24789   1.87297
+   3  1  O     s     0.00000   0.00000   0.21576   0.03117  -1.84459  -0.36424
+   4  1  O     s     0.00000   0.00000   0.20680  -0.04117   2.39316   0.27966
+   5  1  O     x     0.00000   0.00000  -0.82375   0.43224  -0.18505  -0.01101
+   6  1  O     y    -0.69235   0.57405   0.00000   0.00000   0.00000   0.00000
+   7  1  O     z     0.53490   0.74303   0.00000   0.00000   0.00000   0.00000
+   8  1  O     x     0.00000   0.00000   1.44015   0.07946   0.81581   0.06616
+   9  1  O     y     0.86956  -0.64910   0.00000   0.00000   0.00000   0.00000
+  10  1  O     z    -0.67180  -0.84017   0.00000   0.00000   0.00000   0.00000
+  11  2  H     s     0.00000   0.00000  -0.24665  -1.38404  -0.13179   0.00055
+  12  2  H     s     0.00000   0.00000  -0.53857   0.97607  -1.09066  -0.10900
+
+ VBO LIB IS: ./VBOLIB/VBOLIBD95                                                              
+
+ Localized molecular orbitals and the bond labels
+ ===============================================================================
+ LMO#                      1         2         3         4         5
+ E(a.u.)             -20.387    -1.368    -0.555    -0.254    -0.894
+ Bond Label            1:(0)     1:(1)     1:(2)     1:(3)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.59417  -0.06855   0.00000   0.00000  -0.02522
+   2  1  O     s     0.48181  -0.13523   0.00000   0.00000  -0.04506
+   3  1  O     s    -0.07009   0.55059   0.00000   0.00000   0.16699
+   4  1  O     s    -0.06249   0.53419   0.00000   0.00000   0.05692
+   5  1  O     x     0.01455  -0.25439   0.00000   0.00000   0.56879
+   6  1  O     y     0.00001   0.00001   0.60199   0.41578   0.00000
+   7  1  O     z     0.00000   0.00000  -0.46507   0.53818   0.00000
+   8  1  O     x     0.00670  -0.11261   0.00000   0.00000   0.20925
+   9  1  O     y     0.00001   0.00001   0.29258   0.28475   0.00000
+  10  1  O     z     0.00000   0.00000  -0.22604   0.36858   0.00000
+  11  2  H     s    -0.00526  -0.03378   0.00000   0.00000   0.31927
+  12  2  H     s     0.00435  -0.06807   0.00000   0.00000   0.11862
+
+
+ Mulliken population of localized molecular orbitals
+ ===============================================================================
+ LMO#                      1         2         3         4         5
+ E(a.u.)             -20.387    -1.368    -0.555    -0.254    -0.894
+ Bond Label            1:(0)     1:(1)     1:(2)     1:(3)    2-1(1)
+ -------------------------------------------------------------------------------
+
+   1         O       1.99985   2.05139   2.00000   2.00000   1.35964
+   2         H       0.00015  -0.05139   0.00000   0.00000   0.64036
+
+ WARNING: MELEK != MELE(K)
+
+ PARTITIONING OF LMOs INTO GROUPS ($LMOGRP)
+ =======================================================================
+ LMO#     1  2  3  4  5
+ Group#   1  1  1  1  1
+ Split    1  1  1  1  1
+
+ WARNING: you are splitting a lone-pair LMO(  1)
+ WARNING: you are splitting a lone-pair LMO(  2)
+ WARNING: you are splitting a lone-pair LMO(  3)
+ WARNING: you are splitting a lone-pair LMO(  4)
+ WARNING: Initial orbital 11 undefined from DISLMO
+ Initial orbital
+ WARNING: Initial orbital 12 undefined from DISLMO
+ Initial orbital
+
+ Group assignment of AOs
+ =======================================================================
+ AO#:      1  2  3  4  5  6  7  8  9 10 11 12
+ Group#:   1  1  1  1  1  1  1  1  1  1  1  1
+
+
+
+ Initial guess of orbitals
+ ===============================================================================
+ ORBITAL#                  1         2         3         4         5         6
+ Bond Label            1:(0)     1:(0)     1:(1)     1:(1)     1:(2)     1:(2)
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     1.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   2  1  O     s     0.00000   1.00000   0.00000   0.00000   0.00000   0.00000
+   3  1  O     s     0.00000   0.00000   1.00000   0.00000   0.00000   0.00000
+   4  1  O     s     0.00000   0.00000   0.00000   1.00000   0.00000   0.00000
+   5  1  O     x     0.00000   0.00000   0.00000   0.00000   1.00000   0.00000
+   6  1  O     y     0.00000   0.00000   0.00000   0.00000   0.00000   1.00000
+   7  1  O     z     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   8  1  O     x     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   9  1  O     y     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+  10  1  O     z     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+  11  2  H     s     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+  12  2  H     s     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+
+ ORBITAL#                  7         8         9        10        11        12
+ Bond Label            1:(3)     1:(3)    2-1(1)    2-1(1)                    
+ -------------------------------------------------------------------------------
+
+   1  1  O     s     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   2  1  O     s     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   3  1  O     s     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   4  1  O     s     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   5  1  O     x     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   6  1  O     y     0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   7  1  O     z     1.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   8  1  O     x     0.00000   1.00000   0.00000   0.00000   0.00000   0.00000
+   9  1  O     y     0.00000   0.00000   1.00000   0.00000   0.00000   0.00000
+  10  1  O     z     0.00000   0.00000   0.00000   1.00000   0.00000   0.00000
+  11  2  H     s     0.00000   0.00000   0.00000   0.00000   1.00000   0.00000
+  12  2  H     s     0.00000   0.00000   0.00000   0.00000   0.00000   1.00000
+
+
+
+ GENERAL CONTROLS ($GENCTL)
+ ==============================
+ Number of electron groups =  1
+ Maximum macro-iterations  = 12
+ Restart calculation(0/1/2)=  0
+ Group#               1
+ Num. of electrons    9
+ Num. of spins        1
+ Num. of orbitals    12
+ Method#              2
+
+ SYMBOLIC VB STRUCTURE(S) OF GROUP  1
+ STR. NO.       RUMER PATTERN  
+    1           1  1   3  3   5 11   6  6   7
+    2           1  1   3  3   5  5   6  6   7
+    3           1  1   3  3  11 11   6  6   7
+
+ CALCULATE INITIAL STRUCTURE COEFFICIENTS
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  2 CMAX = 0.13458188718029
+ GROUP =  1  ITER =  3 CMAX = 0.14986965052381
+ GROUP =  1  ITER =  4 CMAX = 0.15281266905810
+ GROUP =  1  ITER =  5 CMAX = 0.09732141256183
+ GROUP =  1  ITER =  6 CMAX = 0.11324954789897
+ GROUP =  1  ITER =  7 CMAX = 0.11350340214756
+ GROUP =  1  ITER =  8 CMAX = 0.07402592541510
+ GROUP =  1  ITER =  9 CMAX = 0.02682177019201
+ GROUP =  1  ITER = 10 CMAX = 0.06674077927442
+ GROUP =  1  ITER = 11 CMAX = 0.02271894101584
+ GROUP =  1  ITER = 12 CMAX = 0.11235382522060
+ GROUP =  1  ITER = 13 CMAX = 0.14818947051885
+ GROUP =  1  ITER = 14 CMAX = 0.00556338643284
+ GROUP =  1  ITER = 15 CMAX = 0.08618784648227
+ GROUP =  1  ITER = 16 CMAX = 0.03035855708274
+ GROUP =  1  ITER = 17 CMAX = 0.01137680467774
+ GROUP =  1  ITER = 18 CMAX = 0.08321308396554
+ GROUP =  1  ITER = 19 CMAX = 0.03846515824559
+ GROUP =  1  ITER = 20 CMAX = 0.00739534900906
+ GROUP =  1  ITER = 21 CMAX = 0.07078909774185
+ GROUP =  1  ITER = 22 CMAX = 0.01507432633408
+ GROUP =  1  ITER = 23 CMAX = 0.01101220412690
+ GROUP =  1  ITER = 24 CMAX = 0.01999209558752
+ GROUP =  1  ITER = 25 CMAX = 0.03759156573065
+ GROUP =  1  ITER = 26 CMAX = 0.01447867829960
+ GROUP =  1  ITER = 27 CMAX = 0.02787596722797
+ GROUP =  1  ITER = 28 CMAX = 0.01024634880230
+ GROUP =  1  ITER = 29 CMAX = 0.00342802480913
+ GROUP =  1  ITER = 30 CMAX = 0.00810758711378
+ VBSCF NOT CONVERGED. CMAX = 0.00810758711378 AFTER  31 ITERATIONS
+
+ ENERGY AND DIFF OF MACROITER    1 =    -74.00842771    -74.00842771
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  2 CMAX = 0.14637086356915
+ GROUP =  1  ITER =  3 CMAX = 0.13557467942584
+ GROUP =  1  ITER =  4 CMAX = 0.12238647070579
+ GROUP =  1  ITER =  5 CMAX = 0.10941270391530
+ GROUP =  1  ITER =  6 CMAX = 0.06576714657148
+ GROUP =  1  ITER =  7 CMAX = 0.06350143688472
+ GROUP =  1  ITER =  8 CMAX = 0.07565626180253
+ GROUP =  1  ITER =  9 CMAX = 0.08626566139617
+ GROUP =  1  ITER = 10 CMAX = 0.04297970818050
+ GROUP =  1  ITER = 11 CMAX = 0.01597180633418
+ GROUP =  1  ITER = 12 CMAX = 0.00541909074262
+ GROUP =  1  ITER = 13 CMAX = 0.00179528264017
+ GROUP =  1  ITER = 14 CMAX = 0.00176638705860
+ GROUP =  1  ITER = 15 CMAX = 0.00058775443347
+ GROUP =  1  ITER = 16 CMAX = 0.00115991088263
+ GROUP =  1  ITER = 17 CMAX = 0.00038918816888
+ GROUP =  1  ITER = 18 CMAX = 0.00038733007994
+ GROUP =  1  ITER = 19 CMAX = 0.00038598194905
+ GROUP =  1  ITER = 20 CMAX = 0.00012856720495
+ GROUP =  1  ITER = 21 CMAX = 0.00025612906698
+ GROUP =  1  ITER = 22 CMAX = 0.00008569911217
+ GROUP =  1  ITER = 23 CMAX = 0.00017082123282
+ GROUP =  1  ITER = 24 CMAX = 0.00005721836373
+ GROUP =  1  ITER = 25 CMAX = 0.00011417933206
+ GROUP =  1  ITER = 26 CMAX = 0.00003818426465
+ GROUP =  1  ITER = 27 CMAX = 0.00007625445519
+ GROUP =  1  ITER = 28 CMAX = 0.00002547377021
+ GROUP =  1  ITER = 29 CMAX = 0.00005089707815
+ GROUP =  1  ITER = 30 CMAX = 0.00001699054848
+ VBSCF NOT CONVERGED. CMAX = 0.00001699054848 AFTER  31 ITERATIONS
+
+ ENERGY AND DIFF OF MACROITER    2 =    -75.21858911     -1.21016140
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  2 CMAX = 0.14853558513137
+ GROUP =  1  ITER =  3 CMAX = 0.16140269096482
+ GROUP =  1  ITER =  4 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  5 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  6 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  7 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  8 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  9 CMAX = 0.06088059182593
+ GROUP =  1  ITER = 10 CMAX = 0.02367664543286
+ GROUP =  1  ITER = 11 CMAX = 0.00877044574635
+ GROUP =  1  ITER = 12 CMAX = 0.00309082024076
+ GROUP =  1  ITER = 13 CMAX = 0.00105157307993
+ GROUP =  1  ITER = 14 CMAX = 0.00035273171963
+ GROUP =  1  ITER = 15 CMAX = 0.00011779822986
+ GROUP =  1  ITER = 16 CMAX = 0.00003928790785
+ GROUP =  1  ITER = 17 CMAX = 0.00001309811988
+ GROUP =  1  ITER = 18 CMAX = 0.00000436625190
+
+ ENERGY AND DIFF OF MACROITER    3 =    -75.37477349     -0.15618438
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  2 CMAX = 0.15000000000000
+ GROUP =  1  ITER =  3 CMAX = 0.13056651643620
+ GROUP =  1  ITER =  4 CMAX = 0.01386295122448
+ GROUP =  1  ITER =  5 CMAX = 0.01466181174129
+ GROUP =  1  ITER =  6 CMAX = 0.00341328465657
+ GROUP =  1  ITER =  7 CMAX = 0.00377758133441
+ GROUP =  1  ITER =  8 CMAX = 0.00348167258839
+ GROUP =  1  ITER =  9 CMAX = 0.00105644441433
+ GROUP =  1  ITER = 10 CMAX = 0.00088775844547
+ GROUP =  1  ITER = 11 CMAX = 0.00079646375290
+ GROUP =  1  ITER = 12 CMAX = 0.00028368433722
+ GROUP =  1  ITER = 13 CMAX = 0.00009482825206
+ GROUP =  1  ITER = 14 CMAX = 0.00003154639643
+ GROUP =  1  ITER = 15 CMAX = 0.00001049840758
+ GROUP =  1  ITER = 16 CMAX = 0.00000349649123
+
+ ENERGY AND DIFF OF MACROITER    4 =    -75.40513965     -0.03036616
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.01163940694292
+ GROUP =  1  ITER =  2 CMAX = 0.00312525332604
+ GROUP =  1  ITER =  3 CMAX = 0.00041182625134
+ GROUP =  1  ITER =  4 CMAX = 0.00048357458177
+ GROUP =  1  ITER =  5 CMAX = 0.00053279554792
+ GROUP =  1  ITER =  6 CMAX = 0.00179531234172
+ GROUP =  1  ITER =  7 CMAX = 0.00248271383090
+ GROUP =  1  ITER =  8 CMAX = 0.00368939651490
+ GROUP =  1  ITER =  9 CMAX = 0.00509222623501
+ GROUP =  1  ITER = 10 CMAX = 0.00675467336840
+ GROUP =  1  ITER = 11 CMAX = 0.00844802083507
+ GROUP =  1  ITER = 12 CMAX = 0.00995802969826
+ GROUP =  1  ITER = 13 CMAX = 0.01058572442469
+ GROUP =  1  ITER = 14 CMAX = 0.00978718722671
+ GROUP =  1  ITER = 15 CMAX = 0.00934244409830
+ GROUP =  1  ITER = 16 CMAX = 0.02772782276833
+ GROUP =  1  ITER = 17 CMAX = 0.00655795872154
+ GROUP =  1  ITER = 18 CMAX = 0.00182832818566
+ GROUP =  1  ITER = 19 CMAX = 0.00026021049973
+ GROUP =  1  ITER = 20 CMAX = 0.00027885837449
+ GROUP =  1  ITER = 21 CMAX = 0.00027105622655
+ GROUP =  1  ITER = 22 CMAX = 0.00024805062850
+ GROUP =  1  ITER = 23 CMAX = 0.00019983323913
+ GROUP =  1  ITER = 24 CMAX = 0.00007654673335
+ GROUP =  1  ITER = 25 CMAX = 0.00002630319998
+ GROUP =  1  ITER = 26 CMAX = 0.00000891313955
+
+ ENERGY AND DIFF OF MACROITER    5 =    -75.40523835     -0.00009871
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00060893587897
+ GROUP =  1  ITER =  2 CMAX = 0.00026971878402
+ GROUP =  1  ITER =  3 CMAX = 0.00017286897734
+ GROUP =  1  ITER =  4 CMAX = 0.00018630798511
+ GROUP =  1  ITER =  5 CMAX = 0.00023318889300
+ GROUP =  1  ITER =  6 CMAX = 0.00072439828085
+ GROUP =  1  ITER =  7 CMAX = 0.00117467782717
+ GROUP =  1  ITER =  8 CMAX = 0.00175272026362
+ GROUP =  1  ITER =  9 CMAX = 0.00247225368564
+ GROUP =  1  ITER = 10 CMAX = 0.00337288960881
+ GROUP =  1  ITER = 11 CMAX = 0.00449231988584
+ GROUP =  1  ITER = 12 CMAX = 0.00586778683847
+ GROUP =  1  ITER = 13 CMAX = 0.00752160977791
+ GROUP =  1  ITER = 14 CMAX = 0.00942798195068
+ GROUP =  1  ITER = 15 CMAX = 0.01141992503177
+ GROUP =  1  ITER = 16 CMAX = 0.01301212319705
+ GROUP =  1  ITER = 17 CMAX = 0.01330020269345
+ GROUP =  1  ITER = 18 CMAX = 0.01178902654887
+ GROUP =  1  ITER = 19 CMAX = 0.01135083254312
+ GROUP =  1  ITER = 20 CMAX = 0.04412858513480
+ GROUP =  1  ITER = 21 CMAX = 0.00916334669868
+ GROUP =  1  ITER = 22 CMAX = 0.01296299492879
+ GROUP =  1  ITER = 23 CMAX = 0.01527555022307
+ GROUP =  1  ITER = 24 CMAX = 0.00105604004263
+ GROUP =  1  ITER = 25 CMAX = 0.00154225256905
+ GROUP =  1  ITER = 26 CMAX = 0.00046532615718
+ GROUP =  1  ITER = 27 CMAX = 0.00008874452698
+ GROUP =  1  ITER = 28 CMAX = 0.00005893190908
+ GROUP =  1  ITER = 29 CMAX = 0.00008356613220
+ GROUP =  1  ITER = 30 CMAX = 0.00008470798281
+ VBSCF NOT CONVERGED. CMAX = 0.00008470798281 AFTER  31 ITERATIONS
+
+ ENERGY AND DIFF OF MACROITER    6 =    -75.40523882     -0.00000047
+
+ VB-ORBITAL OPTIMIZATION OF GROUP  1 ...
+ GROUP =  1  ITER =  1 CMAX = 0.00062405508740
+ GROUP =  1  ITER =  2 CMAX = 0.00023313702902
+ GROUP =  1  ITER =  3 CMAX = 0.00026749621393
+ GROUP =  1  ITER =  4 CMAX = 0.00030194789539
+ GROUP =  1  ITER =  5 CMAX = 0.00030381735661
+ GROUP =  1  ITER =  6 CMAX = 0.00110311088932
+ GROUP =  1  ITER =  7 CMAX = 0.00164065338520
+ GROUP =  1  ITER =  8 CMAX = 0.00233156262902
+ GROUP =  1  ITER =  9 CMAX = 0.00317443860228
+ GROUP =  1  ITER = 10 CMAX = 0.00422038803854
+ GROUP =  1  ITER = 11 CMAX = 0.00542955487976
+ GROUP =  1  ITER = 12 CMAX = 0.00675817986360
+ GROUP =  1  ITER = 13 CMAX = 0.00789554070866
+ GROUP =  1  ITER = 14 CMAX = 0.00823643278575
+ GROUP =  1  ITER = 15 CMAX = 0.00756112101811
+ GROUP =  1  ITER = 16 CMAX = 0.00920891454846
+ GROUP =  1  ITER = 17 CMAX = 0.02728636570777
+ GROUP =  1  ITER = 18 CMAX = 0.00926379773209
+ GROUP =  1  ITER = 19 CMAX = 0.02362293675913
+ GROUP =  1  ITER = 20 CMAX = 0.00470186953363
+ GROUP =  1  ITER = 21 CMAX = 0.00009562740895
+ GROUP =  1  ITER = 22 CMAX = 0.00013236491526
+ GROUP =  1  ITER = 23 CMAX = 0.00006953953314
+ GROUP =  1  ITER = 24 CMAX = 0.00005054092478
+ GROUP =  1  ITER = 25 CMAX = 0.00004164596724
+ GROUP =  1  ITER = 26 CMAX = 0.00003706199096
+ GROUP =  1  ITER = 27 CMAX = 0.00003486363861
+ GROUP =  1  ITER = 28 CMAX = 0.00003599765901
+ GROUP =  1  ITER = 29 CMAX = 0.00001376626008
+ GROUP =  1  ITER = 30 CMAX = 0.00000505661866
+
+
+ OVERLAP MATRIX OF VB ORBITALS FOR GROUP   1
+
+       1     2     3     4     5     6     7     8     9    10    11    12
+ ===========================================================================
+   1  1.00
+   2  0.92  1.00
+   3  0.43  0.61  1.00
+   4 -0.02  0.19  0.82  1.00
+   5  0.00 -0.10 -0.38 -0.21  1.00
+   6  0.00  0.00  0.00  0.00  0.00  1.00
+   7  0.00  0.00  0.00  0.00  0.00  0.00  1.00
+   8  0.04  0.00 -0.15  0.00  0.70  0.00  0.00  1.00
+   9  0.00  0.00  0.00  0.00  0.00  0.76  0.00  0.00  1.00
+  10  0.00  0.00  0.00  0.00  0.00  0.00  0.74  0.00  0.00  1.00
+  11 -0.02  0.05  0.26  0.51  0.32  0.00  0.00  0.60  0.00  0.00  1.00
+  12 -0.02  0.07  0.38  0.65  0.20  0.00  0.00  0.56  0.00  0.00  0.84  1.00
+
+ Normalized structure coefficients
+  0.6597  0.4029  0.0529
+
+ ====Mulliken Weight====
+  0.6294  0.3396  0.0309
+
+ ====Lowdin   Weight====
+  0.4867  0.3951  0.1183
+
+ ====Hiberty  Weight====
+  0.7250  0.2704  0.0047
+
+
+ ENERGY AND DIFF OF MACROITER    7 =    -75.40523849      0.00000033
+
+ ORBITALS OF EACH ELECTRON GROUP IN AO BASIS: ORBITAL(GROUP)
+ ===========================================================================
+    Orbital#             1         2         3         4         5         6
+      Group#             1         1         1         1         1         1
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  O     s   0.59799   0.00000   0.24701   0.00000  -0.03215   0.00000
+   2  1  O     s   0.49325   1.00000   0.12966   0.00000  -0.02055   0.00000
+   3  1  O     s  -0.12687   0.00000   0.45377   0.00000  -0.03177   0.00000
+   4  1  O     s  -0.11119   0.00000   0.40515   1.00000  -0.18026   0.00000
+   5  1  O     x   0.03629   0.00000  -0.12546   0.00000   0.79254   0.00000
+   6  1  O     y   0.00000   0.00000   0.00000   0.00000   0.00000   0.75001
+   7  1  O     z   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   8  1  O     x   0.02266   0.00000  -0.08368   0.00000   0.29409   0.00000
+   9  1  O     y   0.00000   0.00000   0.00000   0.00000   0.00000   0.38307
+  10  1  O     z   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+  11  2  H     s   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+  12  2  H     s   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+
+ ===========================================================================
+    Orbital#             7         8         9        10        11        12
+      Group#             1         1         1         1         1         1
+ ---------------------------------------------------------------------------
+  AO# LABELS
+   1  1  O     s   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   2  1  O     s   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   3  1  O     s   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   4  1  O     s   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   5  1  O     x   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   6  1  O     y   0.00000   0.00000   0.00000   0.00000   0.00000   0.00000
+   7  1  O     z   0.78295   0.00000   0.00000   0.00000   0.00000   0.00000
+   8  1  O     x   0.00000   1.00000   0.00000   0.00000   0.00000   0.00000
+   9  1  O     y   0.00000   0.00000   1.00000   0.00000   0.00000   0.00000
+  10  1  O     z   0.34135   0.00000   0.00000   1.00000   0.00000   0.00000
+  11  2  H     s   0.00000   0.00000   0.00000   0.00000   0.74937   0.00000
+  12  2  H     s   0.00000   0.00000   0.00000   0.00000   0.32506   1.00000
+
+
+ STATISTICS OF CPU TIMES (SECONDS)
+ CPU TIME FOR INITIALIZATION      0.016
+ CPU TIME FOR MACROITERATION    149.797
+ TOTAL CPU TIME                 149.813
+

@@ -1,0 +1,10 @@
+#! VB(1)/aug-cc-pVDZ printall 
+
+TEST FOR ONE ELECTRON VB
+
+0 2
+1   .000   .000000   .0
+
+ $ECONV
+ 7
+

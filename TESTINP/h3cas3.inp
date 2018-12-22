@@ -1,0 +1,18 @@
+#! CASVB(3,3)/6-31++G** SPDEN PRINTALL
+
+TEST
+
+0 2
+1        0.0  0.0  1.0
+1        0.0  0.0  0.0
+1        0.0  0.0 -1.0
+
+ $01VBORB
+ 1-2
+ 3->2
+
+ $MACROITER
+ 40
+
+ $ECONV
+ 8

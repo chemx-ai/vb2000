@@ -1,0 +1,106 @@
+#!/bin/csh
+# Copyright (C) 2018 Jiabo Li, Brian Duke, and Roy McWeeny
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# 
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+# 
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#######################################################################
+#
+#  last update = 5 March 2015
+#
+#  This is a C-shell script to execute VB2000, by typing
+#        runvb JOB >& JOB.out &
+#  JOB     is the name of the 'JOB.inp' file to be executed.
+#
+set SCR=/scr/ssd
+set USERSCR=`pwd`
+set VB2PATH=/home/brian/qchem/VB2000
+#
+set JOB=$1      # name of the input file xxx.inp, give only the xxx part
+#
+echo "----- VB2000 execution script 'runvb' -----"
+set master=`hostname`
+echo This job is running on host $master
+echo under operating system `uname` at `date`
+echo "Available scratch disk space (Kbyte units) at beginning of the job is"
+#
+df -k $SCR
+echo "VB2000 temporary binary files will be written to $SCR"
+echo "VB2000 supplementary output files will be written to $PWD"
+#
+if ($JOB:r.inp == $JOB) set JOB=$JOB:r      # strip off possible .inp
+echo "Copying input file $JOB.inp to your run's scratch directory..."
+if (-e $JOB.inp) then
+   set echo
+   cp  $JOB.inp  $SCR/$JOB.inp
+   unset echo
+endif
+#
+#        Just make sure we have the binaries, before we try to run
+#
+   if (-x $VB2PATH/vb2000.exe) then
+   else
+      echo The VB2000 executable vb2000.exe
+      echo could not be found in directory $VB2PATH,
+      echo or else it did not properly link to executable permission.
+      exit 8
+   endif
+#
+#        OK, now we are ready to execute!
+echo cd $SCR
+cd $SCR
+ls -lF
+echo "$VB2PATH/vb2000.exe $JOB"
+$VB2PATH/vb2000.exe $JOB
+#
+#   Clean up the master's scratch directory.
+#
+echo Files used on the master node $master were:
+ls -lF $SCR/$JOB.*
+#
+#   Clean/Rescue any files created by the VB2000 plug-in
+if (-e $SCR/$JOB.V84)        mv $SCR/$JOB.V84     $USERSCR
+if (-e $SCR/$JOB.V89)        mv $SCR/$JOB.V89     $USERSCR
+if (-e $SCR/$JOB.V80)        rm -f $SCR/$JOB.V*
+if (-e $SCR/$JOB.TEMP02)     rm -f $SCR/$JOB.TEMP*
+if (-e $SCR/$JOB.plt) mv $SCR/$JOB.plt $USERSCR/$JOB.orb
+# Pltorb file has to be *.orb, but is named *.plt in the code
+# to avoid a conflict with a XMVB file *.orb. It is renamed here
+# when moved to $USERSCR.
+if (-e $SCR/$JOB.vec)        mv $SCR/$JOB.vec     $USERSCR
+if (-e $SCR/$JOB.vinit) mv $SCR/$JOB.vinit $USERSCR
+if (-e $SCR/$JOB.vlmo) mv $SCR/$JOB.vlmo $USERSCR
+if (-e $SCR/$JOB.vmos) mv $SCR/$JOB.vmos $USERSCR
+if (-e $SCR/$JOB.mol)        mv $SCR/$JOB.mol     $USERSCR
+if (-e $SCR/$JOB.molden)     mv $SCR/$JOB.molden  $USERSCR
+if (-e $SCR/$JOB.mkl)        mv $SCR/$JOB.mkl     $USERSCR
+if (-e $SCR/$JOB.ovl)        mv $SCR/$JOB.ovl     $USERSCR
+ls $SCR/${JOB}*.xyz > $SCR/${JOB}.lis
+if (! -z $SCR/${JOB}.lis) mv $SCR/${JOB}*.xyz $USERSCR
+rm -f $SCR/${JOB}.lis
+ls $SCR/${JOB}-*.cube > $SCR/${JOB}.lis
+if (! -z $SCR/${JOB}.lis) mv $SCR/${JOB}*.cube $USERSCR
+rm -f $SCR/${JOB}.lis
+ls $SCR/${JOB}-*.grd > $SCR/${JOB}.lis
+if (! -z $SCR/${JOB}.lis) mv $SCR/${JOB}*.grd $USERSCR
+rm -f $SCR/${JOB}.lis
+ls $SCR/${JOB}-*.csv > $SCR/${JOB}.lis
+if (! -z $SCR/${JOB}.lis) mv $SCR/${JOB}*.csv $USERSCR
+rm -f $SCR/${JOB}.lis
+rm -f $SCR/${JOB}.*
+#
+#  and this is the end
+#
+date
+time
+exit
+

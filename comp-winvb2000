@@ -1,0 +1,34 @@
+#!/bin/csh
+# Copyright (C) 2018 Jiabo Li, Brian Duke, and Roy McWeeny
+# #
+# # This program is free software: you can redistribute it and/or modify
+# # it under the terms of the GNU General Public License as published by
+# # the Free Software Foundation, either version 3 of the License, or
+# # (at your option) any later version.
+# # 
+# # This program is distributed in the hope that it will be useful,
+# # but WITHOUT ANY WARRANTY; without even the implied warranty of
+# # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# # GNU General Public License for more details.
+# # 
+# # You should have received a copy of the GNU General Public License
+# # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+# ########################################################################
+#
+cp SRC/maxwork.inc .
+cp SRC/maxcen.inc .
+set LOG="comp-wingfc.log"
+set F77=gfortran
+set CC=gcc
+set EXE=winvb2000.exe
+set CFLAGS='-DLINUX64 -m64'
+set FLAGS="-O2 -fdefault-integer-8 -fno-whole-file -fcheck=all -Wall"
+echo " $F77 $FLAGS -c winvb2000.f >& $LOG "
+$F77 $FLAGS -c winvb2000.f >& $LOG
+echo " $CC -c $CFLAGS SRC/vb2c.c >>& $LOG"
+$CC -c $CFLAGS SRC/vb2c.c >>& $LOG
+echo ""
+echo " Linking:"
+echo " $F77 $FLAGS -o $EXE winvb2000.o vb2c.o >>& $LOG "
+$F77 $FLAGS -o $EXE winvb2000.o vb2c.o >>& $LOG
+
