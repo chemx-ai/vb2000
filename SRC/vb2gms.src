@@ -2584,7 +2584,7 @@ C                                                                      C
 C   Version 0.2 - June 2015 updated by David W.O. Sousa                C
 C   CHANGES IN VERSION 0.2:                                            C
 C   * Calculation of occupation numbers                                C
-C   * Corrected formulas generalized to SCVB(N,M)                      C
+C   * Corrected formulas generalized to SCGVB(M,N) [SCVB(N,M)]         C
 C   * Simple Error Handling and Warning Messages                       C
 C   * Improved result printing for gpfep and density matrix            C
 C   * Fixed: Pair interference energies for more than one group        C
@@ -2598,7 +2598,7 @@ C   Version 0.4 - September 2015 updated by David W.O. Sousa           C
 C   CHANGES IN VERSION 0.4:                                            C
 C   * Updated COMMON blocks for VB2000 version 2.7 / GAMESS 2014       C
 C   * Removed dummy input variable from RGMST routine                  C
-C   * print occupations only if SCVB(n,m)                              C
+C   * print occupations only if SCGVB(M,N) [SCVB(N,M)]                 C
 C                                                                      C
 C   Version 0.5 - January 2016 updated by David W.O. Sousa             C
 C   CHANGES IN VERSION 0.5:                                            C
@@ -3043,7 +3043,7 @@ C     Partioning HF Groups
          VI(I)=0.0D0
          CALL NCALC(MLORBIT(I),TT(NOFF),DM1(NOFF),TQC(I))
          CALL NCALC(MLORBIT(I),VV(NOFF),DM1(NOFF),VQC(I))
-C     Partioning VB, SC or CAS Groups
+C     Partioning VB, SCGVB or CAS Groups
       ELSE
          IF (MLORBIT(I).GT.2) THEN
             NSPFLG=1
@@ -3343,7 +3343,7 @@ C     between the quasi-classical densities of    C
 C     groups A and B.                             C
 C                                                 C           
 C     Apr 13, 2015 - David Sousa                  C
-C --> adapted for SC(n,m) case                    C
+C --> adapted for SCGVB(n,m) case                 C
 C                                                 C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       SUBROUTINE G00CALC(MLA,MLB,OPMA,VEE,INDXA,INDXB,OCCPS)
@@ -3373,7 +3373,7 @@ C     B. This is calculated for each ordered pair C
 C     (A,B)                                       C           
 C                                                 C
 C     April 13 / Jun 24, 2015 - David Sousa       C
-C --> adapted for SC(n,m)                         C
+C --> adapted for SCGVB(n,m)                      C
 C --> Storing E[I] for orbital pairs in each      C
 C     group                                       C
 C                                                 C
@@ -3422,7 +3422,7 @@ C     A and the density of group B. This is       C
 C     only calculated once for each pair (A,B)    C
 C                                                 C
 C     Jun 24, 2015 - David Sousa                  C
-C --> Adapted for SC(n,m)                         C
+C --> Adapted for SCGVB(n,m)                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       SUBROUTINE G1NCALC(MLA,MLB,DMA,DMB,SA,OPMA,VEE,OIPO,IFLAG,INDXA,
      &INDXB,IPOFF)
@@ -3472,7 +3472,7 @@ C     this is only calculated once for each       C
 C     pair (A,B)                                  C
 C                                                 C
 C     Apr 13, 2015 -  David Sousa                 C
-C --> Adapted for SC(n,m)                         C
+C --> Adapted for SCGVB(n,m)                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC           
       SUBROUTINE G0NCALC(MLA,MLB,DMB,OPMA,VEE,INDXA,INDXB,OCCPS) 
       IMPLICIT NONE
@@ -3538,7 +3538,7 @@ C     contribution to the electron-electron       C
 C     repulsion from a non-HF group.              C
 C                                                 C
 C     Jun 24, 2015 - David Sousa                  C
-C --> Adapted for SC(n,m)                         C
+C --> Adapted for SCGVB(n,m)                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       SUBROUTINE I2GR(ML,DM2,S,OPMA,VEE,OIPO,IFLAG,INDX,IPOFF)
       IMPLICIT NONE
@@ -3699,7 +3699,7 @@ C --> Calculates the interference contribution    C
 C     from a group for a one-body operator.       C
 C                                                 C
 C     Jun 24, 2015 - David Sousa                  C
-C --> Adapted for SC(n,m)                         C
+C --> Adapted for SCGVB(n,m)                      C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       SUBROUTINE ICALC(ML,S,OPMA,DM,EI,OIPO,IFLAG,IPOFF)
       IMPLICIT DOUBLE PRECISION (A-H,O-Z)

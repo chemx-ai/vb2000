@@ -4744,7 +4744,7 @@ C     Function:
 C                General SCF routine.
 C                1. Hartree-Fock
 C                2. VBSCF
-C                3. SCVB
+C                3. SCGVB, previously known as SC or SCVB
 C                4. CASVB
 C                5. ION or SEN (ionicity or seniority number grouping)
 C                6. GPF
@@ -4760,7 +4760,8 @@ C
 C     History:
 C               First created in Feb. 1998.
 C               Recoded in September, 1999.
-C               Added SCVB and CASVB, March, 2000.
+C               Added SCVB (now called SCGVB) and CASVB, March, 2000.
+C               Added ION or SEN, 2018.
 C
 C     Author:
 C               Jiabo Li
@@ -4979,7 +4980,7 @@ C
 C     Note:
 C               For N>=10, it is more efficient to perform VBSCF
 C               calculation with only one VB structure, then followed
-C               by a SCVB type calculation.
+C               by a SCGVB (formerly known as SC or SCVB) type calculation.
 C
 C     History:
 C               First created in March, 2000.
@@ -5894,7 +5895,7 @@ C               calculations.
 C     METHOD(99)Method for each subunit.
 C               =1: Hartree-Fock (for core orbitals)
 C               =2: VBSCF
-C               =3: SCVB
+C               =3: SCGVB, formerly known as SCVB
 C               =4: CASVB (=CASSCF)
 C               =5: ION or SEN (Ionicity or seniority number grouping.
 C               =6: General product function (GPF)
@@ -13565,7 +13566,7 @@ C    &    WRITE(IOUTVB,'(" KATOM  ",10I4)') (KATOM(I),I=1,NP)
             IF(J1.NE.I1.AND.I.NE.J) THEN
               NMASK = NMASK + 1
               MASK(J,I)=0
-C             IF(MITER.EQ.1) WRITE(IOUTVB,'(2I4)') I,J
+              IF(MITER.EQ.1) WRITE(IOUTVB,'(2I4)') I,J
             ENDIF
           ENDDO
         ENDDO
@@ -22377,7 +22378,7 @@ C     key-values
 C
 C     keyvalues(1) = 1: HF
 C                  = 2: VB(m)
-C                  = 3: SCVB(m)
+C                  = 3: SCGVB(m) - formerly SCVB(m)
 C                  = 4: CASVB(m,n)
 C     (for 2-4)         THE m HIGHEST ENERGY ELECTRONS ARE TREATED BY
 C                       VB METHOD. IF A LMO IS A BONDING ORBITAL, SPLIT IT
@@ -22894,8 +22895,8 @@ C     Theory            Control parameters
 C
 C     1. HF             No.
 C     2. VB             m     // VB(m), m=# of electrons in m orbitals
-C     3. SCVB           m     // SCVB(m) m electrons in m orbitals.
-C       or SC           (m,n) // SCVB(m,n) m electrons in n orbitals.
+C     3. SCGVB          m     // SCGVB(m) m electrons in m orbitals.
+C       or SCVB or SC   (m,n) // SCGVB(m,n) m electrons in n orbitals.
 C     4. CASVB          (m,n) // CASVB(m,n), m electrons in n orbs.
 C     5. ION            (m,n) // ION(m,n), m electrons in n orbs.
 C     6. GPF            ng    // generalized product function method, 
@@ -22952,7 +22953,7 @@ C       WRITE(IOUTVB,*)'VB(M)=',M
           WRITE(IOUTVB,*)"The number of electrons in VB group must > 0"
           CALL ABORT0("PARATH0000")
         END IF
-      ELSE IF(WORD.EQ.'SCVB'.OR.WORD.EQ.'SC') THEN
+      ELSE IF(WORD.EQ.'SCGVB'.OR.WORD.EQ.'SCVB'.OR.WORD.EQ.'SC') THEN
         MTHEORY=3
         CALL READNUM(STRING,M,LENW,ICURSOR,LENBUF)
         CALL READNUM(STRING,N,LENW,ICURSOR,LENBUF)
@@ -23014,7 +23015,7 @@ C
           CALL READNUM(STRING,M,LENW,ICURSOR,LENBUF)
           N = M
           ICURSOR=ICURSOR+2
-        ELSE IF(WORD.EQ.'SCVB'.OR.WORD.EQ.'SC') THEN
+        ELSE IF(WORD.EQ.'SCGVB'.OR.WORD.EQ.'SCVB'.OR.WORD.EQ.'SC') THEN
           MTHEO=3
           CALL READNUM(STRING,M,LENW,ICURSOR,LENBUF)
 C         WRITE(IOUTVB,'("ICURSOR,LENBUF =",2I3)') ICURSOR,LENBUF
